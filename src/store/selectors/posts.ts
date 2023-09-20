@@ -3,6 +3,7 @@ import { RootState } from '..'
 import { Post } from '../reducers/posts'
 
 export const getAllPosts = (state: RootState) => state.posts
+
 export const selectPostById = createSelector(
   [getAllPosts, (_, postId) => postId],
   (postsState, postId) => {
@@ -17,7 +18,6 @@ export const selectCommentsForPost = (postId: string) =>
     return post ? post.comments : []
   })
 
-// Select all posts
 export const selectAllPosts = createSelector(
   [getAllPosts],
   postsState => postsState.data

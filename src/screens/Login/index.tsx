@@ -1,29 +1,40 @@
-import React, { useState } from 'react'
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
+import React from 'react'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import { useDispatch } from 'react-redux'
-// import { setDeviceId } from '../redux/deviceIdSlice'; // Import your Redux action
-import styles from './index.styles'
 import { useNavigation } from '@react-navigation/native'
+import DeviceInfo from 'react-native-device-info'
+import styles from './index.styles'
+import { setDeviceId } from '../../store/reducers/device'
+import Logo from '../../../assets/logo.png'
 
 const LoginScreen = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
-  const [deviceId, setDeviceId] = useState('')
 
   const handleLogin = () => {
-    navigation.navigate('Home')
+    registerDevice()
+  }
+
+  const registerDevice = () => {
+    DeviceInfo.getUniqueId()
+      .then(uniqueID => {
+        console.log('uniqueID', uniqueID)
+        dispatch(setDeviceId(uniqueID))
+        navigation.navigate('Home')
+      })
+      .catch(error => console.error('Device registration failed:', error))
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.logo}>Your Logo</Text>
+      <Image style={{ marginBottom: 45 }} source={Logo} />
 
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         placeholder='Device ID'
         onChangeText={text => setDeviceId(text)}
         value={deviceId}
-      />
+      /> */}
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>

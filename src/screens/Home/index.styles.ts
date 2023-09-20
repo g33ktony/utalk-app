@@ -10,10 +10,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5
   },
-  postImage: {
-    fontSize: 16,
-    marginBottom: 5
-  },
   postLikes: {
     fontSize: 14,
     color: 'green',
@@ -78,18 +74,33 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     borderRadius: 5
   },
-  bottomRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  commentsLikes: {
-    flexDirection: 'row'
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  commentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8
+  },
+  commentInput: {
+    flex: 1,
+    marginLeft: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 20,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    fontSize: 16
+  },
+  sendCommentIcon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#f0f0f0'
   }
 })
 

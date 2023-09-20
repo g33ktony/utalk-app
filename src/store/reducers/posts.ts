@@ -12,12 +12,12 @@ export interface Post {
   likes: Like[]
 }
 
-type Like = {
+export type Like = {
   author: string
   id: string
 }
 
-type Comment = {
+export type Comment = {
   id: string
   text: string
 }
@@ -70,6 +70,7 @@ const postsSlice = createSlice({
     addLike: (state, action) => {
       const { postId, author } = action.payload
       const post = state.data.find(p => p.id === postId)
+      const isAlreadyLiked = post?.likes.find(el => el.author === deviceId)
       if (post) {
         const newLike = {
           id: '1',

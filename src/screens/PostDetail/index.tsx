@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Button, FlatList, Text, TextInput, View } from 'react-native'
+import { Button, FlatList, Image, Text, TextInput, View } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { addComment } from '../../store/reducers/posts'
 import { selectPostById } from '../../store/selectors/posts'
 import styles from './index.styles'
+import { selectDeviceId } from '../../store/reducers/device'
 
 interface RouteParams {
   id: string
@@ -28,20 +29,19 @@ const PostScreen = () => {
   const route = useRoute()
   const { id } = route.params as RouteParams
   const post = useSelector(state => selectPostById(state, id))
+  const deviceId = useSelector(selectDeviceId)
 
   const dispatch = useDispatch()
-  const [newCommentAuthor, setNewCommentAuthor] = useState('')
   const [newCommentText, setNewCommentText] = useState('')
 
   const handleNewComment = () => {
     const newComment = {
       id: Math.random().toString(36).substr(2, 9),
-      author: newCommentAuthor,
+      author: deviceId,
       text: newCommentText
     }
 
     dispatch(addComment({ postId: id, comment: newComment }))
-    setNewCommentAuthor('')
     setNewCommentText('')
   }
   const renderItem = ({ item }: { item: Comment }) => (
@@ -54,7 +54,8 @@ const PostScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.postTitle}>{post?.author}</Text>
-      <Text style={styles.postImage}>{post?.image}</Text>
+      {/* <Text style={styles.postImage}>{post?.image}</Text> */}
+      <Image style={styles.postImage} source={{ uri: post?.image }} />
       <Text style={styles.postLikes}>{post?.likes.length} likes</Text>
       <Text style={styles.postComments}>{post?.comments?.length} comments</Text>
       <FlatList
@@ -63,12 +64,6 @@ const PostScreen = () => {
         keyExtractor={item => item.id}
       />
       <View style={styles.newComment}>
-        <TextInput
-          style={styles.newCommentAuthor}
-          value={newCommentAuthor}
-          placeholder='Author'
-          onChangeText={setNewCommentAuthor}
-        />
         <TextInput
           style={styles.newCommentText}
           value={newCommentText}
