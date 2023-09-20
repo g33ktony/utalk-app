@@ -50,20 +50,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 16
   },
-  authorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 8
-  },
-  author: {
-    fontSize: 16
-  },
   title: {
     fontSize: 18,
     marginBottom: 8
@@ -78,29 +64,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  commentRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 8
-  },
-  commentInput: {
-    flex: 1,
-    marginLeft: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 20,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    fontSize: 16
-  },
-  sendCommentIcon: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#f0f0f0'
   }
 })
 

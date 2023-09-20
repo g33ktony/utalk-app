@@ -1,20 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Text, View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
-import { Comment, Like, addLike } from '../../store/reducers/posts'
+import { CommentT, Like, addLike } from '../../store/reducers/posts'
 import { selectDeviceId } from '../../store/reducers/device'
 import { selectPostById } from '../../store/selectors/posts'
 import styles from '../index.styles'
+import Comment from '../comment'
 
 type PropsT = {
   postId: string
-  comments: Comment[]
+  comments: CommentT[]
   likes: Like[]
 }
 
 const PostInfoBar = ({ postId, comments, likes }: PropsT) => {
   const dispatch = useDispatch()
+  const [showComments, setShowComments] = useState(false)
   const deviceId = useSelector(selectDeviceId)
   const post = useSelector(state => selectPostById(state, postId))
 
@@ -33,7 +35,10 @@ const PostInfoBar = ({ postId, comments, likes }: PropsT) => {
   return (
     <View style={styles.bottomRow}>
       <View style={styles.commentsLikes}>
-        <TouchableOpacity style={{ marginRight: 8 }}>
+        <TouchableOpacity
+          style={{ marginRight: 8 }}
+          onPress={() => setShowComments(!showComments)}
+        >
           <Text>{comments.length} Comments</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleLike(postId)}>
@@ -42,6 +47,15 @@ const PostInfoBar = ({ postId, comments, likes }: PropsT) => {
           </Text>
         </TouchableOpacity>
       </View>
+      {showComments && (
+        <FlatList
+          data={comments}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <Comment comment={item} onLike={() => {}} onReply={() => {}} />
+          )}
+        />
+      )}
     </View>
   )
 }

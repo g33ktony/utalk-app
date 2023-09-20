@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, FlatList, Image, Text, TextInput, View } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -30,9 +30,12 @@ const PostScreen = () => {
   const { id } = route.params as RouteParams
   const post = useSelector(state => selectPostById(state, id))
   const deviceId = useSelector(selectDeviceId)
-
   const dispatch = useDispatch()
   const [newCommentText, setNewCommentText] = useState('')
+
+  // useEffect(() => {
+
+  // }, [])
 
   const handleNewComment = () => {
     const newComment = {

@@ -41,7 +41,7 @@ const NewPostScreen = () => {
   const handlePostSubmit = () => {
     dispatch(
       addPost({
-        id: '1',
+        id: Math.random().toString(36).substr(2, 9),
         title: postTitle,
         author: deviceId,
         description: 'desc',
