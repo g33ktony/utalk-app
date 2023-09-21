@@ -23,21 +23,29 @@ Follow these steps to get UTalk up and running on your local machine:
    ```bash
    cd utalk
 
-3. Start the development server:
+3. Install all dependencies:
 
     ```bash
-    npm install
+   npm install
+   ```
 
-4. Start Metro Bundler
+4. Install Pods
+
+   ```bash
+   npx pod-install
+   ```
+
+5. Start Metro Bundler
 
    ``` bash 
    npm start
+   ```
 
-5. Run the application in an Android or iOS device typing "a" or "i"
+6. Run the application in an Android or iOS device typing "a" or "i"
 
 
 
-# Here are some prompts used to generate code for this application
+## Here are some prompts used to generate code for this application
 
 1. To generate code base and install dependencies the project needs
 
