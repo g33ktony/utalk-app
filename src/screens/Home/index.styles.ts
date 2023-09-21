@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   postContainer: {
     marginBottom: 16,
     borderColor: '#ccc',
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderRadius: 5,
     padding: 16
   },

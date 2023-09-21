@@ -1,4 +1,4 @@
-import { ThunkAction, configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
 import rootReducer from './reducers'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
@@ -11,14 +11,11 @@ import {
   PURGE,
   REGISTER
 } from 'redux-persist'
-import { fetchAllPosts } from './reducers/posts'
 
 const persistConfig = {
   key: 'root',
-  storage: AsyncStorage,
-  whitelist: ['auth']
+  storage: AsyncStorage
 }
-
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const store = configureStore({
@@ -30,17 +27,6 @@ const store = configureStore({
       }
     })
 })
-
 const persistor = persistStore(store)
-
-export { store, persistor }
 export type RootState = ReturnType<typeof store.getState>
-type FetchAllPostsAction = ReturnType<typeof fetchAllPosts.fulfilled>
-
-export type ThunkResult<R> = ThunkAction<
-  R,
-  RootState,
-  unknown,
-  FetchAllPostsAction
->
-export type AppDispatch = typeof store.dispatch
+export { store, persistor }

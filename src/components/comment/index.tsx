@@ -1,19 +1,28 @@
 import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome' // You can use your preferred icon library
+import Avatar from '../avatar'
+import { useSelector } from 'react-redux'
+import { selectDeviceId } from '../../store/reducers/device'
+import { CommentT } from '../../store/reducers/posts'
 
-const Comment = ({ comment, onLike, onReply }) => {
+type PropsT = {
+  comment: CommentT
+  onLike: (id: string) => void
+  onReply: (id: string) => void
+}
+
+const Comment = ({ comment, onLike, onReply }: PropsT) => {
   const [isLiked, setIsLiked] = useState(false)
   const [showReplies, setShowReplies] = useState(false)
+  const deviceId = useSelector(selectDeviceId) || ''
 
   const handleLike = () => {
     setIsLiked(!isLiked)
-    // Call the parent component's onLike function to handle the like action
     onLike(comment.id)
   }
 
   const handleReply = () => {
-    // Call the parent component's onReply function to handle the reply action
     onReply(comment.id)
   }
 
@@ -23,6 +32,7 @@ const Comment = ({ comment, onLike, onReply }) => {
 
   return (
     <View style={styles.commentContainer}>
+      <Avatar id={deviceId} width={20} height={20} size={20} />
       <Text>
         {comment.author}: {comment.text}
       </Text>
@@ -66,7 +76,7 @@ const Comment = ({ comment, onLike, onReply }) => {
 const styles = StyleSheet.create({
   commentContainer: {
     flexDirection: 'row',
-    margin: 10
+    marginVertical: 10
   },
   replyButton: {
     color: 'blue',

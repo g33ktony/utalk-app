@@ -64,6 +64,9 @@ const postsSlice = createSlice({
       const { postId, comment } = action.payload
       const post = state.data.find(p => p.id === postId)
       if (post) {
+        if (!post.comments) {
+          post.comments = []
+        }
         post.comments.push(comment)
       }
     },
@@ -72,16 +75,30 @@ const postsSlice = createSlice({
       const post = state.data.find(p => p.id === postId)
       if (post) {
         const newLike = {
-          id: '1',
+          id: Math.random().toString(36).substr(2, 9),
           author
         }
         post.likes = [...post.likes, newLike]
+      }
+    },
+    removeLike: (state, action) => {
+      const { postId, author } = action.payload
+      const post = state.data.find(p => p.id === postId)
+      if (post) {
+        console.log('post', post)
+        post.likes = post.likes.filter(like => like.id !== author)
       }
     }
   }
 })
 
-export const { setPosts, setSearchTerm, addComment, addLike, addPost } =
-  postsSlice.actions
+export const {
+  setPosts,
+  setSearchTerm,
+  addComment,
+  addLike,
+  addPost,
+  removeLike
+} = postsSlice.actions
 
 export default postsSlice.reducer

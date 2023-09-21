@@ -28,7 +28,7 @@ interface DeviceState {
 }
 
 const initialState: DeviceState = {
-  deviceId: null
+  deviceId: ''
 }
 
 const deviceSlice = createSlice({

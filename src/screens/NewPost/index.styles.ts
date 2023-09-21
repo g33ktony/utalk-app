@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     marginBottom: 16
   },
   previewContainer: {
+    flex: 1,
     alignItems: 'center',
     marginBottom: 16
   },

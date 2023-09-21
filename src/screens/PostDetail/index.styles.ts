@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   postImage: {
-    fontSize: 16,
     marginBottom: 5
   },
   postLikes: {

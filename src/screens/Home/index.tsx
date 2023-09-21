@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   ActivityIndicator,
   Alert,
-  Button,
   FlatList,
   Text,
   TouchableOpacity,
@@ -12,27 +11,28 @@ import {
 } from 'react-native'
 import { Post, fetchAllPosts } from '../../store/reducers/posts'
 import { getAllPosts } from '../../store/selectors/posts'
-import { ThunkResult } from '../../store'
+import { selectDeviceId } from '../../store/reducers/device'
 import PostInfoBar from '../../components/post-info-bar'
-import styles from './index.styles'
 import CommentRow from '../../components/comment-row'
 import Avatar from '../../components/avatar'
-import formatHashtags from '../../helpers/format-hashtags'
 import SearchBar from '../../components/search-bar'
+import formatHashtags from '../../helpers/format-hashtags'
+import styles from './index.styles'
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
   const dispatch = useDispatch()
   const posts = useSelector(getAllPosts)
-  const { data } = posts
+  const deviceId = useSelector(selectDeviceId)
+  const { error } = posts
+  const [searchVisible, setSearchVisible] = useState(false)
 
   useEffect(() => {
-    dispatch<ThunkResult<void>>(fetchAllPosts())
+    dispatch(fetchAllPosts())
   }, [dispatch])
 
   useEffect(() => {
-    console.log('posts', data)
-    if (posts?.error) {
-      Alert.alert('Error', posts.error)
+    if (error) {
+      Alert.alert('Error', error)
     }
   }, [posts])
 
@@ -40,35 +40,30 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     navigation.navigate('Post', { id })
   }
 
-  const renderItem = ({ item }: { item: Post }) => {
-    console.log('item', item)
-    return (
-      <View style={styles.postContainer}>
-        <Avatar author={item.author} />
+  const renderItem = ({ item }: { item: Post }) => (
+    <View style={styles.postContainer}>
+      <TouchableOpacity onPress={() => handlePostPress(item.id)}>
+        <Avatar id={deviceId} author={item.author} />
         <Text style={styles.title}>{formatHashtags(item.title, () => {})}</Text>
         <Image style={styles.postImage} source={{ uri: item.image }} />
-        <PostInfoBar
-          postId={item.id}
-          comments={item.comments}
-          likes={item.likes}
-        />
-        <CommentRow item={item} />
-      </View>
-    )
-  }
+        <Text style={{ marginBottom: 15 }}>{item.description}</Text>
+      </TouchableOpacity>
+      <PostInfoBar
+        postId={item.id}
+        comments={item.comments}
+        likes={item.likes}
+      />
+      <CommentRow item={item} />
+    </View>
+  )
 
   return (
     <View style={styles.container}>
-      <View style={styles.newPost}>
-        <Avatar />
-        <Button
-          title='New Post'
-          onPress={() => navigation.navigate('New Post')}
-        />
-      </View>
-      <View>
-        <SearchBar />
-      </View>
+      {searchVisible ? (
+        <View>
+          <SearchBar onSearch={() => {}} />
+        </View>
+      ) : null}
       {posts.status === 'loading' ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size='large' color='#0000ff' />

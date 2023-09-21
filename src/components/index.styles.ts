@@ -5,7 +5,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   commentsLikes: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 })
 

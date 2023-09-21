@@ -6,6 +6,7 @@ import { addComment } from '../../store/reducers/posts'
 import { selectPostById } from '../../store/selectors/posts'
 import styles from './index.styles'
 import { selectDeviceId } from '../../store/reducers/device'
+import { getUserName } from '../../store/selectors/auth'
 
 interface RouteParams {
   id: string
@@ -29,7 +30,7 @@ const PostScreen = () => {
   const route = useRoute()
   const { id } = route.params as RouteParams
   const post = useSelector(state => selectPostById(state, id))
-  const deviceId = useSelector(selectDeviceId)
+  const userName = useSelector(getUserName)
   const dispatch = useDispatch()
   const [newCommentText, setNewCommentText] = useState('')
 
@@ -40,7 +41,7 @@ const PostScreen = () => {
   const handleNewComment = () => {
     const newComment = {
       id: Math.random().toString(36).substr(2, 9),
-      author: deviceId,
+      author: userName,
       text: newCommentText
     }
 
