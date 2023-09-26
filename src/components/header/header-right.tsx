@@ -1,21 +1,27 @@
 import React from 'react'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import { Image, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { View } from 'react-native'
+import PlusIcon from '../../../assets/plus.square.png'
+import SearchIcon from '../../../assets/binoculars.png'
+import { useDispatch } from 'react-redux'
+import { setIsShown } from '../../store/reducers/search'
+import styles from './index.styles'
 
 const HeaderRight = () => {
   const navigation = useNavigation()
+  const dispatch = useDispatch()
+
+  const navigateToNewPost = () => navigation.navigate('New Post')
+  const handleShowSearch = () => dispatch(setIsShown(true))
+
   return (
-    <View style={{ marginRight: 15, flexDirection: 'row', gap: 10 }}>
-      <TouchableOpacity onPress={() => {}}>
-        <Icon size={20} name='search' />
+    <View style={styles.container}>
+      <TouchableOpacity onPress={handleShowSearch}>
+        <Image style={styles.icon} source={SearchIcon} alt='search icon' />
       </TouchableOpacity>
-      <TouchableOpacity
-        style={{}}
-        onPress={() => navigation.navigate('New Post')}
-      >
-        <Icon size={20} name='plus-square-o' />
+      <TouchableOpacity onPress={navigateToNewPost}>
+        <Image style={styles.icon} source={PlusIcon} alt='new post icon' />
       </TouchableOpacity>
     </View>
   )

@@ -1,39 +1,50 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, Button, Image } from 'react-native'
+import { View, Text, TextInput, Button, Image, Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
+import moment from 'moment-timezone'
 import {
   launchImageLibrary,
   launchCamera,
   CameraOptions,
-  Callback,
   ImagePickerResponse
 } from 'react-native-image-picker'
 import { addPost } from '../../store/reducers/posts'
 import { getUserName } from '../../store/selectors/auth'
+import VideoPlayer from '../../components/video-player'
 import styles from './index.styles'
-import { Alert } from 'react-native'
 
 const NewPostScreen = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const [postTitle, setPostTitle] = useState('')
   const [postDescription, setPostDescription] = useState('')
-  const [mediaUri, setMediaUri] = useState('')
+  const [mediaUri, setMediaUri] = useState<string | null>(null)
+  const [videoUri, setVideoUri] = useState<string | null>(null)
   const userName = useSelector(getUserName)
+  const today = moment().format('MM/DD/YYYY')
 
   const handleMedia = async (
     method: (
       options: CameraOptions,
-      callback?: Callback | undefined
-    ) => Promise<ImagePickerResponse>
+      callback?: (response: ImagePickerResponse) => void
+    ) => void
   ) => {
     try {
-      const res = await method({
-        mediaType: 'mixed'
+      const res: ImagePickerResponse = await new Promise(resolve => {
+        method(
+          { mediaType: 'mixed', presentationStyle: 'pageSheet' },
+          response => resolve(response)
+        )
       })
       if (res.assets?.length) {
-        setMediaUri(res.assets[0].uri)
+        if (res.assets[0].type === 'video/quicktime') {
+          setVideoUri(res.assets[0].uri || null)
+          setMediaUri(null)
+        } else {
+          setMediaUri(res.assets[0].uri || null)
+          setVideoUri(null)
+        }
       }
     } catch (error) {
       console.error(error)
@@ -49,7 +60,10 @@ const NewPostScreen = () => {
           author: userName,
           description: postDescription,
           image: mediaUri,
-          likes: []
+          video: videoUri,
+          likes: [],
+          createdAt: today,
+          updatedAt: today
         })
       )
       navigation.goBack()
@@ -86,6 +100,7 @@ const NewPostScreen = () => {
           {mediaUri && (
             <Image source={{ uri: mediaUri }} style={styles.previewImage} />
           )}
+          {videoUri && <VideoPlayer uri={videoUri} />}
         </View>
       </View>
 

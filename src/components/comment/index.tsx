@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome' // You can use your preferred icon library
-import Avatar from '../avatar'
 import { useSelector } from 'react-redux'
+import Icon from 'react-native-vector-icons/FontAwesome' // You can use your preferred icon library
 import { selectDeviceId } from '../../store/reducers/device'
 import { CommentT } from '../../store/reducers/posts'
+import Avatar from '../avatar'
 
 type PropsT = {
   comment: CommentT
@@ -19,11 +19,11 @@ const Comment = ({ comment, onLike, onReply }: PropsT) => {
 
   const handleLike = () => {
     setIsLiked(!isLiked)
-    onLike(comment.id)
+    onLike(comment?.id)
   }
 
   const handleReply = () => {
-    onReply(comment.id)
+    onReply(comment?.id)
   }
 
   const toggleReplies = () => {
@@ -34,7 +34,7 @@ const Comment = ({ comment, onLike, onReply }: PropsT) => {
     <View style={styles.commentContainer}>
       <Avatar id={deviceId} width={20} height={20} size={20} />
       <Text>
-        {comment.author}: {comment.text}
+        {comment?.author}: {comment?.text}
       </Text>
 
       <TouchableOpacity onPress={handleLike}>
@@ -48,27 +48,6 @@ const Comment = ({ comment, onLike, onReply }: PropsT) => {
       <TouchableOpacity onPress={handleReply}>
         <Text style={styles.replyButton}>Reply</Text>
       </TouchableOpacity>
-
-      {comment.replies && comment.replies.length > 0 && (
-        <TouchableOpacity onPress={toggleReplies}>
-          <Text style={styles.toggleRepliesButton}>
-            {showReplies ? 'Hide Replies' : 'View Replies'}
-          </Text>
-        </TouchableOpacity>
-      )}
-
-      {showReplies && comment.replies && comment.replies.length > 0 && (
-        <View style={styles.repliesContainer}>
-          {comment.replies.map(reply => (
-            <Comment
-              key={reply.id}
-              comment={reply}
-              onLike={onLike}
-              onReply={onReply}
-            />
-          ))}
-        </View>
-      )}
     </View>
   )
 }

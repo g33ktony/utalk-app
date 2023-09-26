@@ -5,8 +5,6 @@ import { NavigationContainer } from '@react-navigation/native'
 import LoginScreen from '../screens/Login'
 import { getAuth } from '../store/selectors/auth'
 import HomeStack from './home'
-import HeaderLeft from '../components/header/header-left'
-import HeaderRight from '../components/header/header-right'
 
 const Stack = createStackNavigator()
 
@@ -15,15 +13,11 @@ const Navigation = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={isAuthenticated ? 'Home' : 'Login'}>
+      <Stack.Navigator initialRouteName={isAuthenticated ? 'Home' : 'LogIn'}>
         <Stack.Screen
-          name='Home'
+          name={'Home'}
+          options={{ headerShown: false }}
           component={HomeStack}
-          options={{
-            headerTitle: '',
-            headerLeft: () => <HeaderLeft />,
-            headerRight: () => <HeaderRight />
-          }}
         />
         <Stack.Screen name='LogIn' component={LoginScreen} />
       </Stack.Navigator>

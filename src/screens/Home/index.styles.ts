@@ -43,27 +43,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 8
   },
-  postContainer: {
-    marginBottom: 16,
-    borderColor: '#ccc',
-    borderBottomWidth: 1,
-    borderRadius: 5,
-    padding: 16
-  },
-  title: {
-    fontSize: 18,
-    marginBottom: 8
-  },
-  postImage: {
-    width: '100%',
-    height: 200,
-    marginBottom: 8,
-    borderRadius: 5
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  postList: {
+    flex: 1
   }
 })
 

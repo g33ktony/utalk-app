@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
-import { Post, addComment } from '../../store/reducers/posts'
+import { TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { Image, TextInput, TouchableOpacity, View } from 'react-native'
+import { PostT, addComment } from '../../store/reducers/posts'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import styles from './index.styles'
 import { selectDeviceId } from '../../store/reducers/device'
 import { getUserName } from '../../store/selectors/auth'
 import Avatar from '../avatar'
+import styles from './index.styles'
 
 type PropsT = {
-  item: Post
+  item: PostT
 }
 const CommentRow = ({ item }: PropsT) => {
   const dispatch = useDispatch()
@@ -40,7 +40,7 @@ const CommentRow = ({ item }: PropsT) => {
         onPress={handleCommentSubmit}
         style={styles.sendCommentIcon}
       >
-        <Icon name='send' size={20} color='#007AFF' />
+        <Icon name='send' size={20} color='black' />
       </TouchableOpacity>
     </View>
   )

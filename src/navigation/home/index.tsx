@@ -14,13 +14,13 @@ const HomeStack = () => {
       <Stack.Screen
         name='Main'
         component={HomeScreen}
-        options={{ headerShown: false }}
+        options={{
+          headerTitle: '',
+          headerLeft: () => <HeaderLeft />,
+          headerRight: () => <HeaderRight />
+        }}
       />
-      <Stack.Screen
-        name='New Post'
-        // options={{ headerShown: false }}
-        component={NewPostScreen}
-      />
+      <Stack.Screen name='New Post' component={NewPostScreen} />
       <Stack.Screen name='Post' component={PostScreen} />
     </Stack.Navigator>
   )

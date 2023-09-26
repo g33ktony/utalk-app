@@ -57,6 +57,8 @@
 	<string>Photo library access is used to get photos for you posts</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera access is used to get photos for you posts</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Camera access is used to get photos for you posts</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

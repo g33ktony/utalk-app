@@ -1,27 +1,34 @@
 import React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text, TouchableOpacity, ViewStyle } from 'react-native'
 import styles from './index.styles'
 
 const formatHashtags = (
   text: string,
-  handleHashtagClick: (text: string) => void
+  style: ViewStyle,
+  onPress: (text: string) => void
 ) => {
   const hashtagRegex = /#(\w+)/g
-  const parts = text.split(hashtagRegex)
+  const parts = text.split(' ')
 
   return parts.map((part, index) => {
     if (part.match(hashtagRegex)) {
-      const hashtag = part.replace('#', '')
       return (
-        <TouchableOpacity
-          key={index}
-          onPress={() => handleHashtagClick(hashtag)}
-        >
-          <Text style={styles.hashtag}>{part}</Text>
-        </TouchableOpacity>
+        <React.Fragment key={index}>
+          <TouchableOpacity onPress={() => onPress(part)}>
+            <Text style={[style, styles.hashtag]}>
+              {part}
+              {index !== parts.length ? ' ' : ''}
+            </Text>
+          </TouchableOpacity>
+        </React.Fragment>
       )
     } else {
-      return <Text key={index}>{part}</Text>
+      return (
+        <Text key={index}>
+          {part}
+          {index !== parts.length ? ' ' : ''}
+        </Text>
+      )
     }
   })
 }

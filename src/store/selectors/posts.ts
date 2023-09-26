@@ -1,6 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { RootState } from '..'
-import { Post } from '../reducers/posts'
+import { PostT } from '../reducers/posts'
+import { SearchState } from '../reducers/search'
 
 export const getAllPosts = (state: RootState) => state.posts
 
@@ -13,7 +14,7 @@ export const selectPostById = createSelector(
 
 export const selectCommentsForPost = (postId: string) =>
   createSelector([getAllPosts], postsState => {
-    const post: Post | undefined = postsState.data.find(p => p.id === postId)
+    const post: PostT | undefined = postsState.data.find(p => p.id === postId)
 
     return post ? post.comments : []
   })
@@ -23,10 +24,5 @@ export const selectAllPosts = createSelector(
   postsState => postsState.data
 )
 
-export const selectFilteredPosts = createSelector(
-  [selectAllPosts, getAllPosts],
-  (allPosts, postsState) =>
-    allPosts.filter(post =>
-      post.title.toLowerCase().includes(postsState.searchTerm.toLowerCase())
-    )
-)
+export const selectFilteredPosts = (state: RootState) =>
+  state.posts.filteredData

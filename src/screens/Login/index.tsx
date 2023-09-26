@@ -1,14 +1,20 @@
 import React, { useState } from 'react'
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import {
+  Text,
+  Image,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+  TextInput
+} from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import DeviceInfo from 'react-native-device-info'
-import styles from './index.styles'
-import { setDeviceId } from '../../store/reducers/device'
 import Logo from '../../../assets/logo.png'
-import { TextInput } from 'react-native'
+import { setDeviceId } from '../../store/reducers/device'
 import { login, setAuthorUsername } from '../../store/reducers/auth'
-import { Alert } from 'react-native'
+import styles from './index.styles'
 
 const LoginScreen = () => {
   const dispatch = useDispatch()
@@ -28,14 +34,17 @@ const LoginScreen = () => {
     DeviceInfo.getUniqueId()
       .then(uniqueID => {
         dispatch(setDeviceId(uniqueID))
-        dispatch(login)
+        dispatch(login())
         navigation.navigate('Home')
       })
       .catch(error => console.error('Device registration failed:', error))
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
       <Image style={{ marginBottom: 45 }} source={Logo} />
 
       <TextInput
@@ -48,7 +57,7 @@ const LoginScreen = () => {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 

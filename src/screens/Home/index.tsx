@@ -6,29 +6,67 @@ import {
   FlatList,
   Text,
   TouchableOpacity,
-  View,
-  Image
+  View
 } from 'react-native'
-import { Post, fetchAllPosts } from '../../store/reducers/posts'
-import { getAllPosts } from '../../store/selectors/posts'
-import { selectDeviceId } from '../../store/reducers/device'
-import PostInfoBar from '../../components/post-info-bar'
-import CommentRow from '../../components/comment-row'
-import Avatar from '../../components/avatar'
+import Axios from 'axios'
+import { useNavigation } from '@react-navigation/native'
+import { PostT, filterPosts, setPosts } from '../../store/reducers/posts'
+import { getAllPosts, selectFilteredPosts } from '../../store/selectors/posts'
+import { selectIsShown, selectTerm } from '../../store/selectors/search'
+import { setTerm } from '../../store/reducers/search'
 import SearchBar from '../../components/search-bar'
-import formatHashtags from '../../helpers/format-hashtags'
+import { logout } from '../../store/reducers/auth'
+import Post from '../../components/post'
 import styles from './index.styles'
 
-const HomeScreen = ({ navigation }: { navigation: any }) => {
+const HomeScreen = () => {
   const dispatch = useDispatch()
+  const navigation = useNavigation()
+  const [isLoading, setIsLoading] = useState(false)
   const posts = useSelector(getAllPosts)
-  const deviceId = useSelector(selectDeviceId)
+  const searchIsShown = useSelector(selectIsShown)
+  const searchTerm = useSelector(selectTerm)
+  const filteredPosts = useSelector(selectFilteredPosts)
   const { error } = posts
-  const [searchVisible, setSearchVisible] = useState(false)
+
+  const clearSearch = () => {
+    dispatch(setTerm(''))
+    dispatch(filterPosts(''))
+  }
+
+  const fetchPosts = async () => {
+    clearSearch()
+    setIsLoading(true)
+    try {
+      const response = await Axios.get('http://192.168.0.33:3000/posts')
+      setTimeout(() => {
+        const combinedData = [...posts.data, ...response.data]
+        const newData = Array.from(new Set(combinedData))
+        dispatch(setPosts(newData))
+        setIsLoading(false)
+      }, 1500)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   useEffect(() => {
-    dispatch(fetchAllPosts())
-  }, [dispatch])
+    fetchPosts()
+  }, [])
+
+  useEffect(() => {
+    if (!searchIsShown) {
+      clearSearch()
+    }
+  }, [searchIsShown])
+
+  useEffect(() => {
+    if (searchTerm.length) {
+      dispatch(filterPosts(searchTerm))
+    } else {
+      clearSearch()
+    }
+  }, [searchTerm])
 
   useEffect(() => {
     if (error) {
@@ -36,46 +74,44 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     }
   }, [posts])
 
-  const handlePostPress = (id: string) => {
-    navigation.navigate('Post', { id })
+  const handleLogOut = () => {
+    dispatch(logout())
+    // dispatch(setPosts([])) // Todo: Remove for production this is dev only
+    navigation.navigate('LogIn')
   }
 
-  const renderItem = ({ item }: { item: Post }) => (
-    <View style={styles.postContainer}>
-      <TouchableOpacity onPress={() => handlePostPress(item.id)}>
-        <Avatar id={deviceId} author={item.author} />
-        <Text style={styles.title}>{formatHashtags(item.title, () => {})}</Text>
-        <Image style={styles.postImage} source={{ uri: item.image }} />
-        <Text style={{ marginBottom: 15 }}>{item.description}</Text>
-      </TouchableOpacity>
-      <PostInfoBar
-        postId={item.id}
-        comments={item.comments}
-        likes={item.likes}
-      />
-      <CommentRow item={item} />
-    </View>
-  )
+  const renderItem = ({ item }: { item: PostT }) => <Post item={item} />
 
   return (
     <View style={styles.container}>
-      {searchVisible ? (
-        <View>
-          <SearchBar onSearch={() => {}} />
-        </View>
+      {searchIsShown ? (
+        <SearchBar onSearch={text => dispatch(setTerm(text))} />
       ) : null}
-      {posts.status === 'loading' ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size='large' color='#0000ff' />
+      {!posts.data.length && !isLoading ? (
+        <View style={styles.emptyState}>
+          <Text>Not content yet</Text>
         </View>
       ) : (
-        <FlatList
-          data={posts.data}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          showsVerticalScrollIndicator={false}
-        />
+        <View style={styles.postList}>
+          {isLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator />
+            </View>
+          ) : (
+            <FlatList
+              refreshing={isLoading}
+              onRefresh={fetchPosts}
+              data={filteredPosts.length ? filteredPosts : posts.data}
+              renderItem={renderItem}
+              keyExtractor={item => item.id}
+              showsVerticalScrollIndicator={false}
+            />
+          )}
+        </View>
       )}
+      <TouchableOpacity onPress={handleLogOut}>
+        <Text>Logout</Text>
+      </TouchableOpacity>
     </View>
   )
 }

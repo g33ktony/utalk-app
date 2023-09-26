@@ -4,9 +4,8 @@ import { useRoute } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { addComment } from '../../store/reducers/posts'
 import { selectPostById } from '../../store/selectors/posts'
-import styles from './index.styles'
-import { selectDeviceId } from '../../store/reducers/device'
 import { getUserName } from '../../store/selectors/auth'
+import styles from './index.styles'
 
 interface RouteParams {
   id: string
@@ -34,10 +33,6 @@ const PostScreen = () => {
   const dispatch = useDispatch()
   const [newCommentText, setNewCommentText] = useState('')
 
-  // useEffect(() => {
-
-  // }, [])
-
   const handleNewComment = () => {
     const newComment = {
       id: Math.random().toString(36).substr(2, 9),
@@ -58,7 +53,7 @@ const PostScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.postTitle}>{post?.author}</Text>
-      {/* <Text style={styles.postImage}>{post?.image}</Text> */}
+      <Text style={styles.postImage}>{post?.image}</Text>
       <Image style={styles.postImage} source={{ uri: post?.image }} />
       <Text style={styles.postLikes}>{post?.likes.length} likes</Text>
       <Text style={styles.postComments}>{post?.comments?.length} comments</Text>

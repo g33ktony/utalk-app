@@ -1,13 +1,14 @@
 import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
-  hashtag: {
-    padding: 0,
-    color: 'green',
-    textDecorationLine: 'underline',
-    lineHeight: 0,
-    marginBottom: 0,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center'
+  },
+  video: {
+    width: 350,
+    height: 200
   }
 })
 

@@ -1,51 +1,30 @@
-import React, { useState } from 'react'
-import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import React from 'react'
+import { View, TextInput, TouchableOpacity } from 'react-native'
+import { useDispatch } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { setIsShown } from '../../store/reducers/search'
+import styles from './index.styles'
 
 type SearchBarProps = {
   onSearch: (searchText: string) => void
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const [searchText, setSearchText] = useState<string>('')
-
-  const handleSearch = () => {
-    onSearch(searchText)
-  }
+  const dispatch = useDispatch()
 
   return (
     <View style={styles.container}>
+      <Icon name='search' size={20} color='gray' style={styles.searchIcon} />
       <TextInput
         style={styles.input}
         placeholder='Search...'
-        onChangeText={text => setSearchText(text)}
-        value={searchText}
-        onSubmitEditing={handleSearch}
+        onChangeText={text => onSearch(text)}
       />
-      <TouchableOpacity onPress={handleSearch}>
-        <Icon name='search' size={20} color='gray' style={styles.searchIcon} />
+      <TouchableOpacity onPress={() => dispatch(setIsShown(false))}>
+        <Icon name='close' size={15} color='gray' style={styles.searchIcon} />
       </TouchableOpacity>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 15
-  },
-  input: {
-    flex: 1,
-    height: 40
-  },
-  searchIcon: {
-    marginLeft: 10
-  }
-})
 
 export default SearchBar
