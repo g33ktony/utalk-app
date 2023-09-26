@@ -76,7 +76,7 @@ const HomeScreen = () => {
 
   const handleLogOut = () => {
     dispatch(logout())
-    // dispatch(setPosts([])) // Todo: Remove for production this is dev only
+    dispatch(setPosts([])) // Todo: Remove for production this is dev only
     navigation.navigate('LogIn')
   }
 
