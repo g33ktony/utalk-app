@@ -7,23 +7,41 @@ import styles from './index.styles'
 
 type SearchBarProps = {
   onSearch: (searchText: string) => void
+  visible: boolean
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, visible }) => {
   const dispatch = useDispatch()
 
+  const onClose = () => dispatch(setIsShown(false))
+  const onChange = (text: string) => onSearch(text)
+
   return (
-    <View style={styles.container}>
-      <Icon name='search' size={20} color='gray' style={styles.searchIcon} />
-      <TextInput
-        style={styles.input}
-        placeholder='Search...'
-        onChangeText={text => onSearch(text)}
-      />
-      <TouchableOpacity onPress={() => dispatch(setIsShown(false))}>
-        <Icon name='close' size={15} color='gray' style={styles.searchIcon} />
-      </TouchableOpacity>
-    </View>
+    <>
+      {visible ? (
+        <View style={styles.container}>
+          <Icon
+            name='search'
+            size={20}
+            color='gray'
+            style={styles.searchIcon}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder='Search...'
+            onChangeText={onChange}
+          />
+          <TouchableOpacity onPress={onClose}>
+            <Icon
+              name='close'
+              size={15}
+              color='gray'
+              style={styles.searchIcon}
+            />
+          </TouchableOpacity>
+        </View>
+      ) : null}
+    </>
   )
 }
 

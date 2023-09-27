@@ -19,7 +19,11 @@ const Navigation = () => {
           options={{ headerShown: false }}
           component={HomeStack}
         />
-        <Stack.Screen name='LogIn' component={LoginScreen} />
+        <Stack.Screen
+          name='LogIn'
+          options={{ headerShown: false }}
+          component={LoginScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   )

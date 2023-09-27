@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Text, View, Dimensions } from 'react-native'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,19 +15,18 @@ import Comment from '../comment'
 
 type PropsT = {
   postId: string
-  isDrawerOpen: boolean
-  setDrawerOpen: (state: boolean) => void
 }
 
 const windowHeight = Dimensions.get('window').height
 
-const PostInfoBar = ({ postId, isDrawerOpen, setDrawerOpen }: PropsT) => {
+const PostInfoBar = ({ postId }: PropsT) => {
   const dispatch = useDispatch()
   const authorName = useSelector(getUserName)
   const post = useSelector(state => selectPostById(state, postId))
   const bottomDrawerRef = useRef<BottomDrawerMethods>(null)
   const comments = post?.comments
   const likes = post?.likes
+  const [isDrawerOpen, setDrawerOpen] = useState(false)
 
   // Todo: Move this to a helper file
   const heightByPercent = (percent: number) => {
@@ -59,9 +58,9 @@ const PostInfoBar = ({ postId, isDrawerOpen, setDrawerOpen }: PropsT) => {
     }
   }
 
-  const handleOpenDrawer = () => {
-    setDrawerOpen(false)
-  }
+  const handleOpenDrawer = () => setDrawerOpen(true)
+
+  const closeDrawer = () => setDrawerOpen(false)
 
   return (
     <View style={styles.bottomRow}>
@@ -90,7 +89,7 @@ const PostInfoBar = ({ postId, isDrawerOpen, setDrawerOpen }: PropsT) => {
         initialHeight={windowHeight}
         customStyles={{ container: { height: heightByPercent(60) } }}
         ref={bottomDrawerRef}
-        onClose={() => setDrawerOpen(true)}
+        onClose={closeDrawer}
       >
         <View
           style={{

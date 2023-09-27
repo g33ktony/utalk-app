@@ -35,7 +35,7 @@ const LoginScreen = () => {
       .then(uniqueID => {
         dispatch(setDeviceId(uniqueID))
         dispatch(login())
-        navigation.navigate('Home')
+        navigation.replace('Home')
       })
       .catch(error => console.error('Device registration failed:', error))
   }

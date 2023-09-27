@@ -18,8 +18,6 @@ type PropsT = {
 const Post = ({ item }: PropsT) => {
   const dispatch = useDispatch()
   const deviceId = useSelector(selectDeviceId)
-  const [isDrawerOpen, setDrawerOpen] = useState(false)
-  const handleOpenDrawer = (openState: boolean) => setDrawerOpen(!openState)
 
   const handleSetHash = (text: string) => {
     dispatch(setIsShown(true))
@@ -41,11 +39,7 @@ const Post = ({ item }: PropsT) => {
           {formatHashtags(item.description, {}, handleSetHash)}
         </Text>
       </View>
-      <PostInfoBar
-        isDrawerOpen={isDrawerOpen}
-        setDrawerOpen={handleOpenDrawer}
-        postId={item.id}
-      />
+      <PostInfoBar postId={item.id} />
       <CommentRow item={item} />
     </View>
   )

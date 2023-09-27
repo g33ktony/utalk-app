@@ -1,6 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import client from '../../apollo/server'
-import { GET_ALL_POSTS } from '../../apollo/mock/queries'
+import { createSlice } from '@reduxjs/toolkit'
 
 export interface PostT {
   id: string
@@ -11,8 +9,8 @@ export interface PostT {
   video: string | null
   comments: CommentT[]
   likes: Like[]
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
 }
 
 export type Like = {
@@ -34,7 +32,44 @@ interface PostsState {
 }
 
 const initialState: PostsState = {
-  data: [],
+  data: [
+    {
+      id: 'sdakjhasiu345',
+      title: 'Sample Post',
+      author: 'John Doe',
+      description: 'This is a sample post.',
+      video: null,
+      image: 'https://picsum.photos/200',
+      comments: [
+        { id: '34s56ewfgdsa', author: 'Lorem Past', text: 'Nice post!' },
+        { id: 'daksdasd', author: 'Lorem OLD', text: 'REALLY NICE' }
+      ],
+      likes: [
+        { id: 'fsdjfghywas', author: 'Lorem OLD' },
+        { id: 'fsdafdsfs', author: 'Lorem Past' }
+      ],
+      createdAt: '09/11/2023',
+      updatedAt: '09/11/2023'
+    },
+    {
+      id: 'fdsjk34r8iu',
+      title: 'Sample Post 2',
+      author: 'Robert Lobato',
+      description: 'This is a second sample post.',
+      video: null,
+      image: 'https://picsum.photos/200',
+      comments: [
+        { id: '3456ewfgdddsa', author: 'Lorem Past', text: 'Nice post!' },
+        { id: 'dasdssasd', author: 'Lorem OLD', text: 'REALLY NICE' }
+      ],
+      likes: [
+        { id: 'fsdjsfghwas', author: 'Lorem OLD' },
+        { id: 'fsdffdsfs', author: 'Lorem Past' }
+      ],
+      createdAt: '09/11/2023',
+      updatedAt: '09/11/2023'
+    }
+  ],
   status: 'idle',
   error: null,
   filteredData: []
@@ -77,17 +112,17 @@ const postsSlice = createSlice({
       if (post) {
         post.likes = post.likes.filter(like => like.author !== author)
       }
-    },
-    filterPosts: (state, action) => {
-      const { data } = state
-      const searchText = action.payload.toLowerCase()
-      const filteredPosts = data.filter(
-        post =>
-          post.title.toLowerCase().includes(searchText) ||
-          post.description.toLowerCase().includes(searchText)
-      )
-      state.filteredData = filteredPosts
     }
+    // filterPosts: (state, action) => {
+    //   const { data } = state
+    //   const searchText = action.payload.toLowerCase()
+    //   const filteredPosts = data.filter(
+    //     post =>
+    //       post.title.toLowerCase().includes(searchText) ||
+    //       post.description.toLowerCase().includes(searchText)
+    //   )
+    //   state.filteredData = filteredPosts
+    // }
   }
 })
 
@@ -96,8 +131,8 @@ export const {
   addComment,
   addLike,
   addPost,
-  removeLike,
-  filterPosts
+  removeLike
+  // filterPosts
 } = postsSlice.actions
 
 export default postsSlice.reducer

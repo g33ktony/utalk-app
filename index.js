@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppRegistry } from 'react-native'
+import { AppRegistry, LogBox } from 'react-native'
 import { ApolloProvider } from '@apollo/client'
 import client from './src/apollo/mock/client'
 import App from './App'
@@ -10,5 +10,7 @@ const Main = () => (
     <App />
   </ApolloProvider>
 )
+
+LogBox.ignoreAllLogs()
 
 AppRegistry.registerComponent(appName, () => Main)

@@ -33,7 +33,10 @@ const NewPostScreen = () => {
     try {
       const res: ImagePickerResponse = await new Promise(resolve => {
         method(
-          { mediaType: 'mixed', presentationStyle: 'pageSheet' },
+          {
+            mediaType: 'mixed',
+            presentationStyle: 'pageSheet'
+          },
           response => resolve(response)
         )
       })
@@ -66,7 +69,7 @@ const NewPostScreen = () => {
           updatedAt: today
         })
       )
-      navigation.goBack()
+      navigation.replace('Home')
     } else {
       Alert.alert('Error', 'Enter a title for the post')
     }
@@ -97,10 +100,10 @@ const NewPostScreen = () => {
         <Button title='Take Photo' onPress={handleLaunchCamera} />
 
         <View style={styles.previewContainer}>
-          {mediaUri && (
+          {mediaUri ? (
             <Image source={{ uri: mediaUri }} style={styles.previewImage} />
-          )}
-          {videoUri && <VideoPlayer uri={videoUri} />}
+          ) : null}
+          {videoUri ? <VideoPlayer uri={videoUri} /> : null}
         </View>
       </View>
 

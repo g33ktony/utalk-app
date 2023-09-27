@@ -1,7 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { RootState } from '..'
 import { PostT } from '../reducers/posts'
-import { SearchState } from '../reducers/search'
 
 export const getAllPosts = (state: RootState) => state.posts
 
@@ -24,5 +23,5 @@ export const selectAllPosts = createSelector(
   postsState => postsState.data
 )
 
-export const selectFilteredPosts = (state: RootState) =>
-  state.posts.filteredData
+// export const selectFilteredPosts = (state: RootState) =>
+//   state.posts.filteredData
