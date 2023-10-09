@@ -1,13 +1,89 @@
-const jsonServer = require('json-server')
-const server = jsonServer.create()
-const router = jsonServer.router('db.json')
-const middlewares = jsonServer.defaults()
+import axios from 'axios'
 
-server.use(middlewares)
-server.use(router)
+const BASE_URL =
+  'https://utalk--3ch4dqk.bravesmoke-1a9df4bd.eastus2.azurecontainerapps.io/api/v1'
 
-const PORT = 3000
-
-server.listen(PORT, () => {
-  console.log(`JSON Server is running on port ${PORT}`)
+const api = axios.create({
+  baseURL: BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 })
+
+api.interceptors.request.use(config => {
+  // console.log('config', config)
+  console.log('Request Headers:', config.headers)
+  // config.headers.Authorization = 'Bearer YOUR_TOKEN';
+
+  return config
+})
+
+export const logIn = body => {
+  const URL = `/v1/auth/signin`
+
+  return api.post(`${BASE_URL}${URL}`, body)
+}
+
+export const fetchPosts = config => {
+  return api.get('/posts', config)
+}
+
+export const likePost = (postId, headers) => {
+  const URL = `/posts/${postId}/like`
+  const payload = {
+    postId
+  }
+
+  return api.post(`${BASE_URL}${URL}`, payload, headers)
+}
+
+export const getPostComments = (postId, token) => {
+  const URL = `/posts/${postId}/comments`
+
+  return api.get(`${BASE_URL}${URL}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const getMedia = ({ postId, token }) => {
+  const URL = `/posts/${postId}/media`
+
+  return api.get(`${BASE_URL}${URL}`, {
+    responseType: 'arraybuffer',
+    responseEncoding: 'base64',
+    headers: {
+      'Content-Type': 'application/octet-stream',
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const postMedia = (file, postBody, token) => {
+  const URL = '/posts'
+  const formData = new FormData()
+
+  formData.append('file', file)
+  formData.append('data', JSON.stringify(postBody))
+
+  return api.post(`${BASE_URL}${URL}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const addComment = (postId, commentData, token) => {
+  const URL = `/posts/${postId}/comments`
+
+  return api.post(`${BASE_URL}${URL}`, commentData, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export default api

@@ -1,19 +1,22 @@
 import React from 'react'
 import { View, TextInput, TouchableOpacity } from 'react-native'
-import { useDispatch } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { setIsShown } from '../../store/reducers/search'
 import styles from './index.styles'
+import { useSelector } from 'react-redux'
+import { selectTerm } from '../../store/selectors/search'
 
 type SearchBarProps = {
   onSearch: (searchText: string) => void
+  onClose: () => void
   visible: boolean
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, visible }) => {
-  const dispatch = useDispatch()
-
-  const onClose = () => dispatch(setIsShown(false))
+const SearchBar: React.FC<SearchBarProps> = ({
+  onSearch,
+  visible,
+  onClose
+}) => {
+  const searchTerm = useSelector(selectTerm)
   const onChange = (text: string) => onSearch(text)
 
   return (
@@ -30,6 +33,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, visible }) => {
             style={styles.input}
             placeholder='Search...'
             onChangeText={onChange}
+            value={searchTerm}
           />
           <TouchableOpacity onPress={onClose}>
             <Icon

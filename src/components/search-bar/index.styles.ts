@@ -7,8 +7,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 15
+    paddingHorizontal: 10
   },
   input: {
     flex: 1,

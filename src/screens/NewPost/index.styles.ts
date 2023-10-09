@@ -3,30 +3,36 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16
+    padding: 16,
+    backgroundColor: '#fff'
   },
   label: {
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: 'bold',
     marginBottom: 8
   },
   input: {
     fontSize: 16,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 8,
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16
+  },
+  mediaButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 16
   },
   previewContainer: {
-    flex: 1,
     alignItems: 'center',
     marginBottom: 16
   },
   previewImage: {
-    width: 200,
-    height: 200,
+    width: 350,
+    height: 350,
     resizeMode: 'cover',
-    borderRadius: 5
+    borderRadius: 8
   }
 })
 

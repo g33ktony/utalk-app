@@ -11,7 +11,8 @@ const styles = StyleSheet.create({
     marginRight: 8
   },
   author: {
-    fontSize: 16
+    fontSize: 16,
+    color: 'white'
   }
 })
 

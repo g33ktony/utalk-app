@@ -1,61 +1,84 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Alert, FlatList, Text, TouchableOpacity, View } from 'react-native'
-// import Axios from 'axios'
-import { useNavigation } from '@react-navigation/native'
-import { PostT, setPosts } from '../../store/reducers/posts'
-import { getAllPosts } from '../../store/selectors/posts'
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  RefreshControl,
+  Text,
+  View
+} from 'react-native'
+import {
+  PostT,
+  addFilteredPosts,
+  addPost,
+  setPosts
+} from '../../store/reducers/posts'
+import { getAllPosts, selectFilteredPosts } from '../../store/selectors/posts'
 import { selectIsShown, selectTerm } from '../../store/selectors/search'
 import { setTerm } from '../../store/reducers/search'
 import SearchBar from '../../components/search-bar'
-import { logout } from '../../store/reducers/auth'
 import Post from '../../components/post'
+import PostListEmptyState from '../../components/post/post-list-empty-state'
+import { fetchPosts } from '../../server'
 import styles from './index.styles'
-import PostListEmptyState from '../../components/post-list-empty-state'
+import { getToken } from '../../store/selectors/auth'
+import Video from 'react-native-video'
+import ViewPager from 'react-native-pager-view'
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 
 const HomeScreen = () => {
   const dispatch = useDispatch()
-  const navigation = useNavigation()
   const [isLoading, setIsLoading] = useState(false)
   const posts = useSelector(getAllPosts)
+  const filteredData = useSelector(selectFilteredPosts)
+  const token = useSelector(getToken)
   const searchIsShown = useSelector(selectIsShown)
   const searchTerm = useSelector(selectTerm)
-  // const filteredPosts = useSelector(selectFilteredPosts)
-  const [postsState, setPostsState] = useState(posts.data)
   const { error } = posts
+  const [page, setPage] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
+  const [active, setActive] = useState(0)
+  const [dataToShow, setDataToShow] = useState(posts.data)
 
   const clearSearch = () => {
     dispatch(setTerm(''))
   }
 
-  // const fetchPosts = async () => {
-  //   clearSearch()
-  //   setIsLoading(true)
-  //   try {
-  //     // const response = await Axios.get('http://192.168.0.33:3000/posts')
-  //     const response = await Axios.get('http://localhost:3000/posts')
-  //     setTimeout(() => {
-  //       dispatch(setPosts(response.data))
-  //       setIsLoading(false)
-  //     }, 1500)
-  //   } catch (error) {
-  //     setIsLoading(false)
-  //     console.log(error.message)
-  //   }
-  // }
+  const fetchData = async (customPage?: number) => {
+    try {
+      const res = await fetchPosts({
+        params: {
+          page: customPage ? customPage : page,
+          size: 5,
+          utalkUserId: 2
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      })
 
-  const refreshList = () => {
-    setIsLoading(true)
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 1500)
-
-    // fetchPosts()
+      setTotalPages(res.data.totalPages)
+      // setPostsState([...postsState, ...res.data.posts])
+      dispatch(addPost(res.data.posts))
+    } catch (error) {
+      Alert.alert(error.message)
+      console.log('error', error)
+    }
   }
 
   useEffect(() => {
-    refreshList()
+    fetchData().then(() => {
+      setPage(page + 1)
+    })
   }, [])
+
+  useEffect(() => {
+    setDataToShow(posts.data)
+  }, [posts.data])
+
+  useEffect(() => {
+    console.log('dataToShow', dataToShow)
+    console.log('data', posts.data)
+  }, [dataToShow])
 
   useEffect(() => {
     if (!searchIsShown) {
@@ -65,15 +88,16 @@ const HomeScreen = () => {
 
   useEffect(() => {
     if (searchTerm.length) {
-      setPostsState(
-        postsState.filter(
-          post =>
-            post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            post.description.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+      const filter = posts.data.filter(
+        post =>
+          post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post.description.toLowerCase().includes(searchTerm.toLowerCase())
       )
+      dispatch(addFilteredPosts(filter))
+      setDataToShow(filter)
     } else {
-      setPostsState(posts.data)
+      setDataToShow(posts.data)
+      dispatch(addFilteredPosts(posts.data))
       clearSearch()
     }
   }, [searchTerm])
@@ -84,35 +108,70 @@ const HomeScreen = () => {
     }
   }, [posts])
 
-  const handleLogOut = () => {
-    navigation.replace('LogIn')
-    dispatch(logout())
-    // dispatch(setPosts([])) // Todo: Remove for production this is dev only
+  const handleSearch = (text: string) => dispatch(setTerm(text))
+
+  useEffect(() => {
+    console.log('active', active)
+    console.log('list length', posts.data.length)
+    if (active === posts.data.length - 3) {
+      console.log('loaded more')
+
+      loadMorePosts()
+    }
+  }, [active, posts.data])
+
+  const loadMorePosts = () => {
+    if (page !== totalPages) {
+      fetchData().then(() => {
+        setPage(page + 1)
+      })
+    }
   }
 
-  const renderItem = ({ item }: { item: PostT }) => <Post item={item} />
-  const handleSearch = (text: string) => dispatch(setTerm(text))
-  // console.log('filteredPosts', filteredPosts)
-
-  // const listData = filteredPosts.length ? filteredPosts : posts.data
+  const onRefresh = () => {
+    // setPostsState([])
+    setPage(0)
+    dispatch(setPosts([]))
+    fetchData(0)
+      .then(() => setIsLoading(false))
+      .catch(() => setIsLoading(false))
+  }
 
   return (
     <View style={styles.container}>
-      <SearchBar visible={searchIsShown} onSearch={handleSearch} />
-      <View style={styles.postList}>
-        <FlatList
-          refreshing={isLoading}
-          onRefresh={refreshList}
-          ListEmptyComponent={<PostListEmptyState />}
-          data={postsState}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
-      <TouchableOpacity onPress={handleLogOut}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
+      <SearchBar
+        visible={searchIsShown}
+        onClose={clearSearch}
+        onSearch={handleSearch}
+      />
+      {active === 0 ? (
+        <TouchableOpacity onPress={onRefresh}>
+          <Text>Refresh</Text>
+        </TouchableOpacity>
+      ) : null}
+      {dataToShow.length ? (
+        <ViewPager
+          onPageSelected={e => {
+            setActive(e.nativeEvent.position)
+          }}
+          scrollEnabled
+          orientation='vertical'
+          style={{ flex: 1 }}
+          initialPage={0}
+          offscreenPageLimit={1}
+          overdrag
+        >
+          {dataToShow.map((item, index) => (
+            <View key={item.postID}>
+              <Post item={item} play={index === active} />
+            </View>
+          ))}
+        </ViewPager>
+      ) : (
+        <View style={{ flex: 1 }}>
+          <ActivityIndicator />
+        </View>
+      )}
     </View>
   )
 }

@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle
+} from 'react-native'
 import { useSelector } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome' // You can use your preferred icon library
 import { selectDeviceId } from '../../store/reducers/device'
@@ -10,9 +16,10 @@ type PropsT = {
   comment: CommentT
   onLike: (id: string) => void
   onReply: (id: string) => void
+  textStyle: ViewStyle
 }
 
-const Comment = ({ comment, onLike, onReply }: PropsT) => {
+const Comment = ({ comment, onLike, onReply, textStyle }: PropsT) => {
   const [isLiked, setIsLiked] = useState(false)
   const [showReplies, setShowReplies] = useState(false)
   const deviceId = useSelector(selectDeviceId) || ''
@@ -33,11 +40,13 @@ const Comment = ({ comment, onLike, onReply }: PropsT) => {
   return (
     <View style={styles.commentContainer}>
       <Avatar id={deviceId} width={20} height={20} size={20} />
-      <Text>
-        {comment?.author}: {comment?.text}
-      </Text>
 
-      <TouchableOpacity onPress={handleLike}>
+      <View style={{ flexDirection: 'column' }}>
+        <Text style={textStyle}>{comment?.author}:</Text>
+        <Text style={textStyle}>{comment?.text}</Text>
+      </View>
+
+      {/* <TouchableOpacity onPress={handleLike}>
         <Icon
           name={isLiked ? 'heart' : 'heart-o'}
           size={20}
@@ -47,7 +56,7 @@ const Comment = ({ comment, onLike, onReply }: PropsT) => {
 
       <TouchableOpacity onPress={handleReply}>
         <Text style={styles.replyButton}>Reply</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   )
 }

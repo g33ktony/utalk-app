@@ -1,16 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 export interface PostT {
-  id: string
+  postID: string
   title: string
   author: string
   description: string
-  image: string | null
-  video: string | null
+  images: string | null
+  videos: string | null
   comments: CommentT[]
   likes: Like[]
   createdAt: string
   updatedAt: string
+  commentCount: number
+  likeCount: number
+  loggedInUserLiked: boolean
 }
 
 export type Like = {
@@ -32,44 +35,7 @@ interface PostsState {
 }
 
 const initialState: PostsState = {
-  data: [
-    {
-      id: 'sdakjhasiu345',
-      title: 'Sample Post',
-      author: 'John Doe',
-      description: 'This is a sample post.',
-      video: null,
-      image: 'https://picsum.photos/200',
-      comments: [
-        { id: '34s56ewfgdsa', author: 'Lorem Past', text: 'Nice post!' },
-        { id: 'daksdasd', author: 'Lorem OLD', text: 'REALLY NICE' }
-      ],
-      likes: [
-        { id: 'fsdjfghywas', author: 'Lorem OLD' },
-        { id: 'fsdafdsfs', author: 'Lorem Past' }
-      ],
-      createdAt: '09/11/2023',
-      updatedAt: '09/11/2023'
-    },
-    {
-      id: 'fdsjk34r8iu',
-      title: 'Sample Post 2',
-      author: 'Robert Lobato',
-      description: 'This is a second sample post.',
-      video: null,
-      image: 'https://picsum.photos/200',
-      comments: [
-        { id: '3456ewfgdddsa', author: 'Lorem Past', text: 'Nice post!' },
-        { id: 'dasdssasd', author: 'Lorem OLD', text: 'REALLY NICE' }
-      ],
-      likes: [
-        { id: 'fsdjsfghwas', author: 'Lorem OLD' },
-        { id: 'fsdffdsfs', author: 'Lorem Past' }
-      ],
-      createdAt: '09/11/2023',
-      updatedAt: '09/11/2023'
-    }
-  ],
+  data: [],
   status: 'idle',
   error: null,
   filteredData: []
@@ -80,59 +46,48 @@ const postsSlice = createSlice({
   initialState,
   reducers: {
     addPost: (state, action) => {
-      state.data.unshift(action.payload)
+      state.data = [...state.data, ...action.payload]
     },
     setPosts: (state, action) => {
       state.data = action.payload
     },
-    addComment: (state, action) => {
-      const { postId, comment } = action.payload
-      const post = state.data.find(p => p.id === postId)
-      if (post) {
-        if (!post.comments) {
-          post.comments = []
-        }
-        post.comments.push(comment)
+    addFilteredPosts: (state, action) => {
+      state.filteredData = [...state.data, ...action.payload]
+    },
+    incrementComments: (state, action: PayloadAction<string>) => {
+      const postId = action.payload
+      const postToUpdate = state.data.find(post => post.postID === postId)
+
+      if (postToUpdate) {
+        postToUpdate.commentCount += 1
       }
     },
-    addLike: (state, action) => {
-      const { postId, author } = action.payload
-      const post = state.data.find(p => p.id === postId)
+    addOrToggleLike: (state, action) => {
+      const postID = action.payload
+      const post = state.data.find((post: PostT) => post.postID === postID)
+
       if (post) {
-        const newLike = {
-          id: Math.random().toString(36).substr(2, 9),
-          author
-        }
-        post.likes = [...post.likes, newLike]
+        post.loggedInUserLiked = !post.loggedInUserLiked
+        post.likeCount += post.loggedInUserLiked ? 1 : -1
       }
     },
     removeLike: (state, action) => {
       const { postId, author } = action.payload
-      const post = state.data.find(p => p.id === postId)
+      const post = state.data.find(p => p.postID === postId)
       if (post) {
         post.likes = post.likes.filter(like => like.author !== author)
       }
     }
-    // filterPosts: (state, action) => {
-    //   const { data } = state
-    //   const searchText = action.payload.toLowerCase()
-    //   const filteredPosts = data.filter(
-    //     post =>
-    //       post.title.toLowerCase().includes(searchText) ||
-    //       post.description.toLowerCase().includes(searchText)
-    //   )
-    //   state.filteredData = filteredPosts
-    // }
   }
 })
 
 export const {
   setPosts,
-  addComment,
-  addLike,
+  addOrToggleLike,
   addPost,
-  removeLike
-  // filterPosts
+  removeLike,
+  addFilteredPosts,
+  incrementComments
 } = postsSlice.actions
 
 export default postsSlice.reducer

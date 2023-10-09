@@ -1,12 +1,24 @@
 import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
-  bottomRow: {
-    justifyContent: 'space-between'
+  captionContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 10,
+    borderRadius: 10
   },
-  commentsLikes: {
-    flexDirection: 'row',
-    alignItems: 'center'
+  caption: {
+    color: 'white',
+    fontSize: 16
+  },
+  container: {
+    flex: 1
+  },
+  media: {
+    flex: 1
   }
 })
 

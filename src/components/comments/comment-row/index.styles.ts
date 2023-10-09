@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
   commentRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 15
+    paddingTop: 15
   },
   commentInput: {
     flex: 1,

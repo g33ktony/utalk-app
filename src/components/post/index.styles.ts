@@ -1,13 +1,14 @@
+import { Dimensions } from 'react-native'
 import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   postContainer: {
-    marginBottom: 16,
-    borderColor: '#ccc',
-    borderBottomWidth: 1,
-    borderRadius: 5
+    flex: 1,
+    padding: 8
   },
   title: {
+    // flex: 1,
+    color: 'white',
     fontSize: 18,
     marginBottom: 8
   },
@@ -25,6 +26,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   description: {
+    color: 'white',
     marginBottom: 15
   }
 })
