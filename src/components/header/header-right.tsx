@@ -14,7 +14,7 @@ const HeaderRight = () => {
   const dispatch = useDispatch()
   const isShown = useSelector(selectIsShown)
 
-  const navigateToNewPost = () => navigation.navigate('New Post')
+  const navigateToNewPost = () => navigation.replace('New Post')
   const handleShowSearch = () => dispatch(setIsShown(!isShown))
 
   return (

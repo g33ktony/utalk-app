@@ -16,9 +16,9 @@ type PropsT = {
     input?: Object
     container?: Object
   }
-  reload: () => void
+  reload?: () => void
 }
-const CommentRow = ({ item, customStyles, reload }: PropsT) => {
+const CommentRow = ({ item, customStyles, reload = () => {} }: PropsT) => {
   const dispatch = useDispatch()
   const deviceId = useSelector(selectDeviceId) || ''
   const userName = useSelector(getUserName)

@@ -1,19 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  ActivityIndicator,
-  Alert,
-  FlatList,
-  RefreshControl,
-  Text,
-  View
-} from 'react-native'
-import {
-  PostT,
-  addFilteredPosts,
-  addPost,
-  setPosts
-} from '../../store/reducers/posts'
+import { ActivityIndicator, Alert, Text, View } from 'react-native'
+import { addFilteredPosts, addPost, setPosts } from '../../store/reducers/posts'
 import { getAllPosts, selectFilteredPosts } from '../../store/selectors/posts'
 import { selectIsShown, selectTerm } from '../../store/selectors/search'
 import { setTerm } from '../../store/reducers/search'
@@ -23,50 +11,70 @@ import PostListEmptyState from '../../components/post/post-list-empty-state'
 import { fetchPosts } from '../../server'
 import styles from './index.styles'
 import { getToken } from '../../store/selectors/auth'
-import Video from 'react-native-video'
 import ViewPager from 'react-native-pager-view'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import Video from 'react-native-video'
+import { useNavigation } from '@react-navigation/native'
+import { AxiosError } from 'axios'
 
 const HomeScreen = () => {
   const dispatch = useDispatch()
+  const navigation = useNavigation()
   const [isLoading, setIsLoading] = useState(false)
   const posts = useSelector(getAllPosts)
   const filteredData = useSelector(selectFilteredPosts)
   const token = useSelector(getToken)
   const searchIsShown = useSelector(selectIsShown)
   const searchTerm = useSelector(selectTerm)
-  const { error } = posts
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [active, setActive] = useState(0)
   const [dataToShow, setDataToShow] = useState(posts.data)
+  const videoRef = useRef<Video | null>(null)
 
   const clearSearch = () => {
     dispatch(setTerm(''))
   }
 
-  const fetchData = async (customPage?: number) => {
+  const setInitialData = async () => {
     try {
       const res = await fetchPosts({
         params: {
-          page: customPage ? customPage : page,
-          size: 5,
-          utalkUserId: 2
+          page: 0,
+          size: 5
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      setTotalPages(res.data.totalPages)
+      dispatch(setPosts(res.data.posts))
+    } catch (error: any) {
+      if (error.response.status) {
+        Alert.alert('Expired Session', 'Please login again')
+        return navigation.replace('LogIn')
+      }
+      Alert.alert(error.message)
+    }
+  }
+
+  const fetchNextPosts = async (customPage?: number) => {
+    try {
+      const res = await fetchPosts({
+        params: {
+          page,
+          size: 5
         },
         headers: { Authorization: `Bearer ${token}` }
       })
 
-      setTotalPages(res.data.totalPages)
-      // setPostsState([...postsState, ...res.data.posts])
       dispatch(addPost(res.data.posts))
-    } catch (error) {
+    } catch (error: any) {
       Alert.alert(error.message)
       console.log('error', error)
     }
   }
 
   useEffect(() => {
-    fetchData().then(() => {
+    setInitialData().then(() => {
       setPage(page + 1)
     })
   }, [])
@@ -74,11 +82,6 @@ const HomeScreen = () => {
   useEffect(() => {
     setDataToShow(posts.data)
   }, [posts.data])
-
-  useEffect(() => {
-    console.log('dataToShow', dataToShow)
-    console.log('data', posts.data)
-  }, [dataToShow])
 
   useEffect(() => {
     if (!searchIsShown) {
@@ -102,39 +105,26 @@ const HomeScreen = () => {
     }
   }, [searchTerm])
 
-  useEffect(() => {
-    if (error) {
-      Alert.alert('Error', error)
-    }
-  }, [posts])
-
   const handleSearch = (text: string) => dispatch(setTerm(text))
 
   useEffect(() => {
-    console.log('active', active)
-    console.log('list length', posts.data.length)
     if (active === posts.data.length - 3) {
-      console.log('loaded more')
-
       loadMorePosts()
     }
   }, [active, posts.data])
 
   const loadMorePosts = () => {
     if (page !== totalPages) {
-      fetchData().then(() => {
+      fetchNextPosts().then(() => {
         setPage(page + 1)
       })
     }
   }
 
   const onRefresh = () => {
-    // setPostsState([])
-    setPage(0)
-    dispatch(setPosts([]))
-    fetchData(0)
-      .then(() => setIsLoading(false))
-      .catch(() => setIsLoading(false))
+    setInitialData().then(() => {
+      setPage(page + 1)
+    })
   }
 
   return (
@@ -163,10 +153,12 @@ const HomeScreen = () => {
         >
           {dataToShow.map((item, index) => (
             <View key={item.postID}>
-              <Post item={item} play={index === active} />
+              <Post videoRef={videoRef} item={item} play={index === active} />
             </View>
           ))}
         </ViewPager>
+      ) : !isLoading ? (
+        <PostListEmptyState />
       ) : (
         <View style={{ flex: 1 }}>
           <ActivityIndicator />

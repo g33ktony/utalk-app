@@ -188,15 +188,16 @@ global.Buffer = global.Buffer || require('buffer').Buffer
 type PropsT = {
   item: PostT
   play: boolean
+  videoRef: React.MutableRefObject<Video | null>
 }
 
-const Post = ({ item, play }: PropsT) => {
+const Post = ({ item, play, videoRef }: PropsT) => {
   const [mediaInfo, setMediaInfo] = useState<{ uri: string } | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
   const token = useSelector(getToken)
   const deviceId = useSelector(getDeviceId)
-  const videoRef = useRef<Video | null>(null)
+  // const videoRef = useRef<Video | null>(null)
   const handleSetHash = (text: string) => {
     dispatch(setIsShown(true))
     dispatch(setTerm(text))
@@ -213,39 +214,37 @@ const Post = ({ item, play }: PropsT) => {
   }
 
   const handleGetMediaFromServer = () => {
-    // setIsLoading(true)
+    setIsLoading(true)
     getMedia({ postId: item.postID, token })
       .then(res => {
         const buffer = Buffer.from(res.data, 'binary').toString('base64')
         const filePath = getFilePath()
+
         return { filePath, buffer }
       })
       .then(async ({ filePath, buffer }) => {
         await RNFS.writeFile(filePath, buffer, 'base64')
+
         return filePath
       })
       .then(filePath => {
         setMediaInfo({ uri: `file://${filePath}` })
-        // setIsLoading(false)
+        setIsLoading(false)
       })
       .catch(e => {
-        // setIsLoading(false)
+        setIsLoading(false)
         console.log(e)
       })
   }
 
   const handleGetMedia = () => {
     const filePath = getFilePath()
-    console.log('filePath', filePath)
 
     RNFS.exists(filePath)
       .then(exists => {
         if (exists) {
-          console.log('exists', exists)
-
           setMediaInfo({ uri: `file://${filePath}` })
         } else {
-          console.log('exists', exists)
           handleGetMediaFromServer()
         }
       })
@@ -262,18 +261,15 @@ const Post = ({ item, play }: PropsT) => {
           console.error('Media file deletion error:', error)
         })
       }
+      videoRef.current?.seek
     }
   }, [])
 
   const playVideo = () => {
     if (videoRef.current) {
       if (!isPlaying) {
-        console.log('playing')
-        videoRef.current.setNativeProps({ paused: false })
         setIsPlaying(true)
       } else {
-        console.log('paused')
-        videoRef.current.setNativeProps({ paused: true })
         setIsPlaying(false)
       }
     }
@@ -288,7 +284,6 @@ const Post = ({ item, play }: PropsT) => {
       return (
         <Video
           ref={videoRef}
-          // audioOnly
           controls
           repeat
           source={mediaInfo}
@@ -310,32 +305,7 @@ const Post = ({ item, play }: PropsT) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* {!isLoading ? (
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => {
-            console.log('tap to play/pause')
-            // Handle tapping on the post (e.g., for toggling play/pause)
-          }}
-        >
-          {renderMedia()}
-        </TouchableOpacity>
-      ) : (
-        <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
-          <ActivityIndicator />
-        </View>
-      )} */}
-      <View
-      // activeOpacity={0.9}
-      // onPress={() => {
-      //   console.log('tap to play/pause')
-      //   // playVideo()
-      // }}
-      >
-        {renderMedia()}
-      </View>
+      <View>{renderMedia()}</View>
       <View
         style={[
           {
@@ -360,7 +330,6 @@ const Post = ({ item, play }: PropsT) => {
             keyboardVerticalOffset={125}
           >
             <CommentRow
-              reload={() => {}}
               customStyles={{
                 placeholderColor: 'white',
                 input: { color: 'white' }

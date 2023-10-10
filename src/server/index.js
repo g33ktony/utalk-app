@@ -11,16 +11,22 @@ const api = axios.create({
   }
 })
 
-api.interceptors.request.use(config => {
-  // console.log('config', config)
-  console.log('Request Headers:', config.headers)
-  // config.headers.Authorization = 'Bearer YOUR_TOKEN';
+// api.interceptors.request.use(config => {
+//   // console.log('config', config)
+//   console.log('Request Headers:', config.headers)
+//   // config.headers.Authorization = 'Bearer YOUR_TOKEN';
 
-  return config
-})
+//   return config
+// })
 
 export const logIn = body => {
-  const URL = `/v1/auth/signin`
+  const URL = `/auth/signin`
+
+  return api.post(`${BASE_URL}${URL}`, body)
+}
+
+export const signUp = body => {
+  const URL = `/auth/signup`
 
   return api.post(`${BASE_URL}${URL}`, body)
 }
@@ -62,11 +68,12 @@ export const getMedia = ({ postId, token }) => {
 }
 
 export const postMedia = (file, postBody, token) => {
-  const URL = '/posts'
+  const URL = '/posts/upload'
   const formData = new FormData()
 
+  formData.append('title', postBody.title)
+  formData.append('content', postBody.content)
   formData.append('file', file)
-  formData.append('data', JSON.stringify(postBody))
 
   return api.post(`${BASE_URL}${URL}`, formData, {
     headers: {
