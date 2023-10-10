@@ -7,7 +7,8 @@ import {
   Image,
   Alert,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  ScrollView
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
@@ -111,6 +112,7 @@ const NewPostScreen = () => {
   const handleLaunchCamera = () => handleMedia(launchCamera)
 
   return (
+    <ScrollView>
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'position' : 'height'}
       style={styles.container}
@@ -157,6 +159,7 @@ const NewPostScreen = () => {
       <Button title='Submit Post' onPress={handlePostSubmit} />
       <Button title='go back' onPress={goBack} />
     </KeyboardAvoidingView>
+    </ScrollView>
   )
 }
 

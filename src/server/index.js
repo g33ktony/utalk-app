@@ -75,6 +75,7 @@ export const postMedia = (file, postBody, token) => {
   formData.append('content', postBody.content)
   formData.append('file', file)
 
+  console.log('full URL ', `${BASE_URL}${URL}`)
   return api.post(`${BASE_URL}${URL}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
