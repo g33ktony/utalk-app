@@ -48,10 +48,10 @@ const HomeScreen = () => {
       setTotalPages(res.data.totalPages)
       dispatch(setPosts(res.data.posts))
     } catch (error: any) {
-      // if (error.response.status) {
-      //   Alert.alert('Expired Session', 'Please login again')
-      //   return navigation.replace('LogIn')
-      // }
+      if (error.response.status) {
+        Alert.alert('Expired Session', 'Please login again')
+        return navigation.replace('LogIn')
+      }
       Alert.alert(error.message)
     }
   }

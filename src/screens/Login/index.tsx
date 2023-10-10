@@ -74,7 +74,6 @@ const LoginScreen = () => {
             'Login Error',
             'Check the info you are entering and try again.'
           )
-          console.log('error', error.message)
         })
     } else {
       Alert.alert('Error', 'Please enter all data to continue registering')
