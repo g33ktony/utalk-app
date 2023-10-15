@@ -24,10 +24,9 @@ type PropsT = {
   isDrawerOpen: boolean
   onCloseDrawer: () => void
 }
-const windowHeight = Dimensions.get('window').height
 
 const CommentsDrawer = ({ post, isDrawerOpen, onCloseDrawer }: PropsT) => {
-  //   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
   const [comments, setComments] = useState<CommentT[]>([])
   const bottomDrawerRef = useRef<BottomDrawerMethods>(null)
   const token = useSelector(getToken)
@@ -52,42 +51,42 @@ const CommentsDrawer = ({ post, isDrawerOpen, onCloseDrawer }: PropsT) => {
     }
   }, [isDrawerOpen])
 
-  //   useEffect(() => {
-  //     const keyboardDidShowListener = Keyboard.addListener(
-  //       'keyboardDidShow',
-  //       keyboardDidShow
-  //     )
-  //     const keyboardDidHideListener = Keyboard.addListener(
-  //       'keyboardDidHide',
-  //       keyboardDidHide
-  //     )
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      keyboardDidShow
+    )
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      keyboardDidHide
+    )
 
-  //     return () => {
-  //       keyboardDidShowListener.remove()
-  //       keyboardDidHideListener.remove()
-  //     }
-  //   }, [])
+    return () => {
+      keyboardDidShowListener.remove()
+      keyboardDidHideListener.remove()
+    }
+  }, [])
 
-  //   const keyboardDidShow = () => {
-  //     setIsKeyboardVisible(true)
-  //   }
+  const keyboardDidShow = () => {
+    setIsKeyboardVisible(true)
+  }
 
-  //   const keyboardDidHide = () => {
-  //     setIsKeyboardVisible(false)
-  //   }
+  const keyboardDidHide = () => {
+    setIsKeyboardVisible(false)
+  }
 
   return (
     <BottomDrawer
-      initialHeight={windowHeight}
+      ref={bottomDrawerRef}
+      initialHeight={heightByPercent(100)}
       customStyles={{
         container: {
-          height: heightByPercent(65),
+          height: heightByPercent(85),
           backgroundColor: '#5B5858',
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0
         }
       }}
-      ref={bottomDrawerRef}
       onClose={onCloseDrawer}
     >
       <View
@@ -107,18 +106,20 @@ const CommentsDrawer = ({ post, isDrawerOpen, onCloseDrawer }: PropsT) => {
           Comments:
         </Text>
         {comments?.length ? (
-          <FlatList
-            data={comments}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => (
-              <Comment
-                textStyle={{ color: 'white' }}
-                comment={item}
-                onLike={() => {}}
-                onReply={() => {}}
-              />
-            )}
-          />
+          <View style={{ flex: 1 }}>
+            <FlatList
+              data={comments}
+              keyExtractor={item => item.commentId}
+              renderItem={({ item }) => (
+                <Comment
+                  textStyle={{ color: 'white' }}
+                  comment={item}
+                  onLike={() => {}}
+                  onReply={() => {}}
+                />
+              )}
+            />
+          </View>
         ) : (
           <View
             style={{
@@ -131,20 +132,21 @@ const CommentsDrawer = ({ post, isDrawerOpen, onCloseDrawer }: PropsT) => {
           </View>
         )}
       </View>
-      {/* <KeyboardAvoidingView
+      <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={80}
-      > */}
-      <CommentRow
-        reload={fetchPostComments}
-        customStyles={{
-          container: { paddingHorizontal: 15 },
-          placeholderColor: 'white',
-          input: { color: 'white' }
-        }}
-        item={post}
-      />
-      {/* </KeyboardAvoidingView> */}
+        keyboardVerticalOffset={isKeyboardVisible ? 0 : 165}
+        contentContainerStyle={{ flex: 1 }}
+      >
+        <CommentRow
+          reload={fetchPostComments}
+          customStyles={{
+            container: { paddingHorizontal: 15 },
+            placeholderColor: 'white',
+            input: { color: 'white' }
+          }}
+          item={post}
+        />
+      </KeyboardAvoidingView>
     </BottomDrawer>
   )
 }

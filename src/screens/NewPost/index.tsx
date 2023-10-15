@@ -59,7 +59,6 @@ const NewPostScreen = () => {
           response => resolve(response)
         )
       })
-      console.log('res', res)
       const fileData = {
         uri: res.assets[0].uri,
         type: res.assets[0].type,
@@ -112,53 +111,55 @@ const NewPostScreen = () => {
   const handleLaunchCamera = () => handleMedia(launchCamera)
 
   return (
-    <ScrollView>
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-      style={styles.container}
-    >
-      <View style={styles.previewContainer}>
-        {mediaUri ? (
-          <View>
-            <Image source={{ uri: mediaUri }} style={styles.previewImage} />
-          </View>
-        ) : null}
-        {videoUri ? (
-          <View style={styles.previewImage}>
-            <VideoPlayer
-              style={{ height: '100%', width: '100%' }}
-              uri={videoUri}
-            />
-          </View>
-        ) : null}
-      </View>
-      <Text style={styles.label}>Title:</Text>
-      <TextInput
-        style={styles.input}
-        value={postTitle}
-        placeholder='Enter post title'
-        onChangeText={setPostTitle}
-      />
+    <ScrollView contentContainerStyle={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+        style={styles.container}
+      >
+        <View style={styles.previewContainer}>
+          {mediaUri ? (
+            <View>
+              <Image source={{ uri: mediaUri }} style={styles.previewImage} />
+            </View>
+          ) : null}
+          {videoUri ? (
+            <View style={styles.previewImage}>
+              <VideoPlayer
+                style={{ height: '100%', width: '100%' }}
+                uri={videoUri}
+              />
+            </View>
+          ) : null}
+        </View>
+        <Text style={styles.label}>Title:</Text>
+        <TextInput
+          style={styles.input}
+          value={postTitle}
+          placeholderTextColor='gray'
+          placeholder='Enter post title'
+          onChangeText={setPostTitle}
+        />
 
-      <Text style={styles.label}>Description:</Text>
-      <TextInput
-        style={styles.input}
-        value={postDescription}
-        placeholder='Description'
-        onChangeText={setPostDescription}
-      />
+        <Text style={styles.label}>Description:</Text>
+        <TextInput
+          style={styles.input}
+          value={postDescription}
+          placeholderTextColor='gray'
+          placeholder='Description'
+          onChangeText={setPostDescription}
+        />
 
-      <View style={styles.mediaButtonsContainer}>
-        <TouchableOpacity onPress={handleLaunchLibrary}>
-          <Icon name='picture-o' size={22} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleLaunchCamera}>
-          <Icon name='camera' size={22} />
-        </TouchableOpacity>
-      </View>
-      <Button title='Submit Post' onPress={handlePostSubmit} />
-      <Button title='go back' onPress={goBack} />
-    </KeyboardAvoidingView>
+        <View style={styles.mediaButtonsContainer}>
+          <TouchableOpacity onPress={handleLaunchLibrary}>
+            <Icon name='picture-o' size={22} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleLaunchCamera}>
+            <Icon name='camera' size={22} />
+          </TouchableOpacity>
+        </View>
+        <Button title='Submit Post' onPress={handlePostSubmit} />
+        <Button title='go back' onPress={goBack} />
+      </KeyboardAvoidingView>
     </ScrollView>
   )
 }

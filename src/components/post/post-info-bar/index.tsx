@@ -15,12 +15,13 @@ type PropsT = {
 }
 
 const PostInfoBar = ({ postId }: PropsT) => {
+  const dispatch = useDispatch()
+  const [isDrawerOpen, setDrawerOpen] = useState(false)
   const post = useSelector(state => selectPostById(state, postId))
   const token = useSelector(getToken)
-  const dispatch = useDispatch()
-
+  const hitSlopConfig = { top: 10, bottom: 10, left: 10, right: 10 }
+  const likeIcon = post?.loggedInUserLiked ? 'thumbs-up' : 'thumbs-o-up'
   const likes = post?.likeCount || 0
-  const [isDrawerOpen, setDrawerOpen] = useState(false)
 
   const handleLike = async () => {
     try {
@@ -43,13 +44,10 @@ const PostInfoBar = ({ postId }: PropsT) => {
       <View style={styles.commentsLikes}>
         <TouchableOpacity
           onPress={handleLike}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          hitSlop={hitSlopConfig}
           style={styles.likeButton}
         >
-          <Icon
-            style={styles.like}
-            name={post?.loggedInUserLiked ? 'thumbs-up' : 'thumbs-o-up'}
-          />
+          <Icon style={styles.like} name={likeIcon} />
           <Text style={styles.likeText}>{likes} Likes</Text>
         </TouchableOpacity>
         <Icon style={styles.commentIcon} name='comment-o' />

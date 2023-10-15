@@ -11,14 +11,6 @@ const api = axios.create({
   }
 })
 
-// api.interceptors.request.use(config => {
-//   // console.log('config', config)
-//   console.log('Request Headers:', config.headers)
-//   // config.headers.Authorization = 'Bearer YOUR_TOKEN';
-
-//   return config
-// })
-
 export const logIn = body => {
   const URL = `/auth/signin`
 
@@ -75,7 +67,6 @@ export const postMedia = (file, postBody, token) => {
   formData.append('content', postBody.content)
   formData.append('file', file)
 
-  console.log('full URL ', `${BASE_URL}${URL}`)
   return api.post(`${BASE_URL}${URL}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',

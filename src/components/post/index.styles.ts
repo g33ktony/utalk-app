@@ -4,7 +4,11 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
   postContainer: {
     flex: 1,
-    padding: 8
+    padding: 16,
+    position: 'absolute',
+    zIndex: 9000,
+    height: '100%',
+    width: '100%'
   },
   title: {
     // flex: 1,
@@ -28,6 +32,13 @@ const styles = StyleSheet.create({
   description: {
     color: 'white',
     marginBottom: 15
+  },
+  media: {
+    width: '100%',
+    height: '100%'
+  },
+  flexContainer: {
+    flex: 1
   }
 })
 

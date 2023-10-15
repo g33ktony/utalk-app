@@ -8,6 +8,7 @@ import { getToken, getUserName } from '../../../store/selectors/auth'
 import Avatar from '../../avatar'
 import styles from './index.styles'
 import { addComment } from '../../../server'
+import { Keyboard } from 'react-native'
 
 type PropsT = {
   item: PostT | null
@@ -39,6 +40,7 @@ const CommentRow = ({ item, customStyles, reload = () => {} }: PropsT) => {
     addComment(item?.postID, newComment, token)
       .then(() => reload())
       .then(() => {
+        Keyboard.dismiss()
         dispatch(incrementComments(item?.postID))
       })
 

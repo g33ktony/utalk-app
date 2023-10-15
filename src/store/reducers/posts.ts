@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import produce from 'immer'
 
 export interface PostT {
   postID: string
@@ -46,13 +47,13 @@ const postsSlice = createSlice({
   initialState,
   reducers: {
     addPost: (state, action) => {
-      state.data = [...state.data, ...action.payload]
+      state.data.push(...action.payload)
     },
     setPosts: (state, action) => {
       state.data = action.payload
     },
     addFilteredPosts: (state, action) => {
-      state.filteredData = [...state.data, ...action.payload]
+      state.filteredData.push(...action.payload)
     },
     incrementComments: (state, action: PayloadAction<string>) => {
       const postId = action.payload

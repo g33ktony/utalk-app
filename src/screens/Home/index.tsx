@@ -2,27 +2,26 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ActivityIndicator, Alert, Text, View } from 'react-native'
 import { addFilteredPosts, addPost, setPosts } from '../../store/reducers/posts'
-import { getAllPosts, selectFilteredPosts } from '../../store/selectors/posts'
+import { getAllPosts } from '../../store/selectors/posts'
 import { selectIsShown, selectTerm } from '../../store/selectors/search'
 import { setTerm } from '../../store/reducers/search'
 import SearchBar from '../../components/search-bar'
 import Post from '../../components/post'
-import PostListEmptyState from '../../components/post/post-list-empty-state'
 import { fetchPosts } from '../../server'
 import styles from './index.styles'
 import { getToken } from '../../store/selectors/auth'
-import ViewPager from 'react-native-pager-view'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Video from 'react-native-video'
 import { useNavigation } from '@react-navigation/native'
-import { AxiosError } from 'axios'
+import { PageSelectedEvent } from '../../components/pager-view/types'
+import PagerView from 'react-native-pager-view'
+import PostListEmptyState from '../../components/post/post-list-empty-state'
 
 const HomeScreen = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const [isLoading, setIsLoading] = useState(false)
   const posts = useSelector(getAllPosts)
-  const filteredData = useSelector(selectFilteredPosts)
   const token = useSelector(getToken)
   const searchIsShown = useSelector(selectIsShown)
   const searchTerm = useSelector(selectTerm)
@@ -122,9 +121,19 @@ const HomeScreen = () => {
   }
 
   const onRefresh = () => {
-    setInitialData().then(() => {
-      setPage(page + 1)
-    })
+    setIsLoading(true)
+    setTimeout(() => {
+      setInitialData()
+        .then(() => {
+          setPage(page + 1)
+          setIsLoading(false)
+        })
+        .catch(() => setIsLoading(false))
+    }, 600)
+  }
+
+  const handlePageSelected = (event: PageSelectedEvent) => {
+    setActive(event.nativeEvent.position)
   }
 
   return (
@@ -139,28 +148,26 @@ const HomeScreen = () => {
           <Text>Refresh</Text>
         </TouchableOpacity>
       ) : null}
-      {dataToShow.length ? (
-        <ViewPager
-          onPageSelected={e => {
-            setActive(e.nativeEvent.position)
-          }}
+
+      {!dataToShow.length ? <PostListEmptyState /> : null}
+
+      {dataToShow.length && !isLoading ? (
+        <PagerView
+          onPageSelected={handlePageSelected}
           scrollEnabled
           orientation='vertical'
-          style={{ flex: 1 }}
+          style={styles.pager}
           initialPage={0}
           offscreenPageLimit={1}
-          overdrag
         >
           {dataToShow.map((item, index) => (
             <View key={item.postID}>
               <Post videoRef={videoRef} item={item} play={index === active} />
             </View>
           ))}
-        </ViewPager>
-      ) : !isLoading ? (
-        <PostListEmptyState />
+        </PagerView>
       ) : (
-        <View style={{ flex: 1 }}>
+        <View style={styles.loadingContainer}>
           <ActivityIndicator />
         </View>
       )}
