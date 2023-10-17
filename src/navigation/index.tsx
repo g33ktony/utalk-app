@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import LoginScreen from '../screens/Login'
 import { getAuth } from '../store/selectors/auth'
-import HomeStack from './home'
+import MainStack from './main'
 
 const Stack = createStackNavigator()
 
@@ -13,11 +13,11 @@ const Navigation = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={isAuthenticated ? 'Home' : 'LogIn'}>
+      <Stack.Navigator initialRouteName={isAuthenticated ? 'Main' : 'LogIn'}>
         <Stack.Screen
-          name={'Home'}
+          name={'Main'}
           options={{ headerShown: false }}
-          component={HomeStack}
+          component={MainStack}
         />
         <Stack.Screen
           name='LogIn'

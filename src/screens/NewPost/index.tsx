@@ -8,22 +8,19 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
-import {
-  launchImageLibrary,
-  launchCamera,
-  CameraOptions,
-  ImagePickerResponse
-} from 'react-native-image-picker'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { getToken } from '../../store/selectors/auth'
 import VideoPlayer from '../../components/video-player'
-import styles from './index.styles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import { openPicker } from 'react-native-image-crop-picker'
 import { postMedia } from '../../server'
+import styles from './index.styles'
+import CameraView from '../../components/camera-view'
 
 const NewPostScreen = () => {
   const navigation = useNavigation()
@@ -37,42 +34,38 @@ const NewPostScreen = () => {
   const [postDescription, setPostDescription] = useState('')
   const [mediaUri, setMediaUri] = useState<string | null>(null)
   const [videoUri, setVideoUri] = useState<string | null>(null)
+  const [cameraOpen, setCameraOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleMedia = async (
-    method: (
-      options: CameraOptions,
-      callback?: (response: ImagePickerResponse) => void
-    ) => void
-  ) => {
+  const handleMedia = async (method: (options) => void) => {
     try {
-      const res: ImagePickerResponse = await new Promise(resolve => {
-        method(
-          {
-            mediaType: 'mixed',
-            quality: 0.1,
-            presentationStyle: 'pageSheet',
-            videoQuality: 'low',
-            durationLimit: 180,
-            includeBase64: true,
-            formatAsMp4: true
-          },
-          response => resolve(response)
-        )
+      const res = await method({
+        width: 300,
+        height: 400,
+        maxFiles: 1,
+        forceJpg: true,
+        mediaType: 'any'
       })
+
+      const pathParts = res.path.split('/')
+      const fileName = pathParts[pathParts.length - 1].split('.')[0]
+
       const fileData = {
-        uri: res.assets[0].uri,
-        type: res.assets[0].type,
-        name: res.assets[0].fileName
+        uri: res.path,
+        type: res.mime,
+        name: fileName
       }
+
+      console.log('fileData', fileData)
 
       setFile(fileData)
 
-      if (res.assets?.length) {
-        if (res.assets[0].type === 'video/mp4') {
-          setVideoUri(res.assets[0].uri || null)
+      if (res) {
+        if (res.mime === 'video/mp4') {
+          setVideoUri(res.path || null)
           setMediaUri(null)
         } else {
-          setMediaUri(res.assets[0].uri || null)
+          setMediaUri(res.path || null)
           setVideoUri(null)
         }
       }
@@ -82,85 +75,145 @@ const NewPostScreen = () => {
   }
 
   const goBack = () => {
-    navigation.replace('Home')
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Main' }]
+    })
   }
 
   const handlePostSubmit = () => {
+    setIsLoading(true)
     if ((postTitle && !videoUri) || !mediaUri) {
       const postBody = {
         title: postTitle,
         content: postDescription
       }
       postMedia(file, postBody, token)
-        .then(response => {
-          navigation.replace('Home')
+        .then(() => {
+          setIsLoading(false)
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' }]
+          })
         })
         .catch(error => {
+          setIsLoading(false)
+          console.error('Error uploading video:', error)
           Alert.alert(
             'Error submitting post',
             'Something went wrong, please try again.'
           )
-          console.error('Error uploading video:', error)
         })
     } else {
       Alert.alert('Error', 'Enter a title for the post')
     }
   }
 
-  const handleLaunchLibrary = () => handleMedia(launchImageLibrary)
-  const handleLaunchCamera = () => handleMedia(launchCamera)
+  const handleLaunchLibrary = () => handleMedia(openPicker)
+  const handleLaunchCamera = () => setCameraOpen(true)
+  const [isVideo, setIsVideo] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
 
   return (
-    <ScrollView contentContainerStyle={{ flex: 1 }}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-        style={styles.container}
+    <>
+      <CameraView
+        cameraOpen={cameraOpen}
+        isVideo={isVideo}
+        setCameraOpen={setCameraOpen}
+        setFile={setFile}
+        setMediaUri={setMediaUri}
+        setVideoUri={setVideoUri}
+        setIsVideo={setIsVideo}
+        isRecording={isRecording}
+        setIsRecording={setIsRecording}
       >
-        <View style={styles.previewContainer}>
-          {mediaUri ? (
-            <View>
-              <Image source={{ uri: mediaUri }} style={styles.previewImage} />
+        <ScrollView contentContainerStyle={{ flex: 1 }}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+            keyboardVerticalOffset={90}
+            style={styles.container}
+          >
+            <View style={styles.previewContainer}>
+              {mediaUri ? (
+                <View>
+                  <Image
+                    source={{ uri: mediaUri }}
+                    resizeMode='cover'
+                    resizeMethod='resize'
+                    style={styles.previewImage}
+                  />
+                </View>
+              ) : null}
+              {videoUri ? (
+                <View style={styles.previewImage}>
+                  <VideoPlayer
+                    style={{ height: '100%', width: '100%' }}
+                    uri={videoUri}
+                  />
+                </View>
+              ) : null}
             </View>
-          ) : null}
-          {videoUri ? (
-            <View style={styles.previewImage}>
-              <VideoPlayer
-                style={{ height: '100%', width: '100%' }}
-                uri={videoUri}
+            <View style={styles.mediaButtonsContainer}>
+              <TouchableOpacity
+                style={{
+                  width: 75,
+                  height: 75,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderRadius: 8
+                }}
+                onPress={handleLaunchLibrary}
+              >
+                <Icon name='picture-o' size={22} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: 75,
+                  height: 75,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderRadius: 8
+                }}
+                onPress={handleLaunchCamera}
+              >
+                <Icon name='camera' size={22} />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.label}>Title:</Text>
+            <TextInput
+              style={styles.input}
+              value={postTitle}
+              placeholderTextColor='gray'
+              placeholder='Enter post title'
+              onChangeText={setPostTitle}
+              editable={!!file}
+            />
+            <Text style={styles.label}>Description:</Text>
+            <TextInput
+              style={styles.input}
+              value={postDescription}
+              placeholderTextColor='gray'
+              placeholder='Description'
+              onChangeText={setPostDescription}
+              editable={!!file}
+            />
+
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <Button
+                title='Submit Post'
+                onPress={handlePostSubmit}
+                disabled={!file}
               />
-            </View>
-          ) : null}
-        </View>
-        <Text style={styles.label}>Title:</Text>
-        <TextInput
-          style={styles.input}
-          value={postTitle}
-          placeholderTextColor='gray'
-          placeholder='Enter post title'
-          onChangeText={setPostTitle}
-        />
-
-        <Text style={styles.label}>Description:</Text>
-        <TextInput
-          style={styles.input}
-          value={postDescription}
-          placeholderTextColor='gray'
-          placeholder='Description'
-          onChangeText={setPostDescription}
-        />
-
-        <View style={styles.mediaButtonsContainer}>
-          <TouchableOpacity onPress={handleLaunchLibrary}>
-            <Icon name='picture-o' size={22} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleLaunchCamera}>
-            <Icon name='camera' size={22} />
-          </TouchableOpacity>
-        </View>
-        <Button title='Submit Post' onPress={handlePostSubmit} />
-        <Button title='go back' onPress={goBack} />
-      </KeyboardAvoidingView>
-    </ScrollView>
+            )}
+            <Button title='go back' onPress={goBack} />
+          </KeyboardAvoidingView>
+        </ScrollView>
+      </CameraView>
+    </>
   )
 }
 

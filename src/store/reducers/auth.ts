@@ -3,11 +3,13 @@ import { createSlice } from '@reduxjs/toolkit'
 interface AuthState {
   token: string
   userName: string
+  firstName: string
 }
 
 const initialState: AuthState = {
   userName: '',
-  token: ''
+  token: '',
+  firstName: 'Antonio M'
 }
 
 const authSlice = createSlice({

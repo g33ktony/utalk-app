@@ -1,6 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ActivityIndicator, Alert, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Alert,
+  Dimensions,
+  FlatList,
+  View,
+  RefreshControl,
+  Platform
+} from 'react-native'
+import Video from 'react-native-video'
+import { useNavigation } from '@react-navigation/native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { addFilteredPosts, addPost, setPosts } from '../../store/reducers/posts'
 import { getAllPosts } from '../../store/selectors/posts'
 import { selectIsShown, selectTerm } from '../../store/selectors/search'
@@ -8,17 +19,20 @@ import { setTerm } from '../../store/reducers/search'
 import SearchBar from '../../components/search-bar'
 import Post from '../../components/post'
 import { fetchPosts } from '../../server'
-import styles from './index.styles'
 import { getToken } from '../../store/selectors/auth'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import Video from 'react-native-video'
-import { useNavigation } from '@react-navigation/native'
-import { PageSelectedEvent } from '../../components/pager-view/types'
-import PagerView from 'react-native-pager-view'
 import PostListEmptyState from '../../components/post/post-list-empty-state'
+import styles from './index.styles'
+import { useScreenDimensions } from '../../helpers/hooks'
 
-const HomeScreen = () => {
+export type PageSelectedEvent = {
+  nativeEvent: {
+    position: number
+  }
+}
+
+const MainScreen = () => {
   const dispatch = useDispatch()
+  const { HEADER_HEIGHT, fullScreenHeight } = useScreenDimensions()
   const navigation = useNavigation()
   const [isLoading, setIsLoading] = useState(false)
   const posts = useSelector(getAllPosts)
@@ -27,29 +41,42 @@ const HomeScreen = () => {
   const searchTerm = useSelector(selectTerm)
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
-  const [active, setActive] = useState(0)
   const [dataToShow, setDataToShow] = useState(posts.data)
+  const [viewableItems, setViewableItems] = useState([])
   const videoRef = useRef<Video | null>(null)
+  const availableHeight = fullScreenHeight - HEADER_HEIGHT
 
   const clearSearch = () => {
     dispatch(setTerm(''))
   }
 
   const setInitialData = async () => {
+    setIsLoading(true)
     try {
-      const res = await fetchPosts({
+      let config = {
         params: {
           page: 0,
-          size: 5
+          size: 3
         },
         headers: { Authorization: `Bearer ${token}` }
-      })
+      }
+
+      // if(searchIsShown) {
+      //   config.params.
+      // }
+
+      const res = await fetchPosts(config)
       setTotalPages(res.data.totalPages)
       dispatch(setPosts(res.data.posts))
+      setIsLoading(false)
     } catch (error: any) {
       if (error.response.status) {
         Alert.alert('Expired Session', 'Please login again')
-        return navigation.replace('LogIn')
+        setIsLoading(false)
+        return navigation.reset({
+          index: 0,
+          routes: [{ name: 'LogIn' }]
+        })
       }
       Alert.alert(error.message)
     }
@@ -60,7 +87,7 @@ const HomeScreen = () => {
       const res = await fetchPosts({
         params: {
           page,
-          size: 5
+          size: 3
         },
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -106,12 +133,6 @@ const HomeScreen = () => {
 
   const handleSearch = (text: string) => dispatch(setTerm(text))
 
-  useEffect(() => {
-    if (active === posts.data.length - 3) {
-      loadMorePosts()
-    }
-  }, [active, posts.data])
-
   const loadMorePosts = () => {
     if (page !== totalPages) {
       fetchNextPosts().then(() => {
@@ -122,18 +143,20 @@ const HomeScreen = () => {
 
   const onRefresh = () => {
     setIsLoading(true)
-    setTimeout(() => {
-      setInitialData()
-        .then(() => {
-          setPage(page + 1)
-          setIsLoading(false)
-        })
-        .catch(() => setIsLoading(false))
-    }, 600)
+    setInitialData()
+      .then(() => {
+        setPage(page + 1)
+        setIsLoading(false)
+      })
+      .catch(() => setIsLoading(false))
   }
 
-  const handlePageSelected = (event: PageSelectedEvent) => {
-    setActive(event.nativeEvent.position)
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    setViewableItems(viewableItems.map(item => item.index))
+  })
+
+  const viewabilityConfig = {
+    itemVisiblePercentThreshold: 50
   }
 
   return (
@@ -143,36 +166,53 @@ const HomeScreen = () => {
         onClose={clearSearch}
         onSearch={handleSearch}
       />
-      {active === 0 ? (
-        <TouchableOpacity onPress={onRefresh}>
-          <Text>Refresh</Text>
-        </TouchableOpacity>
-      ) : null}
 
-      {!dataToShow.length ? <PostListEmptyState /> : null}
-
-      {dataToShow.length && !isLoading ? (
-        <PagerView
-          onPageSelected={handlePageSelected}
-          scrollEnabled
-          orientation='vertical'
-          style={styles.pager}
-          initialPage={0}
-          offscreenPageLimit={1}
-        >
-          {dataToShow.map((item, index) => (
-            <View key={item.postID}>
-              <Post videoRef={videoRef} item={item} play={index === active} />
-            </View>
-          ))}
-        </PagerView>
-      ) : (
+      {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator />
         </View>
+      ) : (
+        <FlatList
+          data={dataToShow}
+          renderItem={({ item, index }) => (
+            <View
+              style={{
+                height: availableHeight
+              }}
+            >
+              <Post
+                item={item}
+                play={viewableItems.includes(index)}
+                videoRef={videoRef}
+              />
+            </View>
+          )}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={onRefresh}
+              tintColor='#000'
+              colors={['#000']}
+            />
+          }
+          refreshing={isLoading}
+          keyExtractor={item => item.postID}
+          pagingEnabled
+          decelerationRate='fast'
+          snapToAlignment='start'
+          onViewableItemsChanged={onViewableItemsChanged.current}
+          viewabilityConfig={viewabilityConfig}
+          showsVerticalScrollIndicator={false}
+          snapToInterval={availableHeight}
+          removeClippedSubviews
+          ListEmptyComponent={<PostListEmptyState />}
+          initialNumToRender={2}
+          onEndReached={loadMorePosts}
+          onEndReachedThreshold={0.1}
+        />
       )}
     </View>
   )
 }
 
-export default HomeScreen
+export default MainScreen

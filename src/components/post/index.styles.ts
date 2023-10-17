@@ -1,9 +1,7 @@
-import { Dimensions } from 'react-native'
 import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   postContainer: {
-    flex: 1,
     padding: 16,
     position: 'absolute',
     zIndex: 9000,
@@ -11,7 +9,6 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   title: {
-    // flex: 1,
     color: 'white',
     fontSize: 18,
     marginBottom: 8
@@ -23,7 +20,7 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   bottomRow: {
-    justifyContent: 'space-between'
+    marginBottom: 10
   },
   commentsLikes: {
     flexDirection: 'row',

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
   Alert,
-  Dimensions,
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
@@ -15,7 +14,7 @@ import BottomDrawer, {
 import Comment from '..'
 import CommentRow from '../comment-row'
 import { CommentT, PostT } from '../../../store/reducers/posts'
-import { heightByPercent } from '../../../helpers/viewport'
+import { useScreenDimensions } from '../../../helpers/hooks'
 import { getPostComments } from '../../../server'
 import { useSelector } from 'react-redux'
 import { getToken } from '../../../store/selectors/auth'
@@ -29,6 +28,7 @@ const CommentsDrawer = ({ post, isDrawerOpen, onCloseDrawer }: PropsT) => {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
   const [comments, setComments] = useState<CommentT[]>([])
   const bottomDrawerRef = useRef<BottomDrawerMethods>(null)
+  const { heightByPercent } = useScreenDimensions()
   const token = useSelector(getToken)
 
   const fetchPostComments = () => {

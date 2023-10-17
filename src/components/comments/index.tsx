@@ -17,8 +17,8 @@ const Comment = ({ comment, textStyle }: PropsT) => {
     <View style={styles.commentContainer}>
       <Avatar id={deviceId} width={20} height={20} size={20} />
 
-      <View style={{ flexDirection: 'column' }}>
-        <Text style={textStyle}>{comment?.author}:</Text>
+      <View style={{ flex: 1, flexDirection: 'column' }}>
+        <Text style={[textStyle, { marginBottom: 8 }]}>{comment?.author}:</Text>
         <Text style={textStyle}>{comment?.text}</Text>
       </View>
     </View>

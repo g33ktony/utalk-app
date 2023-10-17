@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Provider } from 'react-redux'
-import Navigation from './src/navigation/Navigation'
+import Navigation from './src/navigation'
 import { store, persistor } from './src/store'
 import { PersistGate } from 'redux-persist/integration/react'
 

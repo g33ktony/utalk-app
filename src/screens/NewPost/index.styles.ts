@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
   mediaButtonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginBottom: 16
   },
   previewContainer: {

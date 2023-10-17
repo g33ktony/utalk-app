@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  View,
   Alert,
   TextInput,
   ActivityIndicator,
@@ -39,7 +40,10 @@ const LoginScreen = () => {
         .then(() => {
           setIsLoading(false)
           registerDevice()
-          navigation.replace('Home')
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' }]
+          })
         })
         .catch(error => {
           setIsLoading(false)
@@ -55,6 +59,8 @@ const LoginScreen = () => {
     }
   }
 
+  const toggleMode = () => setIsSignUp(!isSignUp)
+
   const handleSignUp = () => {
     setIsLoading(true)
     if (email && password && username) {
@@ -66,7 +72,10 @@ const LoginScreen = () => {
         .then(() => {
           setIsLoading(false)
           registerDevice()
-          navigation.replace('Home')
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' }]
+          })
         })
         .catch(error => {
           setIsLoading(false)
@@ -92,6 +101,7 @@ const LoginScreen = () => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={90}
       style={styles.container}
     >
       <Image style={{ marginBottom: 45 }} source={Logo} />
@@ -102,7 +112,6 @@ const LoginScreen = () => {
           placeholder='Username'
           placeholderTextColor='gray'
           onChangeText={setUsername}
-          value={username}
           autoCapitalize='none'
         />
       ) : null}
@@ -112,7 +121,6 @@ const LoginScreen = () => {
         placeholder='Email'
         placeholderTextColor='gray'
         onChangeText={setEmail}
-        value={email}
         autoCapitalize='none'
       />
 
@@ -121,15 +129,8 @@ const LoginScreen = () => {
         placeholder='Password'
         placeholderTextColor='gray'
         onChangeText={setPassword}
-        value={password}
         secureTextEntry
       />
-
-      <Button
-        onPress={() => setIsSignUp(!isSignUp)}
-        title={isSignUp ? 'LogIn' : 'SignUp'}
-      />
-
       <TouchableOpacity
         style={styles.button}
         disabled={isLoading}
@@ -138,9 +139,16 @@ const LoginScreen = () => {
         {isLoading ? (
           <ActivityIndicator />
         ) : (
-          <Text style={styles.buttonText}>Submit</Text>
+          <Text style={styles.buttonText}>
+            {!isSignUp ? 'Sign In' : 'Register'}
+          </Text>
         )}
       </TouchableOpacity>
+
+      <Button
+        onPress={toggleMode}
+        title={isSignUp ? 'Go to Sign In' : 'Register'}
+      />
     </KeyboardAvoidingView>
   )
 }

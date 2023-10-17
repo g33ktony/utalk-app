@@ -17,6 +17,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setIsShown, setTerm } from '../../store/reducers/search'
 import { getDeviceId } from 'react-native-device-info'
 import Media from './media'
+import { useScreenDimensions } from '../../helpers/hooks'
+import { selectIsShown } from '../../store/selectors/search'
+
 global.Buffer = global.Buffer || require('buffer').Buffer
 
 type PropsT = {
@@ -27,6 +30,10 @@ type PropsT = {
 
 const Post = ({ item, play, videoRef }: PropsT) => {
   const dispatch = useDispatch()
+  const { fullScreenHeight, insetsTop, insetsBottom, HEADER_HEIGHT } =
+    useScreenDimensions()
+  const availableHeight =
+    fullScreenHeight - (insetsTop + insetsBottom + HEADER_HEIGHT)
   const deviceId = useSelector(getDeviceId)
   const handleSetHash = (text: string) => {
     dispatch(setIsShown(true))
@@ -41,6 +48,9 @@ const Post = ({ item, play, videoRef }: PropsT) => {
 
   useEffect(() => {
     setIsPlaying(play)
+    if (play) {
+      videoRef.current?.seek(0)
+    }
   }, [play])
 
   const playVideo = () => {
@@ -54,7 +64,7 @@ const Post = ({ item, play, videoRef }: PropsT) => {
   }
 
   return (
-    <View style={styles.flexContainer}>
+    <View style={[styles.flexContainer, { height: availableHeight }]}>
       <Media item={item} ref={videoRef} isPlaying={isPlaying} />
       <View style={styles.postContainer}>
         <Avatar id={deviceId} author={item.author} />
@@ -63,10 +73,11 @@ const Post = ({ item, play, videoRef }: PropsT) => {
         <Text style={styles.description}>
           {formatHashtags(item.description, {}, handleSetHash)}
         </Text>
-        <PostInfoBar postId={item.postID} />
+        <PostInfoBar setIsPlaying={setIsPlaying} postId={item.postID} />
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'position' : 'height'}
           keyboardVerticalOffset={90}
+          style={styles.bottomRow}
         >
           <CommentRow customStyles={commentRowStyles} item={item} />
         </KeyboardAvoidingView>

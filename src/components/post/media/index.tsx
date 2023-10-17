@@ -29,6 +29,8 @@ const Media = forwardRef(
       setIsLoading(true)
       getMedia({ postId: item.postID, token })
         .then(res => {
+          console.log('res', Object.keys(res.data))
+
           const buffer = Buffer.from(res.data, 'binary').toString('base64')
           const filePath = getFilePath()
 
@@ -54,6 +56,8 @@ const Media = forwardRef(
 
       RNFS.exists(filePath)
         .then(exists => {
+          console.log('exists', exists, `file://${filePath}`, item.title)
+
           if (exists) {
             setMediaInfo({ uri: `file://${filePath}` })
           } else {
@@ -78,6 +82,7 @@ const Media = forwardRef(
         }
       }
     }, [])
+
     if (!mediaInfo) {
       return null
     }
