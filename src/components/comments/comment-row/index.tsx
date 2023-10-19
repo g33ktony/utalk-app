@@ -7,7 +7,7 @@ import { selectDeviceId } from '../../../store/reducers/device'
 import { getToken, getUserName } from '../../../store/selectors/auth'
 import Avatar from '../../avatar'
 import styles from './index.styles'
-import { addComment } from '../../../server'
+import { addComment } from '../../../api'
 import { Keyboard } from 'react-native'
 
 type PropsT = {

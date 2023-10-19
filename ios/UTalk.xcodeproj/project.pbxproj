@@ -8,12 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* UTalkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* UTalkTests.m */; };
+		0D0356F799C6FD0DCE3BD2C4 /* libPods-UTalk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 307D05DBDCC4572F46343A65 /* libPods-UTalk.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		26D9DBBB7F3FF92DD9B3A445 /* libPods-UTalk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B3924372D505615480D75C5 /* libPods-UTalk.a */; };
+		5709B6332B74212C074D4E28 /* libPods-UTalk-UTalkTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71B8CA60183057B439ADE49C /* libPods-UTalk-UTalkTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		BBAA346A3AA4B7881F983EE4 /* libPods-UTalk-UTalkTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BD5E4EEC07C811F40906587 /* libPods-UTalk-UTalkTests.a */; };
+		A9701AFB2ADF46AB00D530EA /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9701AFA2ADF46AB00D530EA /* File.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,21 +31,23 @@
 		00E356EE1AD99517003FC87E /* UTalkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UTalkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* UTalkTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UTalkTests.m; sourceTree = "<group>"; };
-		0BD5E4EEC07C811F40906587 /* libPods-UTalk-UTalkTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UTalk-UTalkTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* UTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = UTalk/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = UTalk/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = UTalk/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = UTalk/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = UTalk/main.m; sourceTree = "<group>"; };
-		2B3924372D505615480D75C5 /* libPods-UTalk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UTalk.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B7049045D5AE818F221288F /* Pods-UTalk-UTalkTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UTalk-UTalkTests.release.xcconfig"; path = "Target Support Files/Pods-UTalk-UTalkTests/Pods-UTalk-UTalkTests.release.xcconfig"; sourceTree = "<group>"; };
+		307D05DBDCC4572F46343A65 /* libPods-UTalk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UTalk.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		71B8CA60183057B439ADE49C /* libPods-UTalk-UTalkTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UTalk-UTalkTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = UTalk/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		A022662E0385D329723E26D7 /* Pods-UTalk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UTalk.debug.xcconfig"; path = "Target Support Files/Pods-UTalk/Pods-UTalk.debug.xcconfig"; sourceTree = "<group>"; };
+		82F299EE23C29FF28F6F41EE /* Pods-UTalk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UTalk.release.xcconfig"; path = "Target Support Files/Pods-UTalk/Pods-UTalk.release.xcconfig"; sourceTree = "<group>"; };
+		914A452F3364AAD454BC8572 /* Pods-UTalk-UTalkTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UTalk-UTalkTests.debug.xcconfig"; path = "Target Support Files/Pods-UTalk-UTalkTests/Pods-UTalk-UTalkTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A9701AF92ADF46AB00D530EA /* UTalk-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UTalk-Bridging-Header.h"; sourceTree = "<group>"; };
+		A9701AFA2ADF46AB00D530EA /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		A993DB472ABB9E1B00F68F15 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = text; name = FontAwesome.ttf; path = ../../../../../../../.Trash/FontAwesome.ttf; sourceTree = "<group>"; };
-		D67612E07476C0C9945E015C /* Pods-UTalk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UTalk.release.xcconfig"; path = "Target Support Files/Pods-UTalk/Pods-UTalk.release.xcconfig"; sourceTree = "<group>"; };
-		EAE812DF6376CB8597DE4619 /* Pods-UTalk-UTalkTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UTalk-UTalkTests.debug.xcconfig"; path = "Target Support Files/Pods-UTalk-UTalkTests/Pods-UTalk-UTalkTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B1E5009F69633A336EC24934 /* Pods-UTalk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UTalk.debug.xcconfig"; path = "Target Support Files/Pods-UTalk/Pods-UTalk.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		FD755BA3599D8CE993F9E594 /* Pods-UTalk-UTalkTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UTalk-UTalkTests.release.xcconfig"; path = "Target Support Files/Pods-UTalk-UTalkTests/Pods-UTalk-UTalkTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BBAA346A3AA4B7881F983EE4 /* libPods-UTalk-UTalkTests.a in Frameworks */,
+				5709B6332B74212C074D4E28 /* libPods-UTalk-UTalkTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,7 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26D9DBBB7F3FF92DD9B3A445 /* libPods-UTalk.a in Frameworks */,
+				0D0356F799C6FD0DCE3BD2C4 /* libPods-UTalk.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,8 +105,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				2B3924372D505615480D75C5 /* libPods-UTalk.a */,
-				0BD5E4EEC07C811F40906587 /* libPods-UTalk-UTalkTests.a */,
+				307D05DBDCC4572F46343A65 /* libPods-UTalk.a */,
+				71B8CA60183057B439ADE49C /* libPods-UTalk-UTalkTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -118,12 +121,14 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				A9701AFA2ADF46AB00D530EA /* File.swift */,
 				13B07FAE1A68108700A75B9A /* UTalk */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* UTalkTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				A9701AF92ADF46AB00D530EA /* UTalk-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -151,10 +156,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				A022662E0385D329723E26D7 /* Pods-UTalk.debug.xcconfig */,
-				D67612E07476C0C9945E015C /* Pods-UTalk.release.xcconfig */,
-				EAE812DF6376CB8597DE4619 /* Pods-UTalk-UTalkTests.debug.xcconfig */,
-				FD755BA3599D8CE993F9E594 /* Pods-UTalk-UTalkTests.release.xcconfig */,
+				B1E5009F69633A336EC24934 /* Pods-UTalk.debug.xcconfig */,
+				82F299EE23C29FF28F6F41EE /* Pods-UTalk.release.xcconfig */,
+				914A452F3364AAD454BC8572 /* Pods-UTalk-UTalkTests.debug.xcconfig */,
+				1B7049045D5AE818F221288F /* Pods-UTalk-UTalkTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -166,12 +171,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "UTalkTests" */;
 			buildPhases = (
-				F1E9DDF8FDF9CF57A4A6190B /* [CP] Check Pods Manifest.lock */,
+				D3B06F47D559ECD136262D37 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				49245FC86E207FFAA1636440 /* [CP] Embed Pods Frameworks */,
-				DF7676BECF826D842D5AED78 /* [CP] Copy Pods Resources */,
+				6FB424C441330CD7FD2C6663 /* [CP] Embed Pods Frameworks */,
+				BCFB75F5EFDBC62537330F51 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -187,14 +192,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "UTalk" */;
 			buildPhases = (
-				14EAC95503A34879EE88BA0B /* [CP] Check Pods Manifest.lock */,
+				1BD919BD26C28355E48873BA /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				AED050CB61F381BEAA29B512 /* [CP] Embed Pods Frameworks */,
-				9020D7AFB93A8192B8C73935 /* [CP] Copy Pods Resources */,
+				DF8A5A95225D034ADA8A94A5 /* [CP] Embed Pods Frameworks */,
+				CFE657744175F938706B0148 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -218,7 +223,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1500;
 					};
 				};
 			};
@@ -277,7 +282,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		14EAC95503A34879EE88BA0B /* [CP] Check Pods Manifest.lock */ = {
+		1BD919BD26C28355E48873BA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -299,7 +304,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		49245FC86E207FFAA1636440 /* [CP] Embed Pods Frameworks */ = {
+		6FB424C441330CD7FD2C6663 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -316,41 +321,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UTalk-UTalkTests/Pods-UTalk-UTalkTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9020D7AFB93A8192B8C73935 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-UTalk/Pods-UTalk-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-UTalk/Pods-UTalk-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UTalk/Pods-UTalk-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AED050CB61F381BEAA29B512 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-UTalk/Pods-UTalk-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-UTalk/Pods-UTalk-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UTalk/Pods-UTalk-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DF7676BECF826D842D5AED78 /* [CP] Copy Pods Resources */ = {
+		BCFB75F5EFDBC62537330F51 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -367,7 +338,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UTalk-UTalkTests/Pods-UTalk-UTalkTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F1E9DDF8FDF9CF57A4A6190B /* [CP] Check Pods Manifest.lock */ = {
+		CFE657744175F938706B0148 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-UTalk/Pods-UTalk-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-UTalk/Pods-UTalk-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UTalk/Pods-UTalk-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D3B06F47D559ECD136262D37 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -387,6 +375,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DF8A5A95225D034ADA8A94A5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-UTalk/Pods-UTalk-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-UTalk/Pods-UTalk-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UTalk/Pods-UTalk-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -424,6 +429,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				A9701AFB2ADF46AB00D530EA /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -441,8 +447,9 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EAE812DF6376CB8597DE4619 /* Pods-UTalk-UTalkTests.debug.xcconfig */;
+			baseConfigurationReference = 914A452F3364AAD454BC8572 /* Pods-UTalk-UTalkTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -468,8 +475,9 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FD755BA3599D8CE993F9E594 /* Pods-UTalk-UTalkTests.release.xcconfig */;
+			baseConfigurationReference = 1B7049045D5AE818F221288F /* Pods-UTalk-UTalkTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -499,7 +507,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A022662E0385D329723E26D7 /* Pods-UTalk.debug.xcconfig */;
+			baseConfigurationReference = B1E5009F69633A336EC24934 /* Pods-UTalk.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -519,15 +527,16 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = UTalk;
+				SWIFT_OBJC_BRIDGING_HEADER = "UTalk-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.2;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D67612E07476C0C9945E015C /* Pods-UTalk.release.xcconfig */;
+			baseConfigurationReference = 82F299EE23C29FF28F6F41EE /* Pods-UTalk.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -546,7 +555,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = UTalk;
-				SWIFT_VERSION = 5.0;
+				SWIFT_OBJC_BRIDGING_HEADER = "UTalk-Bridging-Header.h";
+				SWIFT_VERSION = 5.2;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

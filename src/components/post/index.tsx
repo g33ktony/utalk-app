@@ -18,7 +18,8 @@ import { setIsShown, setTerm } from '../../store/reducers/search'
 import { getDeviceId } from 'react-native-device-info'
 import Media from './media'
 import { useScreenDimensions } from '../../helpers/hooks'
-import { selectIsShown } from '../../store/selectors/search'
+import PlayIndicator from './play-indicator'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 global.Buffer = global.Buffer || require('buffer').Buffer
 
@@ -67,9 +68,30 @@ const Post = ({ item, play, videoRef }: PropsT) => {
     <View style={[styles.flexContainer, { height: availableHeight }]}>
       <Media item={item} ref={videoRef} isPlaying={isPlaying} />
       <View style={styles.postContainer}>
-        <Avatar id={deviceId} author={item.author} />
-        <Text style={styles.title}>{item.title}</Text>
-        <TouchableOpacity onPress={playVideo} style={styles.flexContainer} />
+        <View style={{ flexDirection: 'row' }}>
+          <View>
+            <Avatar id={deviceId} author={item.author} />
+            <Text style={styles.title}>{item.title}</Text>
+          </View>
+          {!item.images ? (
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'flex-end'
+              }}
+            >
+              <Icon
+                name='video-camera'
+                color='rgba(157,157, 159, 0.7)'
+                size={22}
+              />
+            </View>
+          ) : null}
+        </View>
+        <TouchableOpacity onPress={playVideo} style={styles.flexContainer}>
+          <PlayIndicator item={item} isPlaying={isPlaying} />
+        </TouchableOpacity>
         <Text style={styles.description}>
           {formatHashtags(item.description, {}, handleSetHash)}
         </Text>

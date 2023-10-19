@@ -1,22 +1,33 @@
 import React, {
   Dispatch,
-  MutableRefObject,
   ReactElement,
   SetStateAction,
-  forwardRef,
+  useCallback,
   useEffect,
   useRef,
   useState
 } from 'react'
-import { View, TouchableOpacity, Platform, Text } from 'react-native'
+import { View, Platform, StyleSheet } from 'react-native'
 import {
   Camera,
+  CameraCaptureError,
   CameraDevice,
+  CameraRuntimeError,
   useCameraDevice,
-  useCameraFormat
+  useCameraFormat,
+  useCameraPermission,
+  useMicrophonePermission
 } from 'react-native-vision-camera'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import { useScreenDimensions } from '../../helpers/hooks'
+import { useIsFocused } from '@react-navigation/core'
+import { useIsForeground, useScreenDimensions } from '../../helpers/hooks'
+import {
+  GestureEvent,
+  HandlerStateChangeEvent,
+  TapGestureHandler
+} from 'react-native-gesture-handler'
+import styles from './index.styles'
+import Controls from './controls'
+import TopControls from './top-controls'
 
 type PropsT = {
   cameraOpen: boolean
@@ -54,18 +65,78 @@ const CameraView = ({
   isRecording,
   hideVideo = false
 }: PropsT) => {
-  const [cameraPosition, setCameraPosition] = useState('back')
+  const isFocussed = useIsFocused()
+  const isForeground = useIsForeground()
+  const isActive = isFocussed && isForeground
+  const [cameraPosition, setCameraPosition] = useState<'front' | 'back'>('back')
+  const [isCameraInitialized, setIsCameraInitialized] = useState(false)
   const [recordedTime, setRecordedTime] = useState(0)
-  const { insetsBottom } = useScreenDimensions()
+  const [hasMicrophonePermission, setHasMicrophonePermission] = useState(false)
   const camera = useRef<Camera>(null)
-  const device: CameraDevice = useCameraDevice(cameraPosition)
+  const { hasPermission, requestPermission } = useMicrophonePermission()
+  const {
+    hasPermission: cameraPermission,
+    requestPermission: requestCameraPermission
+  } = useCameraPermission()
+  let device = useCameraDevice(cameraPosition)
+  const { fullScreenHeight, fullScreenWidth } = useScreenDimensions()
+  const screenAspectRatio = fullScreenHeight / fullScreenWidth
   const format = useCameraFormat(device, [
-    { videoResolution: { width: 426, height: 240 } },
-    { fps: 30 }
+    { videoStabilizationMode: 'auto' },
+    { videoAspectRatio: screenAspectRatio },
+    { videoResolution: { width: 352, height: 240 } },
+    { videoHDR: false },
+    { fps: 25 },
+    { photoHDR: false },
+    { photoAspectRatio: screenAspectRatio },
+    { photoResolution: 'max' }
   ])
 
+  const onGestureEvent = async (
+    event: HandlerStateChangeEvent<Record<string, unknown>>
+  ) => {
+    const { x, y } = event.nativeEvent as unknown as { x: number; y: number }
+    try {
+      await camera.current?.focus({ x, y })
+    } catch (error) {
+      console.log('error focusing', error)
+    }
+  }
+
   useEffect(() => {
-    let interval
+    if (!hasPermission) {
+      requestPermission().then(() => setHasMicrophonePermission(true))
+    }
+    if (!cameraPermission) {
+      requestCameraPermission()
+    }
+  }, [])
+
+  const onError = useCallback((error: CameraRuntimeError) => {
+    if (
+      error.message ===
+      '[permission/camera-permission-denied] The Camera permission was denied!'
+    ) {
+      handleCloseCamera()
+      requestCameraPermission()
+    }
+
+    console.error(error)
+  }, [])
+
+  const toggleCameraType = () => {
+    setIsVideo(prev => !prev)
+  }
+
+  const handleVideoButton = () => {
+    if (isRecording) {
+      return stopRecording()
+    }
+    return takeVideo()
+  }
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | undefined
     if (isRecording) {
       interval = setInterval(() => {
         setRecordedTime(prevTime => prevTime + 1)
@@ -79,221 +150,146 @@ const CameraView = ({
     }
   }, [isRecording])
 
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60)
-    const seconds = time % 60
-    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
-      2,
-      '0'
-    )}`
-  }
-
-  const toggleCameraType = () => {
-    if (!isVideo && Platform.OS === 'android') {
-      setIsVideo(!isVideo)
-      setTimeout(() => {
-        setCameraPosition('front')
-      }, 500)
-    } else {
-      setIsVideo(!isVideo)
-    }
-  }
-
-  const handleVideoButton = () => {
-    if (isRecording) {
-      return stopRecording()
-    }
-    return takeVideo()
-  }
-
   const stopRecording = async () => {
     try {
       await camera?.current?.stopRecording()
+
       setIsRecording(false)
       setRecordedTime(0)
     } catch (error) {
-      console.log('error', error)
+      setIsRecording(false)
+      setRecordedTime(0)
+      if (error instanceof CameraCaptureError) {
+        switch (error.code) {
+          case 'capture/file-io-error':
+            console.error('Failed to write video to disk!')
+            break
+          default:
+            console.error(error)
+            break
+        }
+      }
     }
   }
 
   const takePhoto = async () => {
     try {
       const photo = await camera.current?.takePhoto()
-      const pathParts = photo.path.split('/')
-      const fileName = pathParts[pathParts.length - 1].split('.')[0]
-      console.log('photo', photo)
+      const pathParts = photo?.path.split('/')
+      const fileName = pathParts?.[pathParts.length - 1].split('.')[0]
       const fileData = {
-        uri: photo.path,
+        uri: photo?.path,
         type: 'image/jpeg',
         name: fileName
       }
 
-      console.log('fileData', fileData)
-
       setFile(fileData)
 
       setMediaUri(
-        Platform.OS === 'android' ? `file:///${photo?.path}` : photo.path
+        Platform.OS === 'android'
+          ? `file:///${photo?.path}`
+          : photo?.path || null
       )
       setVideoUri(null)
-      setCameraOpen(false)
+      handleCloseCamera()
     } catch (error) {
-      console.log('error', error.message)
+      if (error instanceof CameraCaptureError) {
+        switch (error.code) {
+          case 'capture/file-io-error':
+            console.error('Failed to write photo to disk!')
+            break
+          default:
+            console.error(error)
+            break
+        }
+      }
     }
   }
 
-  const takeVideo = () => {
-    console.log('recording...')
-
+  const takeVideo = async () => {
     setIsRecording(true)
     camera.current?.startRecording({
       fileType: 'mp4',
       videoCodec: 'h264',
+      videoBitRate: 200,
       onRecordingFinished: video => {
-        console.log('video', video)
+        const path = video.path
         setIsRecording(false)
-        setVideoUri(video.path)
-        const pathParts = video.path.split('/')
+        setVideoUri(path)
+        const pathParts = path.split('/')
         const fileName = pathParts[pathParts.length - 1].split('.')[0]
         const fileData = {
-          uri: video.path,
+          uri: path,
           type: 'video/mp4',
           name: fileName
         }
 
-        console.log('fileData', fileData)
-
         setFile(fileData)
-
         setMediaUri(null)
-        setCameraOpen(false)
+        handleCloseCamera()
       },
-      onRecordingError: error => console.error(error)
+      onRecordingError: error => console.log(error)
     })
   }
 
+  const handleCloseCamera = () => {
+    if (isRecording) {
+      stopRecording()
+    }
+    setCameraOpen(false)
+    setIsVideo(false)
+    setCameraPosition('back')
+  }
+
+  const handleTogglePosition = useCallback(() => {
+    setCameraPosition(p => (p === 'back' ? 'front' : 'back'))
+  }, [])
+
+  const onInitialized = useCallback(() => {
+    setIsCameraInitialized(true)
+  }, [])
+
   return (
     <>
-      {cameraOpen ? (
-        <View style={{ flex: 1, backgroundColor: 'black' }}>
-          <Camera
-            video={isVideo}
-            photo={!isVideo}
-            // audio
-            format={format}
-            orientation='portrait'
-            enableZoomGesture
-            ref={camera}
-            device={device}
-            style={{ flex: 1, position: 'relative' }}
-            isActive
+      {device != null && cameraOpen ? (
+        <View style={styles.container}>
+          <TapGestureHandler onActivated={onGestureEvent}>
+            <Camera
+              ref={camera}
+              style={StyleSheet.absoluteFill}
+              device={device}
+              format={format}
+              fps={25}
+              lowLightBoost={device.supportsLowLightBoost}
+              isActive={isActive}
+              onInitialized={onInitialized}
+              onError={onError}
+              enableZoomGesture
+              orientation='portrait'
+              photo
+              video
+              audio={hasMicrophonePermission}
+            />
+          </TapGestureHandler>
+          <TopControls
+            recordedTime={recordedTime}
+            isRecording={isRecording}
+            closeCamera={handleCloseCamera}
           />
-          <View
-            style={{
-              position: 'absolute',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%'
-            }}
-          >
-            {isRecording ? (
-              <View
-                style={{
-                  position: 'absolute',
-                  top: 15,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flexDirection: 'row'
-                }}
-              >
-                <View
-                  style={{
-                    height: 14,
-                    width: 14,
-                    backgroundColor: 'red',
-                    borderWidth: 5,
-                    borderRadius: 7,
-                    borderColor: 'red',
-                    marginRight: 10
-                  }}
-                />
-                <Text style={{ color: 'white' }}>
-                  {formatTime(recordedTime)}
-                </Text>
-              </View>
-            ) : null}
-          </View>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              backgroundColor: 'transparent',
-              paddingBottom: insetsBottom,
-              paddingTop: 10
-            }}
-          >
-            <View
-              style={{
-                flexDirection: 'row',
-                backgroundColor: 'black'
-              }}
-            >
-              {!hideVideo ? (
-                <TouchableOpacity
-                  style={{
-                    height: 55,
-                    width: 55,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginRight: 45
-                  }}
-                  disabled={isRecording}
-                  onPress={toggleCameraType}
-                >
-                  <Icon
-                    name={!isVideo ? 'video-camera' : 'camera'}
-                    size={28}
-                    color='white'
-                  />
-                </TouchableOpacity>
-              ) : null}
-              <TouchableOpacity
-                style={{
-                  height: 55,
-                  width: 55,
-                  borderRadius: 55 / 2,
-                  borderWidth: 5,
-                  borderColor: 'white',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: isRecording ? 'red' : 'transparent'
-                }}
-                onPress={isVideo ? handleVideoButton : takePhoto}
-              >
-                <Icon
-                  name={isVideo ? 'video-camera' : 'camera'}
-                  size={18}
-                  color='white'
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  height: 55,
-                  width: 55,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginLeft: 45
-                }}
-                onPress={() =>
-                  setCameraPosition(
-                    cameraPosition === 'back' ? 'front' : 'back'
-                  )
-                }
-              >
-                <Icon name='refresh' size={28} color='white' />
-              </TouchableOpacity>
-            </View>
-          </View>
+          <Controls
+            hideVideo={hideVideo}
+            isRecording={isRecording}
+            captureDisabled={!isCameraInitialized && !isActive}
+            onPressCapture={isVideo ? handleVideoButton : takePhoto}
+            captureBackground={isRecording ? 'red' : 'transparent'}
+            videoButtonDisabled={
+              (!isCameraInitialized && !isActive) || isRecording
+            }
+            onPressCameraType={toggleCameraType}
+            positionDisabled={!isCameraInitialized && !isActive}
+            onPressPosition={handleTogglePosition}
+            isVideo={isVideo}
+          />
         </View>
       ) : (
         children

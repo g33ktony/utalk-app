@@ -3,22 +3,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   ActivityIndicator,
   Alert,
-  Dimensions,
   FlatList,
   View,
-  RefreshControl,
-  Platform
+  RefreshControl
 } from 'react-native'
 import Video from 'react-native-video'
 import { useNavigation } from '@react-navigation/native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { addFilteredPosts, addPost, setPosts } from '../../store/reducers/posts'
 import { getAllPosts } from '../../store/selectors/posts'
 import { selectIsShown, selectTerm } from '../../store/selectors/search'
 import { setTerm } from '../../store/reducers/search'
 import SearchBar from '../../components/search-bar'
 import Post from '../../components/post'
-import { fetchPosts } from '../../server'
+import { fetchPosts } from '../../api'
 import { getToken } from '../../store/selectors/auth'
 import PostListEmptyState from '../../components/post/post-list-empty-state'
 import styles from './index.styles'
@@ -50,23 +47,26 @@ const MainScreen = () => {
     dispatch(setTerm(''))
   }
 
-  const setInitialData = async () => {
+  const setInitialData = async (hashTag?: string) => {
     setIsLoading(true)
     try {
       let config = {
         params: {
           page: 0,
-          size: 3
+          size: 2
         },
         headers: { Authorization: `Bearer ${token}` }
       }
 
-      // if(searchIsShown) {
-      //   config.params.
-      // }
+      if (hashTag) {
+        config.params.hashtags = hashTag
+      } else {
+        clearSearch()
+      }
 
       const res = await fetchPosts(config)
       setTotalPages(res.data.totalPages)
+      setPage(1)
       dispatch(setPosts(res.data.posts))
       setIsLoading(false)
     } catch (error: any) {
@@ -82,27 +82,28 @@ const MainScreen = () => {
     }
   }
 
-  const fetchNextPosts = async (customPage?: number) => {
+  const fetchNextPosts = async (hashTag?: string) => {
     try {
-      const res = await fetchPosts({
+      let config = {
         params: {
           page,
-          size: 3
+          size: 2
         },
         headers: { Authorization: `Bearer ${token}` }
-      })
+      }
+      if (hashTag) {
+        config.params.hashtags = hashTag
+      }
+      const res = await fetchPosts(config)
 
       dispatch(addPost(res.data.posts))
     } catch (error: any) {
       Alert.alert(error.message)
-      console.log('error', error)
     }
   }
 
   useEffect(() => {
-    setInitialData().then(() => {
-      setPage(page + 1)
-    })
+    setInitialData()
   }, [])
 
   useEffect(() => {
@@ -111,19 +112,13 @@ const MainScreen = () => {
 
   useEffect(() => {
     if (!searchIsShown) {
-      clearSearch()
+      onClearInput()
     }
   }, [searchIsShown])
 
   useEffect(() => {
     if (searchTerm.length) {
-      const filter = posts.data.filter(
-        post =>
-          post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.description.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      dispatch(addFilteredPosts(filter))
-      setDataToShow(filter)
+      setInitialData(searchTerm)
     } else {
       setDataToShow(posts.data)
       dispatch(addFilteredPosts(posts.data))
@@ -131,12 +126,14 @@ const MainScreen = () => {
     }
   }, [searchTerm])
 
-  const handleSearch = (text: string) => dispatch(setTerm(text))
+  const handleSearch = (text: string) => {
+    dispatch(setTerm(text))
+  }
 
   const loadMorePosts = () => {
     if (page !== totalPages) {
-      fetchNextPosts().then(() => {
-        setPage(page + 1)
+      fetchNextPosts(searchTerm ? searchTerm : undefined).then(() => {
+        setPage(page => page + 1)
       })
     }
   }
@@ -145,10 +142,14 @@ const MainScreen = () => {
     setIsLoading(true)
     setInitialData()
       .then(() => {
-        setPage(page + 1)
         setIsLoading(false)
       })
       .catch(() => setIsLoading(false))
+  }
+
+  const onClearInput = () => {
+    clearSearch()
+    setInitialData()
   }
 
   const onViewableItemsChanged = useRef(({ viewableItems }) => {
@@ -163,7 +164,7 @@ const MainScreen = () => {
     <View style={styles.container}>
       <SearchBar
         visible={searchIsShown}
-        onClose={clearSearch}
+        onClearInput={onClearInput}
         onSearch={handleSearch}
       />
 

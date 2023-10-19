@@ -58,7 +58,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Camera access is used to get photos for you posts</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Camera access is used to get photos for you posts</string>
+	<string>$(PRODUCT_NAME) needs access to your Microphone.</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

@@ -7,14 +7,14 @@ import { selectTerm } from '../../store/selectors/search'
 
 type SearchBarProps = {
   onSearch: (searchText: string) => void
-  onClose: () => void
+  onClearInput: () => void
   visible: boolean
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
   visible,
-  onClose
+  onClearInput
 }) => {
   const searchTerm = useSelector(selectTerm)
   const onChange = (text: string) => onSearch(text)
@@ -35,7 +35,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             onChangeText={onChange}
             value={searchTerm}
           />
-          <TouchableOpacity onPress={onClose}>
+          <TouchableOpacity onPress={onClearInput}>
             <Icon
               name='close'
               size={15}

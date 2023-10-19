@@ -18,7 +18,7 @@ import Logo from '../../../assets/logo.png'
 import { setDeviceId } from '../../store/reducers/device'
 import { login, setAuthorUsername } from '../../store/reducers/auth'
 import styles from './index.styles'
-import { logIn, signUp } from '../../server'
+import { logIn, signUp } from '../../api'
 
 const LoginScreen = () => {
   const dispatch = useDispatch()

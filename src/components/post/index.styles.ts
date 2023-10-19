@@ -35,7 +35,8 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   flexContainer: {
-    flex: 1
+    flex: 1,
+    justifyContent: 'center'
   }
 })
 

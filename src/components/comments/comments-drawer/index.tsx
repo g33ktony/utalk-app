@@ -15,7 +15,7 @@ import Comment from '..'
 import CommentRow from '../comment-row'
 import { CommentT, PostT } from '../../../store/reducers/posts'
 import { useScreenDimensions } from '../../../helpers/hooks'
-import { getPostComments } from '../../../server'
+import { getPostComments } from '../../../api'
 import { useSelector } from 'react-redux'
 import { getToken } from '../../../store/selectors/auth'
 type PropsT = {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   View,
   Text,
@@ -18,9 +18,10 @@ import { getToken } from '../../store/selectors/auth'
 import VideoPlayer from '../../components/video-player'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { openPicker } from 'react-native-image-crop-picker'
-import { postMedia } from '../../server'
+import { postMedia } from '../../api'
 import styles from './index.styles'
 import CameraView from '../../components/camera-view'
+import Video from 'react-native-video'
 
 const NewPostScreen = () => {
   const navigation = useNavigation()
@@ -46,17 +47,13 @@ const NewPostScreen = () => {
         forceJpg: true,
         mediaType: 'any'
       })
-
       const pathParts = res.path.split('/')
       const fileName = pathParts[pathParts.length - 1].split('.')[0]
-
       const fileData = {
         uri: res.path,
         type: res.mime,
         name: fileName
       }
-
-      console.log('fileData', fileData)
 
       setFile(fileData)
 
@@ -83,11 +80,12 @@ const NewPostScreen = () => {
 
   const handlePostSubmit = () => {
     setIsLoading(true)
-    if ((postTitle && !videoUri) || !mediaUri) {
+    if (postTitle && postDescription && (videoUri || mediaUri)) {
       const postBody = {
         title: postTitle,
         content: postDescription
       }
+
       postMedia(file, postBody, token)
         .then(() => {
           setIsLoading(false)
@@ -98,14 +96,14 @@ const NewPostScreen = () => {
         })
         .catch(error => {
           setIsLoading(false)
-          console.error('Error uploading video:', error)
           Alert.alert(
             'Error submitting post',
             'Something went wrong, please try again.'
           )
         })
     } else {
-      Alert.alert('Error', 'Enter a title for the post')
+      setIsLoading(false)
+      Alert.alert('Error', 'Please enter a title and description')
     }
   }
 
@@ -113,6 +111,7 @@ const NewPostScreen = () => {
   const handleLaunchCamera = () => setCameraOpen(true)
   const [isVideo, setIsVideo] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
+  const videoRef = useRef<Video | null>(null)
 
   return (
     <>
@@ -127,7 +126,7 @@ const NewPostScreen = () => {
         isRecording={isRecording}
         setIsRecording={setIsRecording}
       >
-        <ScrollView contentContainerStyle={{ flex: 1 }}>
+        <ScrollView scrollEnabled contentContainerStyle={{ flex: 1 }}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'position' : 'height'}
             keyboardVerticalOffset={90}
@@ -147,6 +146,8 @@ const NewPostScreen = () => {
               {videoUri ? (
                 <View style={styles.previewImage}>
                   <VideoPlayer
+                    ref={videoRef}
+                    paused={false}
                     style={{ height: '100%', width: '100%' }}
                     uri={videoUri}
                   />
@@ -203,13 +204,15 @@ const NewPostScreen = () => {
             {isLoading ? (
               <ActivityIndicator />
             ) : (
-              <Button
-                title='Submit Post'
-                onPress={handlePostSubmit}
-                disabled={!file}
-              />
+              <View style={{ flexDirection: 'row' }}>
+                <Button
+                  title='Submit Post'
+                  onPress={handlePostSubmit}
+                  disabled={!file}
+                />
+                <Button title='go back' onPress={goBack} />
+              </View>
             )}
-            <Button title='go back' onPress={goBack} />
           </KeyboardAvoidingView>
         </ScrollView>
       </CameraView>

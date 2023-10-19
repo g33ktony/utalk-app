@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image'
 import RNFS from 'react-native-fs'
 import Video from 'react-native-video'
 import { ActivityIndicator, View } from 'react-native'
-import { getMedia } from '../../../server'
+import { getMedia } from '../../../api'
 import { PostT } from '../../../store/reducers/posts'
 import { getToken } from '../../../store/selectors/auth'
 import styles from '../index.styles'
@@ -29,8 +29,6 @@ const Media = forwardRef(
       setIsLoading(true)
       getMedia({ postId: item.postID, token })
         .then(res => {
-          console.log('res', Object.keys(res.data))
-
           const buffer = Buffer.from(res.data, 'binary').toString('base64')
           const filePath = getFilePath()
 
@@ -56,8 +54,6 @@ const Media = forwardRef(
 
       RNFS.exists(filePath)
         .then(exists => {
-          console.log('exists', exists, `file://${filePath}`, item.title)
-
           if (exists) {
             setMediaInfo({ uri: `file://${filePath}` })
           } else {
