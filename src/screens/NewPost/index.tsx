@@ -37,6 +37,9 @@ const NewPostScreen = () => {
   const [videoUri, setVideoUri] = useState<string | null>(null)
   const [cameraOpen, setCameraOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isVideo, setIsVideo] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
+  const videoRef = useRef<Video | null>(null)
 
   const handleMedia = async (method: (options) => void) => {
     try {
@@ -109,9 +112,6 @@ const NewPostScreen = () => {
 
   const handleLaunchLibrary = () => handleMedia(openPicker)
   const handleLaunchCamera = () => setCameraOpen(true)
-  const [isVideo, setIsVideo] = useState(false)
-  const [isRecording, setIsRecording] = useState(false)
-  const videoRef = useRef<Video | null>(null)
 
   return (
     <>

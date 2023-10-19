@@ -3,27 +3,12 @@ import { View, Text, Image, TouchableOpacity } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { logout } from '../../store/reducers/auth'
-import {
-  Asset,
-  ImageLibraryOptions,
-  launchImageLibrary
-} from 'react-native-image-picker'
+import ImageCropPicker, { openPicker } from 'react-native-image-crop-picker'
 import styles from './index.styles'
 import { useSelector } from 'react-redux'
 import { getFirstName, getUserName } from '../../store/selectors/auth'
-import {
-  Camera,
-  CameraDevice,
-  useCameraDevice,
-  useCameraFormat
-} from 'react-native-vision-camera'
-import CameraView from '../../components/camera-view'
 
-interface ImagePickerResponse {
-  didCancel?: boolean
-  error?: string
-  assets: Asset[]
-}
+import CameraView from '../../components/camera-view'
 
 const ProfileScreen = () => {
   const dispatch = useDispatch()
@@ -38,29 +23,23 @@ const ProfileScreen = () => {
     dispatch(logout())
     navigation.reset({
       index: 0,
-      routes: [{ name: 'LogIn' }]
+      routes: [{ name: 'LogIn' as never }]
     })
   }
 
   const handleImagePicker = async () => {
     try {
-      const options: ImageLibraryOptions = {
-        mediaType: 'photo',
-        quality: 0.7,
-        presentationStyle: 'popover',
-        assetRepresentationMode: 'compatible'
+      const options = {
+        width: 300,
+        height: 400,
+        maxFiles: 1,
+        forceJpg: true,
+        mediaType: 'any'
       }
-      const response: ImagePickerResponse = await launchImageLibrary(options)
-      if (response.didCancel) {
-        console.log('User cancelled image picker')
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error)
-      } else {
-        console.log('response', response.assets[0].uri)
+      const res = await openPicker(options)
+      console.log('res', res)
 
-        const source = { uri: response.assets[0].uri }
-        setProfileImage(source.uri)
-      }
+      setProfileImage(res.path)
     } catch (error) {}
   }
 
@@ -73,7 +52,7 @@ const ProfileScreen = () => {
     type: string | undefined
   }>()
   const [mediaUri, setMediaUri] = useState<string | null>('')
-  const [videoUri, setVideoUri] = useState<string | null>('')
+  const [_, setVideoUri] = useState<string | null>('')
 
   useEffect(() => {
     if (file) {

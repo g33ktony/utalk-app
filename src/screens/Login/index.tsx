@@ -32,7 +32,7 @@ const LoginScreen = () => {
   const handleLogin = () => {
     setIsLoading(true)
     if (email && password) {
-      logIn({ email, password })
+      logIn({ email: email.trim(), password: password })
         .then(res => {
           dispatch(setAuthorUsername(email))
           dispatch(login(res.data.token))
@@ -42,7 +42,7 @@ const LoginScreen = () => {
           registerDevice()
           navigation.reset({
             index: 0,
-            routes: [{ name: 'Main' }]
+            routes: [{ name: 'Main' as never }]
           })
         })
         .catch(error => {
@@ -64,7 +64,11 @@ const LoginScreen = () => {
   const handleSignUp = () => {
     setIsLoading(true)
     if (email && password && username) {
-      signUp({ email, password, username })
+      signUp({
+        email: email.trim(),
+        password,
+        username: username.trim()
+      })
         .then(res => {
           dispatch(setAuthorUsername(email))
           dispatch(login(res.data.token))
@@ -74,7 +78,7 @@ const LoginScreen = () => {
           registerDevice()
           navigation.reset({
             index: 0,
-            routes: [{ name: 'Main' }]
+            routes: [{ name: 'Main' as never }]
           })
         })
         .catch(error => {
