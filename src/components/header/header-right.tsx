@@ -17,7 +17,7 @@ const HeaderRight = () => {
   const navigateToNewPost = () =>
     navigation.reset({
       index: 0,
-      routes: [{ name: 'New Post' }]
+      routes: [{ name: 'New Post' as never }]
     })
   const handleShowSearch = () => dispatch(setIsShown(!isShown))
 

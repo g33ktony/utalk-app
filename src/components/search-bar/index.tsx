@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, TextInput, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import styles from './index.styles'
@@ -17,7 +17,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
   onClearInput
 }) => {
   const searchTerm = useSelector(selectTerm)
-  const onChange = (text: string) => onSearch(text)
+  const [value, setValue] = useState(searchTerm)
+
+  const onChange = (text: string) => {
+    setValue(text)
+    onSearch(text)
+  }
+
+  useEffect(() => {
+    setValue(searchTerm)
+  }, [searchTerm])
 
   return (
     <>
@@ -33,7 +42,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             style={styles.input}
             placeholder='Search...'
             onChangeText={onChange}
-            value={searchTerm}
+            value={value}
           />
           <TouchableOpacity onPress={onClearInput}>
             <Icon

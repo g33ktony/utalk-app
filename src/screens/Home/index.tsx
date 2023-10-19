@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { SetStateAction, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   ActivityIndicator,
@@ -27,6 +27,10 @@ export type PageSelectedEvent = {
   }
 }
 
+type ViewableItem = {
+  index: number | null
+}
+
 const MainScreen = () => {
   const dispatch = useDispatch()
   const { HEADER_HEIGHT, fullScreenHeight } = useScreenDimensions()
@@ -39,7 +43,7 @@ const MainScreen = () => {
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [dataToShow, setDataToShow] = useState(posts.data)
-  const [viewableItems, setViewableItems] = useState([])
+  const [viewableItems, setViewableItems] = useState<number[] | null>([])
   const videoRef = useRef<Video | null>(null)
   const availableHeight = fullScreenHeight - HEADER_HEIGHT
 
@@ -50,7 +54,10 @@ const MainScreen = () => {
   const setInitialData = async (hashTag?: string) => {
     setIsLoading(true)
     try {
-      let config = {
+      let config: {
+        params: { page: number; size: number; hashtags?: string }
+        headers: Record<string, string>
+      } = {
         params: {
           page: 0,
           size: 2
@@ -75,7 +82,7 @@ const MainScreen = () => {
         setIsLoading(false)
         return navigation.reset({
           index: 0,
-          routes: [{ name: 'LogIn' }]
+          routes: [{ name: 'LogIn' as never }]
         })
       }
       Alert.alert(error.message)
@@ -84,7 +91,10 @@ const MainScreen = () => {
 
   const fetchNextPosts = async (hashTag?: string) => {
     try {
-      let config = {
+      let config: {
+        params: { page: number; size: number; hashtags?: string }
+        headers: Record<string, string>
+      } = {
         params: {
           page,
           size: 2
@@ -126,8 +136,18 @@ const MainScreen = () => {
     }
   }, [searchTerm])
 
+  const [timer, setTimer] = useState<number | null>(null)
+
   const handleSearch = (text: string) => {
-    dispatch(setTerm(text))
+    if (timer) {
+      clearTimeout(timer)
+    }
+
+    const newTimer = setTimeout(() => {
+      dispatch(setTerm(text))
+    }, 500) as unknown as number
+
+    setTimer(newTimer)
   }
 
   const loadMorePosts = () => {
@@ -152,9 +172,13 @@ const MainScreen = () => {
     setInitialData()
   }
 
-  const onViewableItemsChanged = useRef(({ viewableItems }) => {
-    setViewableItems(viewableItems.map(item => item.index))
-  })
+  const onViewableItemsChanged = useRef(
+    ({ viewableItems }: { viewableItems: ViewableItem[] }) => {
+      setViewableItems(
+        viewableItems.map(item => item.index) as SetStateAction<number[] | null>
+      )
+    }
+  )
 
   const viewabilityConfig = {
     itemVisiblePercentThreshold: 50
@@ -183,7 +207,7 @@ const MainScreen = () => {
             >
               <Post
                 item={item}
-                play={viewableItems.includes(index)}
+                play={viewableItems?.includes(index)}
                 videoRef={videoRef}
               />
             </View>

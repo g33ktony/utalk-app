@@ -25,7 +25,7 @@ global.Buffer = global.Buffer || require('buffer').Buffer
 
 type PropsT = {
   item: PostT
-  play: boolean
+  play: boolean | undefined
   videoRef: MutableRefObject<Video | null>
 }
 
