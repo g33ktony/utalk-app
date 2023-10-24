@@ -9,7 +9,7 @@ interface AuthState {
 const initialState: AuthState = {
   userName: '',
   token: '',
-  firstName: 'Antonio M'
+  firstName: ''
 }
 
 const authSlice = createSlice({
@@ -18,6 +18,9 @@ const authSlice = createSlice({
   reducers: {
     setAuthorUsername: (state, action) => {
       state.userName = action.payload
+    },
+    setFirstName: (state, action) => {
+      state.firstName = action.payload
     },
     login: (state, action) => {
       state.token = action.payload
@@ -28,5 +31,6 @@ const authSlice = createSlice({
   }
 })
 
-export const { login, logout, setAuthorUsername } = authSlice.actions
+export const { login, logout, setAuthorUsername, setFirstName } =
+  authSlice.actions
 export default authSlice.reducer

@@ -16,13 +16,13 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginRight: 20,
-    marginBottom: 10
+    marginBottom: 25
   },
   editProfileButton: {
     padding: 10,
     backgroundColor: '#E5E5E5',
-    borderRadius: 5
+    borderRadius: 5,
+    marginBottom: 15
   },
   userInfo: {
     alignItems: 'center',

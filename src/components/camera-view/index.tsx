@@ -11,7 +11,6 @@ import { View, Platform, StyleSheet } from 'react-native'
 import {
   Camera,
   CameraCaptureError,
-  CameraDevice,
   CameraRuntimeError,
   useCameraDevice,
   useCameraFormat,
@@ -21,7 +20,6 @@ import {
 import { useIsFocused } from '@react-navigation/core'
 import { useIsForeground, useScreenDimensions } from '../../helpers/hooks'
 import {
-  GestureEvent,
   HandlerStateChangeEvent,
   TapGestureHandler
 } from 'react-native-gesture-handler'
@@ -32,7 +30,7 @@ import TopControls from './top-controls'
 type PropsT = {
   cameraOpen: boolean
   children: ReactElement
-  isVideo: boolean
+  isVideo?: boolean
   setIsRecording: Dispatch<SetStateAction<boolean>>
   setFile: Dispatch<
     SetStateAction<
@@ -45,22 +43,22 @@ type PropsT = {
     >
   >
   setMediaUri: Dispatch<SetStateAction<string | null>>
-  setVideoUri: Dispatch<SetStateAction<string | null>>
+  setVideoUri?: Dispatch<SetStateAction<string | null>>
   isRecording: boolean
   setCameraOpen: Dispatch<SetStateAction<boolean>>
-  setIsVideo: Dispatch<SetStateAction<boolean>>
+  setIsVideo?: Dispatch<SetStateAction<boolean>>
   hideVideo?: boolean
 }
 
 const CameraView = ({
   cameraOpen,
   children,
-  isVideo,
+  isVideo = false,
   setFile,
   setMediaUri,
-  setVideoUri,
+  setVideoUri = () => {},
   setCameraOpen,
-  setIsVideo,
+  setIsVideo = () => {},
   setIsRecording,
   isRecording,
   hideVideo = false

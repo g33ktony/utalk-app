@@ -8,6 +8,7 @@ import { getMedia } from '../../../api'
 import { PostT } from '../../../store/reducers/posts'
 import { getToken } from '../../../store/selectors/auth'
 import styles from '../index.styles'
+import { useScreenDimensions } from '../../../helpers/hooks'
 
 type PropsT = {
   item: PostT
@@ -19,6 +20,10 @@ const Media = forwardRef(
     const token = useSelector(getToken)
     const [isLoading, setIsLoading] = useState(false)
     const [mediaInfo, setMediaInfo] = useState<{ uri: string } | null>(null)
+    const { fullScreenHeight, insetsTop, insetsBottom, HEADER_HEIGHT } =
+      useScreenDimensions()
+    const availableHeight =
+      fullScreenHeight - (insetsTop + insetsBottom + HEADER_HEIGHT)
 
     const getFilePath = () => {
       const extension = item.videos ? 'mp4' : 'jpg'
@@ -97,6 +102,8 @@ const Media = forwardRef(
           <Video
             ref={ref}
             repeat
+            poster='https://www.icloud.com/iclouddrive/0a5KhwqS8Q2lbHrkvJPapn-1w#logo.jpg'
+            posterResizeMode='cover'
             ignoreSilentSwitch='ignore'
             source={mediaInfo}
             paused={!isPlaying}

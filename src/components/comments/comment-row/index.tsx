@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
-import { ColorValue, TextInput, TouchableOpacity, View } from 'react-native'
+import {
+  Alert,
+  ColorValue,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { PostT, incrementComments } from '../../../store/reducers/posts'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -27,6 +33,9 @@ const CommentRow = ({ item, customStyles, reload = () => {} }: PropsT) => {
   const token = useSelector(getToken)
 
   const handleCommentSubmit = () => {
+    if (!commentInput) {
+      Alert.alert('Error', 'Please enter a comment to continue')
+    }
     const newComment = {
       text: commentInput,
       post: {

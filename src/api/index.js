@@ -85,4 +85,41 @@ export const addComment = (postId, commentData, token) => {
   })
 }
 
+export const setUserAvatar = (file, token) => {
+  const URL = '/user/avatar'
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return api.post(`${BASE_URL}${URL}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const setUserName = (payload, token) => {
+  const URL = '/user'
+
+  return api.post(`${BASE_URL}${URL}`, payload, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const getAvatar = (payload, token) => {
+  const URL = '/user/avatar'
+
+  return api.get(
+    `${BASE_URL}${URL}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+}
+
 export default api

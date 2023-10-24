@@ -41,9 +41,9 @@ const NewPostScreen = () => {
   const [isRecording, setIsRecording] = useState(false)
   const videoRef = useRef<Video | null>(null)
 
-  const handleMedia = async (method: (options) => void) => {
+  const handleMedia = async () => {
     try {
-      const res = await method({
+      const res = await openPicker({
         width: 300,
         height: 400,
         maxFiles: 1,
@@ -60,15 +60,10 @@ const NewPostScreen = () => {
 
       setFile(fileData)
 
-      if (res) {
-        if (res.mime === 'video/mp4') {
-          setVideoUri(res.path || null)
-          setMediaUri(null)
-        } else {
-          setMediaUri(res.path || null)
-          setVideoUri(null)
-        }
-      }
+      // if (res) {
+      setMediaUri(res.path)
+
+      // }
     } catch (error) {
       console.error(error)
     }
@@ -110,7 +105,7 @@ const NewPostScreen = () => {
     }
   }
 
-  const handleLaunchLibrary = () => handleMedia(openPicker)
+  const handleLaunchLibrary = () => handleMedia()
   const handleLaunchCamera = () => setCameraOpen(true)
 
   return (
@@ -126,11 +121,16 @@ const NewPostScreen = () => {
         isRecording={isRecording}
         setIsRecording={setIsRecording}
       >
-        <ScrollView scrollEnabled contentContainerStyle={{ flex: 1 }}>
+        <ScrollView
+          scrollEnabled
+          // style={{ height: '100%' }}
+          contentContainerStyle={{ flex: 1 }}
+        >
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'position' : 'height'}
             keyboardVerticalOffset={90}
             style={styles.container}
+            // contentContainerStyle={{ height: '100%', backgroundColor: 'red' }}
           >
             <View style={styles.previewContainer}>
               {mediaUri ? (
@@ -204,13 +204,34 @@ const NewPostScreen = () => {
             {isLoading ? (
               <ActivityIndicator />
             ) : (
-              <View style={{ flexDirection: 'row' }}>
-                <Button
-                  title='Submit Post'
-                  onPress={handlePostSubmit}
-                  disabled={!file}
-                />
-                <Button title='go back' onPress={goBack} />
+              <View
+                style={{
+                  justifyContent: 'flex-end',
+                  paddingBottom: 15
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={goBack}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Icon name='chevron-left' size={28} color='black' />
+                    <Text style={{ marginLeft: 10 }}>Go Back</Text>
+                  </TouchableOpacity>
+                  <Button
+                    title='Submit Post'
+                    onPress={handlePostSubmit}
+                    disabled={!file}
+                  />
+                </View>
               </View>
             )}
           </KeyboardAvoidingView>

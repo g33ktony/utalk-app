@@ -108,6 +108,7 @@ const CommentsDrawer = ({ post, isDrawerOpen, onCloseDrawer }: PropsT) => {
         {comments?.length ? (
           <View style={{ flex: 1 }}>
             <FlatList
+              keyboardShouldPersistTaps='always'
               data={comments}
               keyExtractor={item => item.commentId}
               renderItem={({ item }) => (
@@ -140,7 +141,7 @@ const CommentsDrawer = ({ post, isDrawerOpen, onCloseDrawer }: PropsT) => {
         <CommentRow
           reload={fetchPostComments}
           customStyles={{
-            container: { paddingHorizontal: 15 },
+            container: { paddingHorizontal: 15, marginBottom: 20 },
             placeholderColor: 'white',
             input: { color: 'white' }
           }}

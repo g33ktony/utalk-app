@@ -98,7 +98,7 @@ const Post = ({ item, play, videoRef }: PropsT) => {
         <PostInfoBar setIsPlaying={setIsPlaying} postId={item.postID} />
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-          keyboardVerticalOffset={90}
+          keyboardVerticalOffset={115}
           style={styles.bottomRow}
         >
           <CommentRow customStyles={commentRowStyles} item={item} />

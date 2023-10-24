@@ -230,6 +230,7 @@ const MainScreen = () => {
           showsVerticalScrollIndicator={false}
           snapToInterval={availableHeight}
           removeClippedSubviews
+          keyboardShouldPersistTaps='always'
           ListEmptyComponent={<PostListEmptyState />}
           initialNumToRender={2}
           onEndReached={loadMorePosts}
