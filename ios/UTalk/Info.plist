@@ -58,7 +58,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Camera access is used to get photos for your posts</string>
 	<key>CodePushDeploymentKey</key>
-	<string>xoXHS9JuZnb-YPze_XxT6DwyHOXJ44tdmIoyl</string>
+	<string>Itjv6aT3Ek8czi2fMKHRgmRvsW7eMLlyqEd_l</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your Microphone.</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
