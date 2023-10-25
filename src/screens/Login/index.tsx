@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Text,
   Image,
@@ -19,6 +19,8 @@ import { setDeviceId } from '../../store/reducers/device'
 import { login, setAuthorUsername } from '../../store/reducers/auth'
 import styles from './index.styles'
 import { logIn, signUp } from '../../api'
+import codePush from 'react-native-code-push'
+import ProgressBar from '../../components/progress-bar'
 
 const LoginScreen = () => {
   const dispatch = useDispatch()
@@ -28,6 +30,36 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  // const [installing, setInstalling] = useState(false)
+  // const [downloading, setDownloading] = useState(false)
+  // const [total, setTotal] = useState(0)
+  // const [received, setReceived] = useState(0)
+
+  // useEffect(() => {
+  //   codePush.sync(
+  //     { updateDialog: true },
+  //     status => {
+  //       switch (status) {
+  //         case codePush.SyncStatus.DOWNLOADING_PACKAGE:
+  //           // Show "downloading" modal
+  //           setDownloading(true)
+  //           break
+  //         case codePush.SyncStatus.INSTALLING_UPDATE:
+  //           setInstalling(true)
+  //           // Hide "downloading" modal
+  //           break
+  //       }
+  //     },
+  //     ({ receivedBytes, totalBytes }) => {
+  //       setReceived(receivedBytes)
+  //       setTotal(totalBytes)
+  //       console.log('receivedBytes', receivedBytes)
+  //       console.log('totalBytes', totalBytes)
+
+  //       /* Update download modal progress */
+  //     }
+  //   )
+  // }, [])
 
   const handleLogin = () => {
     setIsLoading(true)
@@ -110,6 +142,14 @@ const LoginScreen = () => {
     >
       <Image style={{ marginBottom: 45 }} source={Logo} />
 
+      {/* {installing ? <Text>Installing update.</Text> : null} */}
+      {/* {installing ? <Text>Installing update, please wait...</Text> : null} */}
+      {/* {downloading ? <Text>Downloading update.</Text> : null} */}
+      {/* {downloading ? <Text>Downloading update, please wait...</Text> : null} */}
+      {/* {downloading ? (
+        <ProgressBar totalBytes={total} receivedBytes={received} />
+      ) : null} */}
+
       {isSignUp ? (
         <TextInput
           style={styles.input}
@@ -144,7 +184,7 @@ const LoginScreen = () => {
           <ActivityIndicator />
         ) : (
           <Text style={styles.buttonText}>
-            {!isSignUp ? 'Sign In' : 'Register'}
+            {!isSignUp ? 'Sign In' : 'Registerkjhskjhs'}
           </Text>
         )}
       </TouchableOpacity>

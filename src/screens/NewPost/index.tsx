@@ -60,10 +60,7 @@ const NewPostScreen = () => {
 
       setFile(fileData)
 
-      // if (res) {
       setMediaUri(res.path)
-
-      // }
     } catch (error) {
       console.error(error)
     }
