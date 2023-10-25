@@ -184,7 +184,7 @@ const LoginScreen = () => {
           <ActivityIndicator />
         ) : (
           <Text style={styles.buttonText}>
-            {!isSignUp ? 'Sign In' : 'Registerkjhskjhs'}
+            {!isSignUp ? 'Sign In' : 'Registered'}
           </Text>
         )}
       </TouchableOpacity>
