@@ -74,9 +74,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.utalk"
+    namespace "com.utalkBeta"
     defaultConfig {
-        applicationId "com.utalk"
+        applicationId "com.utalkBeta"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -1,4 +1,4 @@
-package com.utalk;
+package com.utalkBeta;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
