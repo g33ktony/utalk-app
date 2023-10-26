@@ -26,6 +26,7 @@ import {
 import styles from './index.styles'
 import Controls from './controls'
 import TopControls from './top-controls'
+import RNFS from 'react-native-fs'
 
 type PropsT = {
   cameraOpen: boolean
@@ -82,7 +83,7 @@ const CameraView = ({
   const format = useCameraFormat(device, [
     { videoStabilizationMode: 'auto' },
     { videoAspectRatio: screenAspectRatio },
-    { videoResolution: { width: 352, height: 240 } },
+    { videoResolution: { width: 960, height: 720 } },
     { videoHDR: false },
     { fps: 25 },
     { photoHDR: false },
@@ -221,6 +222,13 @@ const CameraView = ({
           type: 'video/mp4',
           name: fileName
         }
+        RNFS.stat(path)
+          .then(stats => {
+            console.log('File size: ', stats.size / (1024 * 1024)) // size in bytes
+          })
+          .catch(error => {
+            console.error(error.message)
+          })
 
         setFile(fileData)
         setMediaUri(null)

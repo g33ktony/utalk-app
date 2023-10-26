@@ -1,5 +1,6 @@
 {
-  "name": "UTalk",
-  "slug": "Utalk-0"
-  // "displayName": "UTalk"
+  "name": "UTalk Beta", //android
+  // "name": "UTalk", // ios/
+  "slug": "Utalk-0",
+  "displayName": "UTalk Beta"
 }

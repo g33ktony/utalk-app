@@ -90,6 +90,8 @@ const NewPostScreen = () => {
           })
         })
         .catch(error => {
+          console.log('error', error)
+
           setIsLoading(false)
           Alert.alert(
             'Error submitting post',
@@ -118,16 +120,11 @@ const NewPostScreen = () => {
         isRecording={isRecording}
         setIsRecording={setIsRecording}
       >
-        <ScrollView
-          scrollEnabled
-          // style={{ height: '100%' }}
-          contentContainerStyle={{ flex: 1 }}
-        >
+        <ScrollView scrollEnabled contentContainerStyle={{ flex: 1 }}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'position' : 'height'}
             keyboardVerticalOffset={90}
             style={styles.container}
-            // contentContainerStyle={{ height: '100%', backgroundColor: 'red' }}
           >
             <View style={styles.previewContainer}>
               {mediaUri ? (
