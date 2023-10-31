@@ -20,6 +20,8 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   button: {
+    justifyContent: 'center',
+    width: 150,
     backgroundColor: 'blue',
     padding: 10,
     borderRadius: 5

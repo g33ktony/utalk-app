@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "https://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-    <dict>
-    <key>AppSecret</key>
-    <string>f380692d-c528-48e6-bd7f-63a02d463fb7</string>
-    </dict>
+<dict>
+	<key>AppSecret</key>
+	<string>8b756f45-a6d2-43a2-8df6-ce70459bbfba</string>
+</dict>
 </plist>

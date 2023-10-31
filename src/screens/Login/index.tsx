@@ -175,8 +175,9 @@ const LoginScreen = () => {
         onChangeText={setPassword}
         secureTextEntry
       />
+      {/* <View style={{ flexDirection: 'row' }}> */}
       <TouchableOpacity
-        style={styles.button}
+        style={[styles.button, { marginBottom: 25 }]}
         disabled={isLoading}
         onPress={isSignUp ? handleSignUp : handleLogin}
       >
@@ -184,15 +185,18 @@ const LoginScreen = () => {
           <ActivityIndicator />
         ) : (
           <Text style={styles.buttonText}>
-            {!isSignUp ? 'Sign In' : 'Register'}
+            {!isSignUp ? 'Sign In' : 'Registerkjhkjhjkhkjhkj'}
           </Text>
         )}
       </TouchableOpacity>
 
-      <Button
+      <TouchableOpacity
+        style={{ justifyContent: 'center' }}
         onPress={toggleMode}
-        title={isSignUp ? 'Go to Sign In' : 'Register'}
-      />
+      >
+        <Text>{isSignUp ? 'Go to Sign In' : 'Go to Register'}</Text>
+      </TouchableOpacity>
+      {/* </View> */}
     </KeyboardAvoidingView>
   )
 }
