@@ -11,11 +11,15 @@ type PropsT = {
 }
 
 const Comment = ({ comment, textStyle }: PropsT) => {
-  const deviceId = useSelector(selectDeviceId) || ''
-
   return (
     <View style={styles.commentContainer}>
-      <Avatar id={deviceId} width={20} height={20} size={20} />
+      <Avatar
+        justAvatar
+        author={comment.author}
+        width={20}
+        height={20}
+        size={30}
+      />
 
       <View style={{ flex: 1, flexDirection: 'column' }}>
         <Text style={[textStyle, { marginBottom: 8 }]}>{comment?.author}:</Text>

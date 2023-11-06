@@ -4,7 +4,8 @@ import produce from 'immer'
 export interface PostT {
   postID: string
   title: string
-  author: string
+  authorUsername: string
+  authorEmail: string
   description: string
   images: string | null
   videos: string | null

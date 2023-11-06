@@ -4,7 +4,6 @@ import MainScreen from '../../screens/Home'
 import NewPostScreen from '../../screens/NewPost'
 import HeaderLeft from '../../components/header/header-left'
 import HeaderRight from '../../components/header/header-right'
-// import ProfileScreen from '../../screens/Profile'
 
 const Stack = createStackNavigator()
 

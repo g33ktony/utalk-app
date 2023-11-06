@@ -54,10 +54,10 @@ const PostInfoBar = ({ postId, setIsPlaying }: PropsT) => {
           hitSlop={hitSlopConfig}
           style={styles.likeButton}
         >
-          <Icon style={styles.like} name={likeIcon} />
+          <Icon size={18} style={styles.like} name={likeIcon} />
           <Text style={styles.likeText}>{likes} Likes</Text>
         </TouchableOpacity>
-        <Icon style={styles.commentIcon} name='comment-o' />
+        <Icon size={18} style={styles.commentIcon} name='comment-o' />
         <Text style={styles.commentText}>
           {post?.commentCount || 0} Comments
         </Text>

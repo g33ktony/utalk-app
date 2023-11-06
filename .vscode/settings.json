@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["Subviews", "utalk"]
+  "cSpell.words": ["Subviews", "utalk"],
+  "java.compile.nullAnalysis.mode": "automatic"
 }

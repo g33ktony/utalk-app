@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Alert,
   ColorValue,
   TextInput,
   TouchableOpacity,
-  View
+  View,
+  Keyboard
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { PostT, incrementComments } from '../../../store/reducers/posts'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { selectDeviceId } from '../../../store/reducers/device'
 import { getToken, getUserName } from '../../../store/selectors/auth'
 import Avatar from '../../avatar'
-import styles from './index.styles'
 import { addComment } from '../../../api'
-import { Keyboard } from 'react-native'
+import useUserAvatar from '../../../helpers/useUserAvatar'
+import styles from './index.styles'
 
 type PropsT = {
   item: PostT | null
@@ -27,8 +27,8 @@ type PropsT = {
 }
 const CommentRow = ({ item, customStyles, reload = () => {} }: PropsT) => {
   const dispatch = useDispatch()
-  const deviceId = useSelector(selectDeviceId) || ''
   const userName = useSelector(getUserName)
+  const { userAvatar } = useUserAvatar(userName)
   const [commentInput, setCommentInput] = useState('')
   const token = useSelector(getToken)
 
@@ -58,7 +58,7 @@ const CommentRow = ({ item, customStyles, reload = () => {} }: PropsT) => {
 
   return (
     <View style={[styles.commentRow, customStyles?.container]}>
-      <Avatar id={deviceId} />
+      <Avatar path={userAvatar} />
       <TextInput
         style={[styles.commentInput, customStyles?.input]}
         placeholder='Add a comment...'

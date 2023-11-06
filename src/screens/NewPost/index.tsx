@@ -214,17 +214,31 @@ const NewPostScreen = () => {
                     onPress={goBack}
                     style={{
                       flexDirection: 'row',
-                      alignItems: 'center'
+                      alignItems: 'center',
+                      borderRadius: 21,
+                      borderColor: '#002677',
+                      borderWidth: 2,
+                      paddingVertical: 8,
+                      paddingHorizontal: 12
                     }}
                   >
-                    <Icon name='chevron-left' size={28} color='black' />
-                    <Text style={{ marginLeft: 10 }}>Go Back</Text>
+                    <Icon name='chevron-left' size={16} color='#002677' />
+                    <Text style={{ marginLeft: 10, color: '#002677' }}>
+                      Go Back
+                    </Text>
                   </TouchableOpacity>
-                  <Button
-                    title='Submit Post'
+                  <TouchableOpacity
+                    style={{
+                      borderRadius: 21,
+                      borderColor: '#002677',
+                      borderWidth: 2,
+                      paddingVertical: 8,
+                      paddingHorizontal: 12
+                    }}
                     onPress={handlePostSubmit}
-                    disabled={!file}
-                  />
+                  >
+                    <Text style={{ color: '#002677' }}>Submit Post</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             )}

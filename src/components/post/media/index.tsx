@@ -3,12 +3,11 @@ import { useSelector } from 'react-redux'
 import FastImage from 'react-native-fast-image'
 import RNFS from 'react-native-fs'
 import Video from 'react-native-video'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, Image, View } from 'react-native'
 import { getMedia } from '../../../api'
 import { PostT } from '../../../store/reducers/posts'
 import { getToken } from '../../../store/selectors/auth'
 import styles from '../index.styles'
-import { useScreenDimensions } from '../../../helpers/hooks'
 
 type PropsT = {
   item: PostT
@@ -17,17 +16,33 @@ type PropsT = {
 
 const Media = forwardRef(
   ({ item, isPlaying }: PropsT, ref: ForwardedRef<Video | null>) => {
+    console.log('isPlaying...', isPlaying, item.postID)
+
     const token = useSelector(getToken)
     const [isLoading, setIsLoading] = useState(false)
-    const [mediaInfo, setMediaInfo] = useState<{ uri: string } | null>(null)
-    const { fullScreenHeight, insetsTop, insetsBottom, HEADER_HEIGHT } =
-      useScreenDimensions()
-    const availableHeight =
-      fullScreenHeight - (insetsTop + insetsBottom + HEADER_HEIGHT)
+    const [videoWidth, setVideoWidth] = useState(0)
+    const [imageWidth, setImageWidth] = useState(0)
+    const [mediaInfo, setMediaInfo] = useState<{
+      uri: string
+      width: number
+      type: string
+    } | null>(null)
 
     const getFilePath = () => {
       const extension = item.videos ? 'mp4' : 'jpg'
       return `${RNFS.TemporaryDirectoryPath}${item.postID}.${extension}`
+    }
+
+    const getFileType = (path: string) => {
+      const extension = path?.split('.')?.pop()?.toLowerCase()
+
+      if (extension === 'jpg') {
+        return 'Image'
+      } else if (extension === 'mp4') {
+        return 'Video'
+      } else {
+        return 'Unknown'
+      }
     }
 
     const handleGetMediaFromServer = () => {
@@ -41,11 +56,24 @@ const Media = forwardRef(
         })
         .then(async ({ filePath, buffer }) => {
           await RNFS.writeFile(filePath, buffer, 'base64')
+          const fileType = getFileType(filePath)
+          let width = 0
+          if (fileType === 'Image') {
+            Image.getSize(
+              filePath,
+              w => {
+                width = w
+              },
+              error => {
+                console.error('Failed to get image size:', error)
+              }
+            )
+          }
 
-          return filePath
+          return { filePath, fileType, width }
         })
-        .then(filePath => {
-          setMediaInfo({ uri: `file://${filePath}` })
+        .then(({ filePath, width, fileType }) => {
+          setMediaInfo({ uri: `file://${filePath}`, width, type: fileType })
           setIsLoading(false)
         })
         .catch(e => {
@@ -60,7 +88,23 @@ const Media = forwardRef(
       RNFS.exists(filePath)
         .then(exists => {
           if (exists) {
-            setMediaInfo({ uri: `file://${filePath}` })
+            const fileType = getFileType(filePath)
+            if (fileType === 'Image') {
+              Image.getSize(
+                filePath,
+                width => {
+                  setImageWidth(width)
+                },
+                error => {
+                  console.error('Failed to get image size:', error)
+                }
+              )
+            }
+            setMediaInfo({
+              uri: `file://${filePath}`,
+              width: imageWidth,
+              type: fileType
+            })
           } else {
             handleGetMediaFromServer()
           }
@@ -96,25 +140,33 @@ const Media = forwardRef(
       )
     }
 
+    const onVideoLoad = (event: { naturalSize: { width: any } }) => {
+      const { width } = event.naturalSize
+      setVideoWidth(width)
+    }
+
     return (
       <View>
         {item.videos ? (
           <Video
             ref={ref}
             repeat
-            poster='https://www.icloud.com/iclouddrive/0a5KhwqS8Q2lbHrkvJPapn-1w#logo.jpg'
-            posterResizeMode='cover'
+            onLoad={onVideoLoad}
             ignoreSilentSwitch='ignore'
             source={mediaInfo}
             paused={!isPlaying}
-            resizeMode='cover'
+            resizeMode={videoWidth > 550 ? 'contain' : 'cover'}
             style={styles.media}
           />
         ) : (
           <FastImage
-            source={mediaInfo}
+            source={{ uri: mediaInfo.uri }}
             style={styles.media}
-            resizeMode={FastImage.resizeMode.cover}
+            resizeMode={
+              imageWidth > 450
+                ? FastImage.resizeMode.contain
+                : FastImage.resizeMode.cover
+            }
           />
         )}
       </View>

@@ -1,26 +1,29 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Text,
   Image,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  View,
   Alert,
   TextInput,
   ActivityIndicator,
-  Button
+  View
 } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import DeviceInfo from 'react-native-device-info'
 import Logo from '../../../assets/logo.png'
 import { setDeviceId } from '../../store/reducers/device'
-import { login, setAuthorUsername } from '../../store/reducers/auth'
+import {
+  login,
+  setAuthorUsername,
+  setFirstName
+} from '../../store/reducers/auth'
 import styles from './index.styles'
 import { logIn, signUp } from '../../api'
-import codePush from 'react-native-code-push'
-import ProgressBar from '../../components/progress-bar'
+import useAppVersion from '../../helpers/useAppVersion'
+import useUserAvatar from '../../helpers/useUserAvatar'
 
 const LoginScreen = () => {
   const dispatch = useDispatch()
@@ -30,61 +33,35 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  // const [installing, setInstalling] = useState(false)
-  // const [downloading, setDownloading] = useState(false)
-  // const [total, setTotal] = useState(0)
-  // const [received, setReceived] = useState(0)
+  const { appVersionComponent } = useAppVersion()
+  const { fetchUserAvatar } = useUserAvatar(username)
 
-  // useEffect(() => {
-  //   codePush.sync(
-  //     { updateDialog: true },
-  //     status => {
-  //       switch (status) {
-  //         case codePush.SyncStatus.DOWNLOADING_PACKAGE:
-  //           // Show "downloading" modal
-  //           setDownloading(true)
-  //           break
-  //         case codePush.SyncStatus.INSTALLING_UPDATE:
-  //           setInstalling(true)
-  //           // Hide "downloading" modal
-  //           break
-  //       }
-  //     },
-  //     ({ receivedBytes, totalBytes }) => {
-  //       setReceived(receivedBytes)
-  //       setTotal(totalBytes)
-  //       console.log('receivedBytes', receivedBytes)
-  //       console.log('totalBytes', totalBytes)
-
-  //       /* Update download modal progress */
-  //     }
-  //   )
-  // }, [])
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setIsLoading(true)
     if (email && password) {
-      logIn({ email: email.trim(), password: password })
-        .then(res => {
-          dispatch(setAuthorUsername(email))
-          dispatch(login(res.data.token))
-        })
-        .then(() => {
-          setIsLoading(false)
-          registerDevice()
+      try {
+        const res = await logIn({ email: email.trim(), password: password })
+        const token = res.data.token
+        dispatch(setAuthorUsername(email))
+        dispatch(setFirstName(res.data.authorUsername))
+        dispatch(login(token))
+        fetchUserAvatar(token)
+
+        if (token) {
           navigation.reset({
             index: 0,
             routes: [{ name: 'Main' as never }]
           })
-        })
-        .catch(error => {
-          setIsLoading(false)
-          Alert.alert(
-            'Login Error',
-            'Check the info you are entering and try again.'
-          )
-          console.log('error', error.message)
-        })
+        }
+      } catch (error) {
+        Alert.alert(
+          'Login Error',
+          'Check the info you are entering and try again.'
+        )
+      } finally {
+        registerDevice()
+        setIsLoading(false)
+      }
     } else {
       Alert.alert('Error', 'Please enter a username and or password')
       setIsLoading(false)
@@ -142,14 +119,6 @@ const LoginScreen = () => {
     >
       <Image style={{ marginBottom: 45 }} source={Logo} />
 
-      {/* {installing ? <Text>Installing update.</Text> : null} */}
-      {/* {installing ? <Text>Installing update, please wait...</Text> : null} */}
-      {/* {downloading ? <Text>Downloading update.</Text> : null} */}
-      {/* {downloading ? <Text>Downloading update, please wait...</Text> : null} */}
-      {/* {downloading ? (
-        <ProgressBar totalBytes={total} receivedBytes={received} />
-      ) : null} */}
-
       {isSignUp ? (
         <TextInput
           style={styles.input}
@@ -175,9 +144,18 @@ const LoginScreen = () => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      {/* <View style={{ flexDirection: 'row' }}> */}
       <TouchableOpacity
-        style={[styles.button, { marginBottom: 25 }]}
+        style={[
+          styles.button,
+          { marginBottom: 25 },
+          {
+            borderRadius: 21,
+            borderColor: '#ce4817',
+            borderWidth: 2,
+            paddingVertical: 8,
+            paddingHorizontal: 12
+          }
+        ]}
         disabled={isLoading}
         onPress={isSignUp ? handleSignUp : handleLogin}
       >
@@ -185,18 +163,31 @@ const LoginScreen = () => {
           <ActivityIndicator />
         ) : (
           <Text style={styles.buttonText}>
-            {!isSignUp ? 'Sign In' : 'Registerkjhkjhjkhkjhkj'}
+            {!isSignUp ? 'Sign In' : 'Register'}
           </Text>
         )}
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={{ justifyContent: 'center' }}
+        style={[
+          { justifyContent: 'center' },
+          {
+            borderRadius: 21,
+            borderColor: '#002677',
+            borderWidth: 2,
+            paddingVertical: 8,
+            paddingHorizontal: 12
+          }
+        ]}
         onPress={toggleMode}
       >
-        <Text>{isSignUp ? 'Go to Sign In' : 'Go to Register'}</Text>
+        <Text style={{ color: '#002677' }}>
+          {isSignUp ? 'Sign In' : 'Register'}
+        </Text>
       </TouchableOpacity>
-      {/* </View> */}
+      <View style={{ position: 'absolute', bottom: 15 }}>
+        {appVersionComponent}
+      </View>
     </KeyboardAvoidingView>
   )
 }

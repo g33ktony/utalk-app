@@ -1,29 +1,51 @@
 import React from 'react'
-import { Image, Text, View } from 'react-native'
+import { Text, View, Image } from 'react-native'
 import styles from './index.styles'
+import FastImage from 'react-native-fast-image'
+import UserAvatar from 'react-native-user-avatar'
+import useUserAvatar from '../../helpers/useUserAvatar'
+import { StyleProp } from 'react-native'
+import { ViewStyle } from 'react-native'
 
 type PropsT = {
   author?: string
   size?: number
-  width?: number
-  height?: number
-  id?: string
+  path?: string
+  justAvatar?: boolean
+  customStyle?: StyleProp<ViewStyle>
 }
 
 const Avatar = ({
   author,
-  size = 300,
-  height = 40,
-  width = 40,
-  id = ''
+  path = '',
+  size = 40,
+  justAvatar = false,
+  customStyle = {}
 }: PropsT) => {
   return (
-    <View style={styles.authorRow}>
-      <Image
-        style={[styles.avatar, { width, height }]}
-        source={{ uri: `https://i.pravatar.cc/${size}?u=${id}` }}
-      />
-      {author ? <Text style={styles.author}>{author}</Text> : null}
+    <View style={[styles.authorRow, customStyle]}>
+      {path ? (
+        <Image
+          style={[
+            styles.avatar,
+            { width: size, height: size, borderRadius: size / 2 }
+          ]}
+          source={{
+            uri: `file://${path}`
+          }}
+        />
+      ) : (
+        <View style={{ marginRight: 8 }}>
+          <UserAvatar
+            size={size}
+            name={author}
+            bgColors={['#6750A5', '#2DBC9C', '#8D23AC', '#DA8432', '#253A8D']}
+          />
+        </View>
+      )}
+      {author && !justAvatar ? (
+        <Text style={styles.author}>{author}</Text>
+      ) : null}
     </View>
   )
 }

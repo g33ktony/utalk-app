@@ -13,17 +13,16 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
     marginBottom: 25
   },
   editProfileButton: {
-    padding: 10,
-    backgroundColor: '#E5E5E5',
-    borderRadius: 5,
-    marginBottom: 15
+    borderRadius: 21,
+    borderColor: '#002677',
+    borderWidth: 2,
+    paddingVertical: 8,
+    paddingHorizontal: 12
   },
+  buttonText: { color: '#002677' },
   userInfo: {
     alignItems: 'center',
     marginVertical: 20
@@ -35,13 +34,11 @@ const styles = StyleSheet.create({
   },
   email: {
     fontSize: 16,
-    color: '#888'
+    color: '#888',
+    marginBottom: 15
   },
   logoutButton: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
+    width: 100,
     padding: 15,
     backgroundColor: '#E5E5E5',
     borderRadius: 5,

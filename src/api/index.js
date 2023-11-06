@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 const BASE_URL =
-  'https://utalk--3ch4dqk.bravesmoke-1a9df4bd.eastus2.azurecontainerapps.io/api/v1'
+  // 'https://utalk---stage.wonderfulbeach-b02619b4.centralus.azurecontainerapps.io/api/v1'
+  'https://utalk---dev.bravesmoke-1a9df4bd.eastus2.azurecontainerapps.io/api/v1'
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -108,18 +109,18 @@ export const setUserName = (payload, token) => {
   })
 }
 
-export const getAvatar = (payload, token) => {
+export const getAvatar = (token, user) => {
   const URL = '/user/avatar'
+  const USER_URL = `/user/avatar/${user}`
 
-  return api.get(
-    `${BASE_URL}${URL}`,
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+  return api.get(`${BASE_URL}${user ? USER_URL : URL}`, {
+    responseType: 'arraybuffer',
+    responseEncoding: 'base64',
+    headers: {
+      'Content-Type': 'application/octet-stream',
+      Authorization: `Bearer ${token}`
     }
-  )
+  })
 }
 
 export default api

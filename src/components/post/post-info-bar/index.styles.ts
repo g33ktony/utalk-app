@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   likeText: {
+    fontSize: 16,
     color: 'white'
   },
   commentIcon: {
@@ -25,10 +26,12 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   commentText: {
+    fontSize: 16,
     flex: 1,
     color: 'white'
   },
   viewAll: {
+    fontSize: 16,
     color: 'white'
   }
 })

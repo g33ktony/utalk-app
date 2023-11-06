@@ -7,7 +7,8 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
@@ -18,21 +19,29 @@ import { useSelector } from 'react-redux'
 import { getFirstName, getToken, getUserName } from '../../store/selectors/auth'
 import CameraView from '../../components/camera-view'
 import { setUserAvatar, setUserName } from '../../api'
+import { setUserAvatar as setAvatar } from '../../store/reducers/auth'
+import useAppVersion from '../../helpers/useAppVersion'
+import useUserAvatar from '../../helpers/useUserAvatar'
+import Avatar from '../../components/avatar'
 
 const ProfileScreen = () => {
   const dispatch = useDispatch()
+
   const navigation = useNavigation()
   const username = useSelector(getUserName)
+  const { userAvatar, fetchUserAvatar, isAvatarLoading } =
+    useUserAvatar(username)
   const token = useSelector(getToken)
   const firstName = useSelector(getFirstName)
   const [user, setUser] = useState(firstName)
+  const { appVersionComponent } = useAppVersion()
   const [profileImage, setProfileImage] = useState<string | undefined>(
-    'https://placeimg.com/100/100/people'
+    userAvatar
   )
   const [cameraOpen, setCameraOpen] = useState(false)
   const [editing, setEditing] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
-  const [mediaUri, setMediaUri] = useState<string | null>('')
+  const [_, setMediaUri] = useState<string | null>('')
   const [file, setFile] = useState<{
     uri: string | undefined
     name: string | undefined
@@ -46,6 +55,14 @@ const ProfileScreen = () => {
       routes: [{ name: 'LogIn' as never }]
     })
   }
+
+  useEffect(() => {
+    fetchUserAvatar()
+  }, [])
+
+  useEffect(() => {
+    setProfileImage(userAvatar)
+  }, [userAvatar])
 
   const handleImagePicker = async () => {
     try {
@@ -65,6 +82,7 @@ const ProfileScreen = () => {
         name: fileName
       }
       setFile(fileData)
+      dispatch(setAvatar(fileData.uri))
 
       setProfileImage(res.path)
     } catch (error) {}
@@ -73,6 +91,7 @@ const ProfileScreen = () => {
   useEffect(() => {
     if (file) {
       setProfileImage(file?.uri)
+      dispatch(setAvatar(file?.uri))
       setUserAvatar(file, token)
         .then(() => {
           Alert.alert('Success', 'Profile avatar was successfully changed.')
@@ -86,6 +105,13 @@ const ProfileScreen = () => {
   const handleCameraOpen = () => setCameraOpen(true)
 
   const handleSaveInfo = () => {
+    if (!user) {
+      setUser(firstName)
+      return Alert.alert(
+        'Error',
+        'You need to fill the username in order to continue saving information.'
+      )
+    }
     setUserName(
       {
         username: user
@@ -126,41 +152,61 @@ const ProfileScreen = () => {
       >
         <>
           <View style={styles.profileHeader}>
-            <Image source={{ uri: profileImage }} style={styles.profileImage} />
+            {isAvatarLoading ? (
+              <View style={styles.profileImage}>
+                <ActivityIndicator />
+              </View>
+            ) : (
+              <Avatar author={user} path={userAvatar} size={100} />
+            )}
+            <Text style={styles.email}>Username: {username}</Text>
             <TouchableOpacity
-              style={styles.editProfileButton}
+              style={[styles.editProfileButton, { marginBottom: 15 }]}
               onPress={handleCameraOpen}
             >
-              <Text>Take Photo</Text>
+              <Text style={styles.buttonText}>Take Photo</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.editProfileButton}
               onPress={handleImagePicker}
             >
-              <Text>Choose Profile Photo</Text>
+              <Text style={styles.buttonText}>Choose Profile Photo</Text>
             </TouchableOpacity>
           </View>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.userInfo}
           >
-            <Text style={styles.username}>Username:</Text>
+            <Text style={styles.username}>First Name and Last Name:</Text>
             <TextInput
               value={user}
+              autoFocus
+              style={
+                editing
+                  ? { height: 40, margin: 12, borderWidth: 1, padding: 10 }
+                  : { height: 40, margin: 12, padding: 10 }
+              }
               editable={editing}
               onChangeText={handleChangeUser}
             />
             <TouchableOpacity
-              style={[styles.editProfileButton]}
+              style={styles.editProfileButton}
               onPress={handleEditInfo}
             >
-              <Text>{editing ? 'Save' : 'Edit Username'}</Text>
+              <Text style={styles.buttonText}>
+                {editing ? 'Save' : 'Edit Username'}
+              </Text>
             </TouchableOpacity>
-            <Text style={styles.email}>Email: {username}</Text>
           </KeyboardAvoidingView>
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-            <Text>Logout</Text>
-          </TouchableOpacity>
+          <View style={{ alignItems: 'center' }}>
+            <TouchableOpacity
+              style={[styles.editProfileButton, { marginBottom: 10 }]}
+              onPress={handleLogout}
+            >
+              <Text style={styles.buttonText}>Logout</Text>
+            </TouchableOpacity>
+            {appVersionComponent}
+          </View>
         </>
       </CameraView>
     </View>

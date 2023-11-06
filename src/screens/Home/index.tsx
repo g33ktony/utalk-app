@@ -1,4 +1,10 @@
-import React, { SetStateAction, useEffect, useRef, useState } from 'react'
+import React, {
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   ActivityIndicator,
@@ -12,7 +18,7 @@ import { useNavigation } from '@react-navigation/native'
 import { addFilteredPosts, addPost, setPosts } from '../../store/reducers/posts'
 import { getAllPosts } from '../../store/selectors/posts'
 import { selectIsShown, selectTerm } from '../../store/selectors/search'
-import { setTerm } from '../../store/reducers/search'
+import { setIsShown, setTerm } from '../../store/reducers/search'
 import SearchBar from '../../components/search-bar'
 import Post from '../../components/post'
 import { fetchPosts } from '../../api'
@@ -43,7 +49,6 @@ const MainScreen = () => {
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [dataToShow, setDataToShow] = useState(posts.data)
-  const [viewableItems, setViewableItems] = useState<number[] | null>([])
   const videoRef = useRef<Video | null>(null)
   const availableHeight = fullScreenHeight - HEADER_HEIGHT
 
@@ -152,7 +157,7 @@ const MainScreen = () => {
 
   const loadMorePosts = () => {
     if (page !== totalPages) {
-      fetchNextPosts(searchTerm ? searchTerm : undefined).then(() => {
+      fetchNextPosts(searchTerm).then(() => {
         setPage(page => page + 1)
       })
     }
@@ -170,18 +175,24 @@ const MainScreen = () => {
   const onClearInput = () => {
     clearSearch()
     setInitialData()
+    dispatch(setIsShown(false))
   }
 
-  const onViewableItemsChanged = useRef(
-    ({ viewableItems }: { viewableItems: ViewableItem[] }) => {
-      setViewableItems(
-        viewableItems.map(item => item.index) as SetStateAction<number[] | null>
-      )
-    }
-  )
+  const [playingIndices, setPlayingIndices] = useState<number[]>([])
+
+  const onViewableItemsChanged = useCallback(({ viewableItems }) => {
+    const indices = viewableItems
+      .filter(item => item.isViewable && item.item.type === 'video')
+      .map(item => item.index)
+
+    // Ensure that only the first viewable video is playing
+    setPlayingIndices(indices.length > 0 ? [indices[0]] : [])
+  }, [])
 
   const viewabilityConfig = {
-    itemVisiblePercentThreshold: 50
+    itemVisiblePercentThreshold: 75,
+    minimumViewTime: 100,
+    waitForInteraction: true
   }
 
   return (
@@ -207,7 +218,7 @@ const MainScreen = () => {
             >
               <Post
                 item={item}
-                play={viewableItems?.includes(index)}
+                play={playingIndices.includes(index)}
                 videoRef={videoRef}
               />
             </View>
@@ -225,7 +236,7 @@ const MainScreen = () => {
           pagingEnabled
           decelerationRate='fast'
           snapToAlignment='start'
-          onViewableItemsChanged={onViewableItemsChanged.current}
+          onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
           showsVerticalScrollIndicator={false}
           snapToInterval={availableHeight}

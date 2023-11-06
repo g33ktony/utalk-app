@@ -2,7 +2,8 @@ import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    height: '100%'
   },
   postTitle: {
     fontSize: 18,

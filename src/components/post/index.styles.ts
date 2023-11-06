@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   postContainer: {
-    padding: 16,
     position: 'absolute',
     zIndex: 9000,
     height: '100%',
@@ -27,6 +26,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   description: {
+    fontSize: 18,
     color: 'white',
     marginBottom: 15
   },
