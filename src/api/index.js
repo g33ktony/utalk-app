@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const BASE_URL =
-  // 'https://utalk---stage.wonderfulbeach-b02619b4.centralus.azurecontainerapps.io/api/v1'
-  'https://utalk---dev.bravesmoke-1a9df4bd.eastus2.azurecontainerapps.io/api/v1'
+  'https://utalk---stage.wonderfulbeach-b02619b4.centralus.azurecontainerapps.io/api/v1'
+// 'https://utalk---dev.bravesmoke-1a9df4bd.eastus2.azurecontainerapps.io/api/v1'
 
 const api = axios.create({
   baseURL: BASE_URL,

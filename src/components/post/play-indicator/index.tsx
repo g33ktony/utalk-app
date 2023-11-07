@@ -7,17 +7,19 @@ type PropsT = {
   item: PostT
 }
 
-const PlayIndicator = ({ isPlaying, item }: PropsT) => (
-  <>
-    {!isPlaying && !item.images ? (
-      <Icon
-        style={{ alignSelf: 'center' }}
-        name='play'
-        size={55}
-        color='rgba(255,255,255,0.5)'
-      />
-    ) : null}
-  </>
-)
+const PlayIndicator = ({ isPlaying, item }: PropsT) => {
+  return (
+    <>
+      {!isPlaying && item.videos ? (
+        <Icon
+          style={{ alignSelf: 'center' }}
+          name='play'
+          size={55}
+          color='rgba(255,255,255,0.5)'
+        />
+      ) : null}
+    </>
+  )
+}
 
 export default PlayIndicator

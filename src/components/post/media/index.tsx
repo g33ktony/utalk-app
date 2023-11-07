@@ -11,11 +11,15 @@ import styles from '../index.styles'
 
 type PropsT = {
   item: PostT
-  playingItem: number
+  playingItem: number | undefined
+  playing: boolean
 }
 
 const Media = forwardRef(
-  ({ item, playingItem }: PropsT, ref: ForwardedRef<VideoRef | null>) => {
+  (
+    { item, playingItem, playing }: PropsT,
+    ref: ForwardedRef<VideoRef | null>
+  ) => {
     const token = useSelector(getToken)
     const [isLoading, setIsLoading] = useState(false)
     const [imageOrientation, setImageOrientation] = useState('')
@@ -166,7 +170,7 @@ const Media = forwardRef(
             onLoad={onVideoLoad}
             ignoreSilentSwitch={IgnoreSilentSwitchType.IGNORE}
             source={mediaInfo}
-            paused={playingItem !== Number(item.postID)}
+            paused={playingItem !== Number(item.postID) || !playing}
             playInBackground={false}
             resizeMode={imageOrientation === 'landscape' ? 'contain' : 'cover'}
             style={styles.media}

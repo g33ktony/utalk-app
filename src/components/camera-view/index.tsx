@@ -230,6 +230,10 @@ const CameraView = ({
     })
   }
 
+  useEffect(() => {
+    console.log('hasMicrophonePermission', hasMicrophonePermission)
+  }, [hasMicrophonePermission])
+
   const handleCloseCamera = () => {
     if (isRecording) {
       stopRecording()
@@ -257,7 +261,7 @@ const CameraView = ({
               style={StyleSheet.absoluteFill}
               device={device}
               format={format}
-              fps={25}
+              fps={30}
               lowLightBoost={device.supportsLowLightBoost}
               isActive={isActive}
               onInitialized={onInitialized}

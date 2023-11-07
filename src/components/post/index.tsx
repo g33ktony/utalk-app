@@ -47,7 +47,7 @@ const Post = ({ item, playingItem, videoRef }: PropsT) => {
     dispatch(setIsShown(true))
     dispatch(setTerm(text))
   }
-  const [playing, setPlaying] = useState(playingItem)
+  const [playing, setPlaying] = useState(false)
 
   const commentRowStyles = {
     placeholderColor: 'white',
@@ -58,15 +58,22 @@ const Post = ({ item, playingItem, videoRef }: PropsT) => {
     fetchAuthorAvatar()
   }, [])
 
+  useEffect(() => {
+    setPlaying(playingItem === Number(item.postID))
+  }, [playingItem])
+
   const playVideo = () => {
-    if (playingItem) {
-      setPlaying(playingItem)
-    }
+    setPlaying(prev => !prev)
   }
 
   return (
     <View style={[styles.flexContainer, { height: availableHeight }]}>
-      <Media item={item} ref={videoRef} playingItem={playingItem} />
+      <Media
+        item={item}
+        ref={videoRef}
+        playingItem={playingItem}
+        playing={playing}
+      />
       <View style={[styles.postContainer, { height: availableHeight }]}>
         <View style={{ flexDirection: 'row' }}>
           <LinearGradient
@@ -109,10 +116,7 @@ const Post = ({ item, playingItem, videoRef }: PropsT) => {
           ) : null}
         </View>
         <TouchableOpacity onPress={playVideo} style={styles.flexContainer}>
-          <PlayIndicator
-            item={item}
-            isPlaying={playingItem === Number(item.postID)}
-          />
+          <PlayIndicator item={item} isPlaying={playing} />
         </TouchableOpacity>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'position' : 'height'}
@@ -125,7 +129,7 @@ const Post = ({ item, playingItem, videoRef }: PropsT) => {
             <Text style={styles.description}>
               {formatHashtags(item.description, {}, handleSetHash)}
             </Text>
-            <PostInfoBar setIsPlaying={() => {}} postId={item.postID} />
+            <PostInfoBar setIsPlaying={setPlaying} postId={item.postID} />
             <CommentRow customStyles={commentRowStyles} item={item} />
           </LinearGradient>
         </KeyboardAvoidingView>

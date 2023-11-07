@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   emptyState: {
-    flex: 1,
+    margin: 25,
     justifyContent: 'center',
     alignItems: 'center'
   }

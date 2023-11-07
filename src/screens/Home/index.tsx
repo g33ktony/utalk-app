@@ -172,7 +172,7 @@ const MainScreen = () => {
 
   const onViewableItemsChanged = useCallback(({ viewableItems }) => {
     if (viewableItems[0].key) {
-      setVisibleItem(viewableItems[0]?.key || 0)
+      setVisibleItem(viewableItems[0]?.key || -1)
     }
   }, [])
 
@@ -196,7 +196,7 @@ const MainScreen = () => {
       ) : (
         <FlatList
           data={dataToShow}
-          renderItem={({ item, index }) => {
+          renderItem={({ item }) => {
             return (
               <Post item={item} playingItem={visibleItem} videoRef={videoRef} />
             )
