@@ -21,19 +21,34 @@ const useAuthorAvatar = (username: string) => {
     } catch (error) {}
   }
 
+  const checkFileExists = async (filePath: string): Promise<boolean> => {
+    try {
+      const fileExists = await RNFS.exists(filePath)
+      return fileExists
+    } catch (error) {
+      console.error('Error checking file existence', error)
+      return false
+    }
+  }
+
   const fetchAuthorAvatar = async () => {
     setIsAuthorAvatarLoading(true)
     try {
-      const avatarRes = await getAvatar(token, username)
-
-      const buffer = Buffer.from(avatarRes.data, 'binary').toString('base64')
       const filePath = getUserAuthorFilePath()
-      if (!filePath) {
-        return setAuthorAvatar(filePath)
+      const exists = await checkFileExists(filePath)
+      if (exists) {
+        setAuthorAvatar(filePath)
+      } else {
+        const avatarRes = await getAvatar(token, username)
+
+        const buffer = Buffer.from(avatarRes.data, 'binary').toString('base64')
+        if (!filePath) {
+          return setAuthorAvatar(filePath)
+        }
+        writeAvatarFile(filePath, buffer)
       }
-      writeAvatarFile(filePath, buffer)
     } catch (error) {
-      console.log('error', error.message)
+      console.log('error', 'no avatar')
     } finally {
       setIsAuthorAvatarLoading(false)
     }

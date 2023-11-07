@@ -1,10 +1,4 @@
-import React, {
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   ActivityIndicator,
@@ -13,7 +7,7 @@ import {
   View,
   RefreshControl
 } from 'react-native'
-import Video from 'react-native-video'
+import { VideoRef } from 'react-native-video'
 import { useNavigation } from '@react-navigation/native'
 import { addFilteredPosts, addPost, setPosts } from '../../store/reducers/posts'
 import { getAllPosts } from '../../store/selectors/posts'
@@ -25,7 +19,6 @@ import { fetchPosts } from '../../api'
 import { getToken } from '../../store/selectors/auth'
 import PostListEmptyState from '../../components/post/post-list-empty-state'
 import styles from './index.styles'
-import { useScreenDimensions } from '../../helpers/hooks'
 
 export type PageSelectedEvent = {
   nativeEvent: {
@@ -39,7 +32,6 @@ type ViewableItem = {
 
 const MainScreen = () => {
   const dispatch = useDispatch()
-  const { HEADER_HEIGHT, fullScreenHeight } = useScreenDimensions()
   const navigation = useNavigation()
   const [isLoading, setIsLoading] = useState(false)
   const posts = useSelector(getAllPosts)
@@ -49,8 +41,8 @@ const MainScreen = () => {
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [dataToShow, setDataToShow] = useState(posts.data)
-  const videoRef = useRef<Video | null>(null)
-  const availableHeight = fullScreenHeight - HEADER_HEIGHT
+  const videoRef = useRef<VideoRef | null>(null)
+  const [visibleItem, setVisibleItem] = useState<number>()
 
   const clearSearch = () => {
     dispatch(setTerm(''))
@@ -178,21 +170,15 @@ const MainScreen = () => {
     dispatch(setIsShown(false))
   }
 
-  const [playingIndices, setPlayingIndices] = useState<number[]>([])
-
   const onViewableItemsChanged = useCallback(({ viewableItems }) => {
-    const indices = viewableItems
-      .filter(item => item.isViewable && item.item.type === 'video')
-      .map(item => item.index)
-
-    // Ensure that only the first viewable video is playing
-    setPlayingIndices(indices.length > 0 ? [indices[0]] : [])
+    if (viewableItems[0].key) {
+      setVisibleItem(viewableItems[0]?.key || 0)
+    }
   }, [])
 
   const viewabilityConfig = {
-    itemVisiblePercentThreshold: 75,
-    minimumViewTime: 100,
-    waitForInteraction: true
+    viewAreaCoveragePercentThreshold: 50,
+    waitForInteraction: false
   }
 
   return (
@@ -210,19 +196,11 @@ const MainScreen = () => {
       ) : (
         <FlatList
           data={dataToShow}
-          renderItem={({ item, index }) => (
-            <View
-              style={{
-                height: availableHeight
-              }}
-            >
-              <Post
-                item={item}
-                play={playingIndices.includes(index)}
-                videoRef={videoRef}
-              />
-            </View>
-          )}
+          renderItem={({ item, index }) => {
+            return (
+              <Post item={item} playingItem={visibleItem} videoRef={videoRef} />
+            )
+          }}
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
@@ -239,7 +217,6 @@ const MainScreen = () => {
           onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
           showsVerticalScrollIndicator={false}
-          snapToInterval={availableHeight}
           removeClippedSubviews
           keyboardShouldPersistTaps='always'
           ListEmptyComponent={<PostListEmptyState />}

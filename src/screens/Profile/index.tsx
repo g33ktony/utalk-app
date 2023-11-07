@@ -140,76 +140,83 @@ const ProfileScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <CameraView
-        cameraOpen={cameraOpen}
-        setCameraOpen={setCameraOpen}
-        setIsRecording={setIsRecording}
-        isRecording={isRecording}
-        setFile={setFile}
-        setMediaUri={setMediaUri}
-        hideVideo
-      >
-        <>
-          <View style={styles.profileHeader}>
-            {isAvatarLoading ? (
-              <View style={styles.profileImage}>
-                <ActivityIndicator />
-              </View>
-            ) : (
-              <Avatar author={user} path={userAvatar} size={100} />
-            )}
-            <Text style={styles.email}>Username: {username}</Text>
-            <TouchableOpacity
-              style={[styles.editProfileButton, { marginBottom: 15 }]}
-              onPress={handleCameraOpen}
-            >
-              <Text style={styles.buttonText}>Take Photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.editProfileButton}
-              onPress={handleImagePicker}
-            >
-              <Text style={styles.buttonText}>Choose Profile Photo</Text>
-            </TouchableOpacity>
-          </View>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.userInfo}
+    <CameraView
+      cameraOpen={cameraOpen}
+      setCameraOpen={setCameraOpen}
+      setIsRecording={setIsRecording}
+      isRecording={isRecording}
+      setFile={setFile}
+      setMediaUri={setMediaUri}
+      hideVideo
+    >
+      <View style={styles.container}>
+        <View style={styles.profileHeader}>
+          {isAvatarLoading ? (
+            <View style={styles.profileImage}>
+              <ActivityIndicator />
+            </View>
+          ) : (
+            <Avatar justAvatar author={user} path={userAvatar} size={100} />
+          )}
+          <TouchableOpacity
+            style={[styles.editProfileButton, { marginBottom: 15 }]}
+            onPress={handleCameraOpen}
           >
-            <Text style={styles.username}>First Name and Last Name:</Text>
-            <TextInput
-              value={user}
-              autoFocus
-              style={
-                editing
-                  ? { height: 40, margin: 12, borderWidth: 1, padding: 10 }
-                  : { height: 40, margin: 12, padding: 10 }
-              }
-              editable={editing}
-              onChangeText={handleChangeUser}
-            />
-            <TouchableOpacity
-              style={styles.editProfileButton}
-              onPress={handleEditInfo}
-            >
-              <Text style={styles.buttonText}>
-                {editing ? 'Save' : 'Edit Username'}
-              </Text>
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
-          <View style={{ alignItems: 'center' }}>
-            <TouchableOpacity
-              style={[styles.editProfileButton, { marginBottom: 10 }]}
-              onPress={handleLogout}
-            >
-              <Text style={styles.buttonText}>Logout</Text>
-            </TouchableOpacity>
-            {appVersionComponent}
-          </View>
-        </>
-      </CameraView>
-    </View>
+            <Text style={styles.buttonText}>Take Photo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.editProfileButton, { marginBottom: 15 }]}
+            onPress={handleImagePicker}
+          >
+            <Text style={styles.buttonText}>Choose Profile Photo</Text>
+          </TouchableOpacity>
+          <Text style={styles.username}>First Name and Last Name:</Text>
+        </View>
+
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={180}
+          style={{ backgroundColor: 'white', alignItems: 'center' }}
+        >
+          <TextInput
+            value={user}
+            autoFocus
+            style={
+              editing
+                ? {
+                    height: 40,
+                    margin: 12,
+                    borderWidth: 1,
+                    padding: 10
+                  }
+                : {
+                    height: 40,
+                    margin: 12,
+                    padding: 10,
+                    textAlign: 'center'
+                  }
+            }
+            editable={editing}
+            onChangeText={handleChangeUser}
+          />
+          <TouchableOpacity
+            style={[styles.editProfileButton, { marginBottom: 15 }]}
+            onPress={handleEditInfo}
+          >
+            <Text style={styles.buttonText}>
+              {editing ? 'Save' : 'Edit Username'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.editProfileButton, { marginBottom: 10 }]}
+            onPress={handleLogout}
+          >
+            <Text style={styles.buttonText}>Logout</Text>
+          </TouchableOpacity>
+          {appVersionComponent}
+        </KeyboardAvoidingView>
+      </View>
+    </CameraView>
   )
 }
 

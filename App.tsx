@@ -8,12 +8,13 @@ import { View, Text } from 'react-native'
 import ProgressBar from './src/components/progress-bar'
 
 function App(): JSX.Element {
-  const [downloadProgress, setDownloadProgress] = useState(null)
+  const [downloadProgress, setDownloadProgress] = useState<{
+    receivedBytes: number
+    totalBytes: number
+  }>()
 
   useEffect(() => {
     const downloadProgressCallback = progress => {
-      console.log('progress', progress)
-
       setDownloadProgress(progress)
     }
 

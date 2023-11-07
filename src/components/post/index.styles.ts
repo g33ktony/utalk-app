@@ -4,7 +4,6 @@ const styles = StyleSheet.create({
   postContainer: {
     position: 'absolute',
     zIndex: 9000,
-    height: '100%',
     width: '100%'
   },
   title: {
@@ -14,12 +13,8 @@ const styles = StyleSheet.create({
   },
   postImage: {
     width: '100%',
-    height: 200,
     marginBottom: 8,
     borderRadius: 5
-  },
-  bottomRow: {
-    marginBottom: 10
   },
   commentsLikes: {
     flexDirection: 'row',

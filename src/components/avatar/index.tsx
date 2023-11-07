@@ -28,6 +28,7 @@ const Avatar = ({
         <Image
           style={[
             styles.avatar,
+            { marginRight: justAvatar ? 0 : 8 },
             { width: size, height: size, borderRadius: size / 2 }
           ]}
           source={{

@@ -7,7 +7,7 @@ import {
   Platform,
   ActivityIndicator
 } from 'react-native'
-import Video from 'react-native-video'
+import { VideoRef } from 'react-native-video'
 import { PostT } from '../../store/reducers/posts'
 import styles from './index.styles'
 import Avatar from '../avatar'
@@ -22,28 +22,32 @@ import PlayIndicator from './play-indicator'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import useAuthorAvatar from '../../helpers/useAuthorAvatar'
+import DeviceInfo from 'react-native-device-info'
 
 global.Buffer = global.Buffer || require('buffer').Buffer
 
 type PropsT = {
   item: PostT
-  play: boolean | undefined
-  videoRef: MutableRefObject<Video | null>
+  playingItem: number | undefined
+  videoRef: MutableRefObject<VideoRef | null>
 }
 
-const Post = ({ item, play, videoRef }: PropsT) => {
+const Post = ({ item, playingItem, videoRef }: PropsT) => {
   const dispatch = useDispatch()
   const { authorAvatar, fetchAuthorAvatar, isAuthorAvatarLoading } =
     useAuthorAvatar(item.authorEmail)
   const { fullScreenHeight, insetsTop, insetsBottom, HEADER_HEIGHT } =
     useScreenDimensions()
   const availableHeight =
-    fullScreenHeight - (insetsTop + insetsBottom + HEADER_HEIGHT)
+    fullScreenHeight -
+    (DeviceInfo.hasNotch()
+      ? HEADER_HEIGHT
+      : insetsTop + insetsBottom + HEADER_HEIGHT)
   const handleSetHash = (text: string) => {
     dispatch(setIsShown(true))
     dispatch(setTerm(text))
   }
-  const [isPlaying, setIsPlaying] = useState(play)
+  const [playing, setPlaying] = useState(playingItem)
 
   const commentRowStyles = {
     placeholderColor: 'white',
@@ -54,29 +58,16 @@ const Post = ({ item, play, videoRef }: PropsT) => {
     fetchAuthorAvatar()
   }, [])
 
-  useEffect(() => {
-    if (play) {
-      setIsPlaying(true)
-      videoRef.current?.seek(0)
-    } else {
-      setIsPlaying(false)
-    }
-  }, [play])
-
   const playVideo = () => {
-    if (videoRef.current) {
-      if (!isPlaying) {
-        setIsPlaying(true)
-      } else {
-        setIsPlaying(false)
-      }
+    if (playingItem) {
+      setPlaying(playingItem)
     }
   }
 
   return (
     <View style={[styles.flexContainer, { height: availableHeight }]}>
-      <Media item={item} ref={videoRef} isPlaying={isPlaying} />
-      <View style={styles.postContainer}>
+      <Media item={item} ref={videoRef} playingItem={playingItem} />
+      <View style={[styles.postContainer, { height: availableHeight }]}>
         <View style={{ flexDirection: 'row' }}>
           <LinearGradient
             style={{ width: '100%', padding: 16 }}
@@ -118,24 +109,26 @@ const Post = ({ item, play, videoRef }: PropsT) => {
           ) : null}
         </View>
         <TouchableOpacity onPress={playVideo} style={styles.flexContainer}>
-          <PlayIndicator item={item} isPlaying={isPlaying} />
+          <PlayIndicator
+            item={item}
+            isPlaying={playingItem === Number(item.postID)}
+          />
         </TouchableOpacity>
-        <LinearGradient
-          style={{ width: '100%', padding: 16 }}
-          colors={['rgba(0,0,0, 0.08)', 'rgba(0,0,0, 0.65)']}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+          keyboardVerticalOffset={85}
         >
-          <Text style={styles.description}>
-            {formatHashtags(item.description, {}, handleSetHash)}
-          </Text>
-          <PostInfoBar setIsPlaying={setIsPlaying} postId={item.postID} />
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-            keyboardVerticalOffset={115}
-            style={styles.bottomRow}
+          <LinearGradient
+            style={{ width: '100%', padding: 16 }}
+            colors={['rgba(0,0,0, 0.08)', 'rgba(0,0,0, 0.65)']}
           >
+            <Text style={styles.description}>
+              {formatHashtags(item.description, {}, handleSetHash)}
+            </Text>
+            <PostInfoBar setIsPlaying={() => {}} postId={item.postID} />
             <CommentRow customStyles={commentRowStyles} item={item} />
-          </KeyboardAvoidingView>
-        </LinearGradient>
+          </LinearGradient>
+        </KeyboardAvoidingView>
       </View>
     </View>
   )

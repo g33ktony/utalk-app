@@ -3,14 +3,15 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
-    height: '100%',
-    width: '100%',
+    flex: 1,
+    // height: '100%',
+    // width: '100%',
     backgroundColor: `#fff`
   },
   profileHeader: {
     justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20
+    alignItems: 'center'
+    // marginBottom: 20
   },
   profileImage: {
     marginBottom: 25
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12
   },
-  buttonText: { color: '#002677' },
+  buttonText: { color: '#002677', textAlign: 'center' },
   userInfo: {
     alignItems: 'center',
     marginVertical: 20

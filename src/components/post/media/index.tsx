@@ -2,7 +2,7 @@ import React, { ForwardedRef, forwardRef, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import FastImage from 'react-native-fast-image'
 import RNFS from 'react-native-fs'
-import Video from 'react-native-video'
+import Video, { IgnoreSilentSwitchType, VideoRef } from 'react-native-video'
 import { ActivityIndicator, Image, View } from 'react-native'
 import { getMedia } from '../../../api'
 import { PostT } from '../../../store/reducers/posts'
@@ -11,17 +11,14 @@ import styles from '../index.styles'
 
 type PropsT = {
   item: PostT
-  isPlaying: boolean
+  playingItem: number
 }
 
 const Media = forwardRef(
-  ({ item, isPlaying }: PropsT, ref: ForwardedRef<Video | null>) => {
-    console.log('isPlaying...', isPlaying, item.postID)
-
+  ({ item, playingItem }: PropsT, ref: ForwardedRef<VideoRef | null>) => {
     const token = useSelector(getToken)
     const [isLoading, setIsLoading] = useState(false)
-    const [videoWidth, setVideoWidth] = useState(0)
-    const [imageWidth, setImageWidth] = useState(0)
+    const [imageOrientation, setImageOrientation] = useState('')
     const [mediaInfo, setMediaInfo] = useState<{
       uri: string
       width: number
@@ -42,6 +39,16 @@ const Media = forwardRef(
         return 'Video'
       } else {
         return 'Unknown'
+      }
+    }
+
+    const getOrientation = (width: number, height: number) => {
+      if (width > height) {
+        return setImageOrientation('landscape')
+      } else if (height > width) {
+        return setImageOrientation('portrait')
+      } else {
+        return setImageOrientation('square')
       }
     }
 
@@ -89,11 +96,13 @@ const Media = forwardRef(
         .then(exists => {
           if (exists) {
             const fileType = getFileType(filePath)
+            let imageWidth = 0
             if (fileType === 'Image') {
               Image.getSize(
                 filePath,
-                width => {
-                  setImageWidth(width)
+                (width, height) => {
+                  imageWidth = width
+                  getOrientation(width, height)
                 },
                 error => {
                   console.error('Failed to get image size:', error)
@@ -140,9 +149,12 @@ const Media = forwardRef(
       )
     }
 
-    const onVideoLoad = (event: { naturalSize: { width: any } }) => {
-      const { width } = event.naturalSize
-      setVideoWidth(width)
+    const onVideoLoad = (event: {
+      naturalSize: { width: number; height: number }
+    }) => {
+      const { width, height } = event.naturalSize
+
+      getOrientation(width, height)
     }
 
     return (
@@ -152,10 +164,11 @@ const Media = forwardRef(
             ref={ref}
             repeat
             onLoad={onVideoLoad}
-            ignoreSilentSwitch='ignore'
+            ignoreSilentSwitch={IgnoreSilentSwitchType.IGNORE}
             source={mediaInfo}
-            paused={!isPlaying}
-            resizeMode={videoWidth > 550 ? 'contain' : 'cover'}
+            paused={playingItem !== Number(item.postID)}
+            playInBackground={false}
+            resizeMode={imageOrientation === 'landscape' ? 'contain' : 'cover'}
             style={styles.media}
           />
         ) : (
@@ -163,7 +176,7 @@ const Media = forwardRef(
             source={{ uri: mediaInfo.uri }}
             style={styles.media}
             resizeMode={
-              imageWidth > 450
+              imageOrientation === 'landscape'
                 ? FastImage.resizeMode.contain
                 : FastImage.resizeMode.cover
             }

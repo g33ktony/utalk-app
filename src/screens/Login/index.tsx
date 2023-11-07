@@ -34,7 +34,7 @@ const LoginScreen = () => {
   const [isSignUp, setIsSignUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { appVersionComponent } = useAppVersion()
-  const { fetchUserAvatar } = useUserAvatar(username)
+  const { fetchUserAvatar } = useUserAvatar(email)
 
   const handleLogin = async () => {
     setIsLoading(true)

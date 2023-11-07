@@ -222,14 +222,6 @@ const CameraView = ({
           type: 'video/mp4',
           name: fileName
         }
-        RNFS.stat(path)
-          .then(stats => {
-            console.log('File size: ', stats.size / (1024 * 1024)) // size in bytes
-          })
-          .catch(error => {
-            console.error(error.message)
-          })
-
         setFile(fileData)
         setMediaUri(null)
         handleCloseCamera()

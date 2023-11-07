@@ -33,6 +33,7 @@ const useUserAvatar = (username: string) => {
 
       const buffer = Buffer.from(avatarRes.data, 'binary').toString('base64')
       const filePath = getUserAvatarFilePath()
+
       if (!filePath) {
         return dispatch(setUserAvatar(filePath))
       }
