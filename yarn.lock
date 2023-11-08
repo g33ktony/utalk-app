@@ -7156,10 +7156,10 @@ react-native-video@^6.0.0-alpha.9:
   resolved "https://registry.yarnpkg.com/react-native-video/-/react-native-video-6.0.0-alpha.9.tgz#1278ea8e7fb705228db3eebd7d7df989eba16bab"
   integrity sha512-wJmcO07A07TbC9eia3pamEpTWifxr14gSRRhU2kQbEtT8kdxH0qMNLbJJD7lLgIXapG3CMhYp198i77Fj/UQeQ==
 
-react-native-vision-camera@3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-vision-camera/-/react-native-vision-camera-3.4.0.tgz#2ddcb2cce559682223d80fd47e83636d6e216b0c"
-  integrity sha512-rXUu8ITjE2b0KOziJCesMQZUhUPl6oBq3sEfiKXMVz4O7VhrQ0Yilh/QDgdDO6Jh4R//E4LXnj/XA7r55XsS8Q==
+react-native-vision-camera@3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-vision-camera/-/react-native-vision-camera-3.3.1.tgz#9dc6a74560535d6ce6deb85046b6b327615a45e3"
+  integrity sha512-OeoHvDTR4wlfij17azxmr7fwDtZc3nzEUe8ZJ3EYJx4HSGaDtvt578VRXUdxLpPs3jqS3J8g/8bivH2IHUkxtg==
 
 react-native@0.72.4:
   version "0.72.4"
