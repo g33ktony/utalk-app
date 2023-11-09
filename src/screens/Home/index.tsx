@@ -171,7 +171,7 @@ const MainScreen = () => {
   }
 
   const onViewableItemsChanged = useCallback(({ viewableItems }) => {
-    if (viewableItems[0].key) {
+    if (viewableItems[0]?.key) {
       setVisibleItem(viewableItems[0]?.key || -1)
     }
   }, [])

@@ -159,7 +159,10 @@ const ProfileScreen = () => {
             <Avatar justAvatar author={user} path={userAvatar} size={100} />
           )}
           <TouchableOpacity
-            style={[styles.editProfileButton, { marginBottom: 15 }]}
+            style={[
+              styles.editProfileButton,
+              { marginBottom: 15, marginTop: 15 }
+            ]}
             onPress={handleCameraOpen}
           >
             <Text style={styles.buttonText}>Take Photo</Text>

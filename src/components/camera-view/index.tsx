@@ -230,10 +230,6 @@ const CameraView = ({
     })
   }
 
-  useEffect(() => {
-    console.log('hasMicrophonePermission', hasMicrophonePermission)
-  }, [hasMicrophonePermission])
-
   const handleCloseCamera = () => {
     if (isRecording) {
       stopRecording()

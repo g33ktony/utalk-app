@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, ViewStyle } from 'react-native'
-import { useSelector } from 'react-redux'
-import { selectDeviceId } from '../../store/reducers/device'
 import { CommentT } from '../../store/reducers/posts'
 import Avatar from '../avatar'
+import useAuthorAvatar from '../../helpers/useAuthorAvatar'
 
 type PropsT = {
   comment: CommentT
@@ -11,17 +10,22 @@ type PropsT = {
 }
 
 const Comment = ({ comment, textStyle }: PropsT) => {
+  const { fetchAuthorAvatar, authorAvatar } = useAuthorAvatar(comment.author)
+
+  useEffect(() => {
+    fetchAuthorAvatar()
+  }, [])
+
   return (
     <View style={styles.commentContainer}>
       <Avatar
         justAvatar
         author={comment.author}
-        width={20}
-        height={20}
         size={30}
+        path={authorAvatar}
       />
 
-      <View style={{ flex: 1, flexDirection: 'column' }}>
+      <View style={{ flex: 1, flexDirection: 'column', marginLeft: 10 }}>
         <Text style={[textStyle, { marginBottom: 8 }]}>{comment?.author}:</Text>
         <Text style={textStyle}>{comment?.text}</Text>
       </View>

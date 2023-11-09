@@ -1,6 +1,6 @@
 import React, { ForwardedRef, forwardRef } from 'react'
 import { View, ViewStyle } from 'react-native'
-import Video from 'react-native-video'
+import Video, { VideoRef } from 'react-native-video'
 import styles from './index.styles'
 
 const VideoPlayer = forwardRef(
@@ -14,23 +14,23 @@ const VideoPlayer = forwardRef(
       paused?: boolean
       style: ViewStyle
     },
-    ref: ForwardedRef<Video | null>
+    ref: ForwardedRef<VideoRef | null>
   ) => {
     return (
-      <View style={styles.container}>
-        <Video
-          ref={ref}
-          repeat
-          ignoreSilentSwitch='ignore'
-          paused={paused}
-          resizeMode='cover'
-          source={{ uri }}
-          volume={80}
-          muted={false}
-          style={style}
-          controls={true}
-        />
-      </View>
+      // <View style={styles.container}>
+      <Video
+        ref={ref}
+        repeat
+        // ignoreSilentSwitch='ignore'
+        paused={paused}
+        // resizeMode='cover'
+        source={{ uri }}
+        volume={50}
+        muted={false}
+        style={style}
+        controls={true}
+      />
+      // </View>
     )
   }
 )

@@ -13,7 +13,7 @@ const HeaderLeft = () => {
       }}
     >
       <Image source={Logo} style={styles.headerLeft} />
-      <Text style={{ marginTop: 10 }}>beta!</Text>
+      <Text style={{ marginTop: 10, marginLeft: -10 }}>beta!</Text>
     </View>
   )
 }

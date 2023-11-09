@@ -110,6 +110,7 @@ const CommentsDrawer = ({ post, isDrawerOpen, onCloseDrawer }: PropsT) => {
             <FlatList
               keyboardShouldPersistTaps='always'
               data={comments}
+              showsVerticalScrollIndicator={false}
               keyExtractor={item => item.commentId}
               renderItem={({ item }) => (
                 <Comment

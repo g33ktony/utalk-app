@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   View,
   Text,
@@ -21,7 +21,7 @@ import { openPicker } from 'react-native-image-crop-picker'
 import { postMedia } from '../../api'
 import styles from './index.styles'
 import CameraView from '../../components/camera-view'
-import Video from 'react-native-video'
+import Video, { IgnoreSilentSwitchType, VideoRef } from 'react-native-video'
 
 const NewPostScreen = () => {
   const navigation = useNavigation()
@@ -39,8 +39,10 @@ const NewPostScreen = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isVideo, setIsVideo] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
-  const videoRef = useRef<Video | null>(null)
-
+  const videoRef = useRef<VideoRef | null>(null)
+  useEffect(() => {
+    console.log('videoUri', videoUri)
+  }, [videoUri])
   const handleMedia = async () => {
     try {
       const res = await openPicker({
@@ -59,6 +61,10 @@ const NewPostScreen = () => {
       }
 
       setFile(fileData)
+
+      if (res.mime === 'video/mp4') {
+        return setVideoUri(res.path)
+      }
 
       setMediaUri(res.path)
     } catch (error) {
@@ -90,8 +96,6 @@ const NewPostScreen = () => {
           })
         })
         .catch(error => {
-          console.log('error', error)
-
           setIsLoading(false)
           Alert.alert(
             'Error submitting post',
