@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { VideoRef } from 'react-native-video'
 import { useNavigation } from '@react-navigation/native'
+import { useDrawerStatus } from '@react-navigation/drawer'
 import { addFilteredPosts, addPost, setPosts } from '../../store/reducers/posts'
 import { getAllPosts } from '../../store/selectors/posts'
 import { selectIsShown, selectTerm } from '../../store/selectors/search'
@@ -43,6 +44,13 @@ const MainScreen = () => {
   const [dataToShow, setDataToShow] = useState(posts.data)
   const videoRef = useRef<VideoRef | null>(null)
   const [visibleItem, setVisibleItem] = useState<number>()
+  const drawerStatus = useDrawerStatus()
+
+  useEffect(() => {
+    if (drawerStatus === 'open') {
+      setVisibleItem(-1)
+    }
+  }, [drawerStatus])
 
   const clearSearch = () => {
     dispatch(setTerm(''))

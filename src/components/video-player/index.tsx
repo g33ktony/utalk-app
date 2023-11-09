@@ -1,7 +1,10 @@
 import React, { ForwardedRef, forwardRef } from 'react'
-import { View, ViewStyle } from 'react-native'
-import Video, { VideoRef } from 'react-native-video'
-import styles from './index.styles'
+import { ViewStyle } from 'react-native'
+import Video, {
+  IgnoreSilentSwitchType,
+  ResizeMode,
+  VideoRef
+} from 'react-native-video'
 
 const VideoPlayer = forwardRef(
   (
@@ -17,20 +20,18 @@ const VideoPlayer = forwardRef(
     ref: ForwardedRef<VideoRef | null>
   ) => {
     return (
-      // <View style={styles.container}>
       <Video
         ref={ref}
         repeat
-        // ignoreSilentSwitch='ignore'
+        ignoreSilentSwitch={IgnoreSilentSwitchType.IGNORE}
         paused={paused}
-        // resizeMode='cover'
+        resizeMode={ResizeMode.COVER}
         source={{ uri }}
-        volume={50}
+        volume={1}
         muted={false}
         style={style}
         controls={true}
       />
-      // </View>
     )
   }
 )
