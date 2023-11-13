@@ -1,7 +1,6 @@
 import React from 'react'
-import { Image, View } from 'react-native'
+import { Image, View, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import PlusIcon from '../../../assets/plus.square.png'
 import SearchIcon from '../../../assets/binoculars.png'
 import { useDispatch, useSelector } from 'react-redux'
@@ -24,10 +23,20 @@ const HeaderRight = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleShowSearch}>
-        <Image style={styles.icon} source={SearchIcon} alt='search icon' />
+        <Image
+          style={styles.icon}
+          source={SearchIcon}
+          alt='search icon'
+          testID='search-icon'
+        />
       </TouchableOpacity>
       <TouchableOpacity onPress={navigateToNewPost}>
-        <Image style={styles.icon} source={PlusIcon} alt='new post icon' />
+        <Image
+          style={styles.icon}
+          source={PlusIcon}
+          alt='new post icon'
+          testID='new post icon'
+        />
       </TouchableOpacity>
     </View>
   )

@@ -50,6 +50,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
               size={15}
               color='gray'
               style={styles.searchIcon}
+              testID='close-button'
             />
           </TouchableOpacity>
         </View>

@@ -12,8 +12,8 @@ const HeaderLeft = () => {
         alignItems: 'center'
       }}
     >
-      <Image source={Logo} style={styles.headerLeft} />
-      <Text style={{ marginTop: 10, marginLeft: -10 }}>beta!</Text>
+      <Image source={Logo} style={styles.headerLeft} testID='logo-image' />
+      <Text style={{ marginTop: 10, marginLeft: -10 }}>beta</Text>
     </View>
   )
 }

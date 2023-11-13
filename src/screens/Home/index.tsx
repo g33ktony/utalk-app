@@ -27,10 +27,6 @@ export type PageSelectedEvent = {
   }
 }
 
-type ViewableItem = {
-  index: number | null
-}
-
 const MainScreen = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()

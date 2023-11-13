@@ -23,9 +23,10 @@ const Avatar = ({
   customStyle = {}
 }: PropsT) => {
   return (
-    <View style={[styles.authorRow, customStyle]}>
+    <View style={[styles.authorRow, customStyle]} testID='avatar-container'>
       {path ? (
         <Image
+          testID='image-avatar'
           style={[
             styles.avatar,
             { marginRight: justAvatar ? 0 : 8 },
@@ -36,8 +37,9 @@ const Avatar = ({
           }}
         />
       ) : (
-        <View style={{ marginRight: 8 }}>
+        <View style={{ marginRight: 8 }} testID='generated-avatar'>
           <UserAvatar
+            testID='generated-avatar'
             size={size}
             name={author}
             bgColors={['#6750A5', '#2DBC9C', '#8D23AC', '#DA8432', '#253A8D']}
