@@ -117,7 +117,7 @@ const LoginScreen = () => {
       keyboardVerticalOffset={90}
       style={styles.container}
     >
-      <Image style={{ marginBottom: 45 }} source={Logo} />
+      <Image style={styles.logo} source={Logo} />
 
       {isSignUp ? (
         <TextInput
@@ -145,17 +145,7 @@ const LoginScreen = () => {
         secureTextEntry
       />
       <TouchableOpacity
-        style={[
-          styles.button,
-          { marginBottom: 25 },
-          {
-            borderRadius: 21,
-            borderColor: '#ce4817',
-            borderWidth: 2,
-            paddingVertical: 8,
-            paddingHorizontal: 12
-          }
-        ]}
+        style={styles.button}
         disabled={isLoading}
         onPress={isSignUp ? handleSignUp : handleLogin}
       >
@@ -168,19 +158,7 @@ const LoginScreen = () => {
         )}
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[
-          { justifyContent: 'center' },
-          {
-            borderRadius: 21,
-            borderColor: '#002677',
-            borderWidth: 2,
-            paddingVertical: 8,
-            paddingHorizontal: 12
-          }
-        ]}
-        onPress={toggleMode}
-      >
+      <TouchableOpacity style={styles.toggleButton} onPress={toggleMode}>
         <Text style={{ color: '#002677' }}>
           {isSignUp ? 'Sign In' : 'Register'}
         </Text>

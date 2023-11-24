@@ -32,6 +32,18 @@ const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
     justifyContent: 'center'
+  },
+  gradient: {
+    width: '100%',
+    padding: 16
+  },
+  row: {
+    flexDirection: 'row'
+  },
+  iconContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
   }
 })
 

@@ -61,6 +61,13 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  flip: {
+    height: 55,
+    width: 55,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 45
   }
 })
 

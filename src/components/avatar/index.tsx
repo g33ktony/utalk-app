@@ -37,7 +37,7 @@ const Avatar = ({
           }}
         />
       ) : (
-        <View style={{ marginRight: 8 }} testID='generated-avatar'>
+        <View style={styles.userAvatarContainer} testID='generated-avatar'>
           <UserAvatar
             testID='generated-avatar'
             size={size}

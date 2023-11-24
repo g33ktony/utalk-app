@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
   author: {
     fontSize: 16,
     color: 'white'
+  },
+  userAvatarContainer: {
+    marginRight: 8
   }
 })
 

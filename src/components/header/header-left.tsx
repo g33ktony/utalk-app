@@ -5,15 +5,9 @@ import styles from './index.styles'
 
 const HeaderLeft = () => {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
+    <View style={styles.leftContainer}>
       <Image source={Logo} style={styles.headerLeft} testID='logo-image' />
-      <Text style={{ marginTop: 10, marginLeft: -10 }}>beta</Text>
+      <Text style={styles.betaText}>beta</Text>
     </View>
   )
 }

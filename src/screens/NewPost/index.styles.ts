@@ -33,6 +33,36 @@ const styles = StyleSheet.create({
     height: 350,
     resizeMode: 'cover',
     borderRadius: 8
+  },
+  button: {
+    width: 75,
+    height: 75,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 8
+  },
+  navigationButton: {
+    borderRadius: 21,
+    borderColor: '#002677',
+    borderWidth: 2,
+    paddingVertical: 8,
+    paddingHorizontal: 12
+  },
+  back: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  navigationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  videoPlayer: {
+    height: '100%',
+    width: '100%'
+  },
+  flexContainer: {
+    flex: 1
   }
 })
 

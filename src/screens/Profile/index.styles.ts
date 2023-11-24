@@ -4,14 +4,11 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     flex: 1,
-    // height: '100%',
-    // width: '100%',
     backgroundColor: `#fff`
   },
   profileHeader: {
     justifyContent: 'center',
     alignItems: 'center'
-    // marginBottom: 20
   },
   profileImage: {
     marginBottom: 25
@@ -21,7 +18,8 @@ const styles = StyleSheet.create({
     borderColor: '#002677',
     borderWidth: 2,
     paddingVertical: 8,
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
+    marginBottom: 15
   },
   buttonText: { color: '#002677', textAlign: 'center' },
   userInfo: {
@@ -43,6 +41,22 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#E5E5E5',
     borderRadius: 5,
+    alignItems: 'center'
+  },
+  editing: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10
+  },
+  disabled: {
+    height: 40,
+    margin: 12,
+    padding: 10,
+    textAlign: 'center'
+  },
+  keyboard: {
+    backgroundColor: 'white',
     alignItems: 'center'
   }
 })

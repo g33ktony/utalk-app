@@ -8,6 +8,7 @@ import {
   Text,
   View
 } from 'react-native'
+import { useSelector } from 'react-redux'
 import BottomDrawer, {
   BottomDrawerMethods
 } from 'react-native-animated-bottom-drawer'
@@ -16,8 +17,9 @@ import CommentRow from '../comment-row'
 import { CommentT, PostT } from '../../../store/reducers/posts'
 import { useScreenDimensions } from '../../../helpers/hooks'
 import { getPostComments } from '../../../api'
-import { useSelector } from 'react-redux'
 import { getToken } from '../../../store/selectors/auth'
+import styles from './index.styles'
+
 type PropsT = {
   post: PostT | null
   isDrawerOpen: boolean
@@ -75,17 +77,25 @@ const CommentsDrawer = ({ post, isDrawerOpen, onCloseDrawer }: PropsT) => {
     setIsKeyboardVisible(false)
   }
 
+  const drawerContainerStyle = {
+    height: heightByPercent(85),
+    backgroundColor: '#5B5858',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0
+  }
+
+  const commentRowStyle = {
+    container: styles.commentRowContainer,
+    placeholderColor: 'white',
+    input: styles.whiteText
+  }
+
   return (
     <BottomDrawer
       ref={bottomDrawerRef}
       initialHeight={heightByPercent(100)}
       customStyles={{
-        container: {
-          height: heightByPercent(85),
-          backgroundColor: '#5B5858',
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0
-        }
+        container: drawerContainerStyle
       }}
       onClose={onCloseDrawer}
     >
@@ -95,18 +105,9 @@ const CommentsDrawer = ({ post, isDrawerOpen, onCloseDrawer }: PropsT) => {
           paddingHorizontal: 15
         }}
       >
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            marginBottom: 15,
-            color: 'white'
-          }}
-        >
-          Comments:
-        </Text>
+        <Text style={styles.commentsTitle}>Comments:</Text>
         {comments?.length ? (
-          <View style={{ flex: 1 }}>
+          <View style={styles.flexContainer}>
             <FlatList
               keyboardShouldPersistTaps='always'
               data={comments}
@@ -123,29 +124,19 @@ const CommentsDrawer = ({ post, isDrawerOpen, onCloseDrawer }: PropsT) => {
             />
           </View>
         ) : (
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <Text style={{ color: 'white' }}>No comments yet</Text>
+          <View style={styles.noComments}>
+            <Text style={styles.whiteText}>No comments yet</Text>
           </View>
         )}
       </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={isKeyboardVisible ? 0 : 165}
-        contentContainerStyle={{ flex: 1 }}
+        contentContainerStyle={styles.flexContainer}
       >
         <CommentRow
           reload={fetchPostComments}
-          customStyles={{
-            container: { paddingHorizontal: 15, marginBottom: 20 },
-            placeholderColor: 'white',
-            input: { color: 'white' }
-          }}
+          customStyles={commentRowStyle}
           item={post}
         />
       </KeyboardAvoidingView>

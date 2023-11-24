@@ -6,6 +6,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10
   },
+  leftContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   headerLeft: {
     marginLeft: 15,
     width: 80,
@@ -16,6 +21,10 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     resizeMode: 'cover'
+  },
+  betaText: {
+    marginTop: 10,
+    marginLeft: -10
   }
 })
 

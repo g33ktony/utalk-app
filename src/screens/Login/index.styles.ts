@@ -7,8 +7,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   logo: {
-    fontSize: 24,
-    marginBottom: 20
+    marginBottom: 45
   },
   input: {
     width: '80%',
@@ -23,13 +22,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 150,
     backgroundColor: '#ce4817',
-    padding: 10,
-    borderRadius: 5
+    borderColor: '#ce4817',
+    borderRadius: 21,
+    borderWidth: 2,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 25
   },
   buttonText: {
     color: 'white',
     fontSize: 18,
     textAlign: 'center'
+  },
+  toggleButton: {
+    justifyContent: 'center',
+    borderRadius: 21,
+    borderColor: '#002677',
+    borderWidth: 2,
+    paddingVertical: 8,
+    paddingHorizontal: 12
   }
 })
 

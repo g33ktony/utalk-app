@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
@@ -14,7 +13,6 @@ import { useDispatch } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { logout, setFirstName } from '../../store/reducers/auth'
 import { openPicker } from 'react-native-image-crop-picker'
-import styles from './index.styles'
 import { useSelector } from 'react-redux'
 import { getFirstName, getToken, getUserName } from '../../store/selectors/auth'
 import CameraView from '../../components/camera-view'
@@ -23,6 +21,7 @@ import { setUserAvatar as setAvatar } from '../../store/reducers/auth'
 import useAppVersion from '../../helpers/useAppVersion'
 import useUserAvatar from '../../helpers/useUserAvatar'
 import Avatar from '../../components/avatar'
+import styles from './index.styles'
 
 const ProfileScreen = () => {
   const dispatch = useDispatch()
@@ -159,16 +158,13 @@ const ProfileScreen = () => {
             <Avatar justAvatar author={user} path={userAvatar} size={100} />
           )}
           <TouchableOpacity
-            style={[
-              styles.editProfileButton,
-              { marginBottom: 15, marginTop: 15 }
-            ]}
+            style={[styles.editProfileButton, { marginTop: 15 }]}
             onPress={handleCameraOpen}
           >
             <Text style={styles.buttonText}>Take Photo</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.editProfileButton, { marginBottom: 15 }]}
+            style={styles.editProfileButton}
             onPress={handleImagePicker}
           >
             <Text style={styles.buttonText}>Choose Profile Photo</Text>
@@ -179,31 +175,17 @@ const ProfileScreen = () => {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={180}
-          style={{ backgroundColor: 'white', alignItems: 'center' }}
+          style={styles.keyboard}
         >
           <TextInput
             value={user}
             autoFocus
-            style={
-              editing
-                ? {
-                    height: 40,
-                    margin: 12,
-                    borderWidth: 1,
-                    padding: 10
-                  }
-                : {
-                    height: 40,
-                    margin: 12,
-                    padding: 10,
-                    textAlign: 'center'
-                  }
-            }
+            style={editing ? styles.editing : styles.disabled}
             editable={editing}
             onChangeText={handleChangeUser}
           />
           <TouchableOpacity
-            style={[styles.editProfileButton, { marginBottom: 15 }]}
+            style={styles.editProfileButton}
             onPress={handleEditInfo}
           >
             <Text style={styles.buttonText}>

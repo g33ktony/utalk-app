@@ -58,13 +58,7 @@ const Controls = ({
           />
         </TouchableOpacity>
         <TouchableOpacity
-          style={{
-            height: 55,
-            width: 55,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginLeft: 45
-          }}
+          style={styles.flip}
           disabled={positionDisabled}
           onPress={onPressPosition}
         >

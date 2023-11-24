@@ -192,3 +192,40 @@ Follow these steps to get UTalk up and running on your local machine:
    export { store, persistor };
 
    ```
+
+# iOS App Installation Instructions
+
+Follow these steps to install the iOS app from AppCenter:
+
+## 1. Receiving Email Invitation:
+- Check your email for an invitation from AppCenter to join an organization.
+- Click on the link provided in the email to accept the invitation and create an account or sign in to AppCenter if you already have an account.
+
+## 2. Joining the Organization:
+- Once logged in, navigate to the organization you were invited to (you should be automatically directed to the organization's page).
+- You may see a list of apps associated with this organization.
+
+## 3. Receiving App Installation Invitation:
+- Await an email invitation to install a specific app, or check the AppCenter dashboard for new app installation invitations under the organization you joined.
+- Once you receive the invitation, click on the link provided to go to the app's installation page on AppCenter.
+
+## 4. Installing the Provisioning Profile:
+- Before installing the app, you'll need to install a provisioning profile on your device.
+- On the app's installation page, there should be instructions to install a provisioning profile. Follow these instructions which may involve:
+    - Clicking on a link to download the provisioning profile.
+    - Going to your device's Settings -> General -> VPN & Device Management.
+    - Under the 'Downloaded Profile' section, tap on the profile you just downloaded.
+    - Tap 'Install' in the top-right corner, and follow any on-screen instructions to install the provisioning profile.
+
+## 5. Installing the App:
+- Go back to the app's installation page on AppCenter.
+- Click on the 'Install' button to begin downloading and installing the app.
+- You may be prompted to confirm the installation; tap 'Install' to confirm.
+
+## 6. Verifying Installation:
+- Once the installation is complete, you should see the app icon on your device's home screen.
+- Tap on the app icon to launch it and ensure it opens successfully.
+
+## 7. Additional Notes:
+- If you encounter the "Untrusted Enterprise Developer" message, go to Settings -> General -> Profiles & Device Management, find the developer name and trust it.
+- If you encounter any errors during the installation, such as the "The developers are working on a version for your device" error, contact the app's developer or admin on AppCenter for further assistance.

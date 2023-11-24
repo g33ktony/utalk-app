@@ -75,9 +75,9 @@ const Post = ({ item, playingItem, videoRef }: PropsT) => {
         playing={playing}
       />
       <View style={[styles.postContainer, { height: availableHeight }]}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={styles.row}>
           <LinearGradient
-            style={{ width: '100%', padding: 16 }}
+            style={styles.gradient}
             colors={['rgba(0,0,0, 0.65)', 'rgba(0,0,0, 0.08)']}
           >
             {isAuthorAvatarLoading ? (
@@ -94,19 +94,13 @@ const Post = ({ item, playingItem, videoRef }: PropsT) => {
               <Avatar
                 author={item.authorUsername}
                 path={authorAvatar}
-                customStyle={{ flexDirection: 'row' }}
+                customStyle={styles.row}
               />
             )}
             <Text style={styles.title}>{item.title}</Text>
           </LinearGradient>
           {!item.images ? (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'flex-end'
-              }}
-            >
+            <View style={styles.iconContainer}>
               <Icon
                 name='video-camera'
                 color='rgba(157,157, 159, 0.7)'
@@ -123,7 +117,7 @@ const Post = ({ item, playingItem, videoRef }: PropsT) => {
           keyboardVerticalOffset={85}
         >
           <LinearGradient
-            style={{ width: '100%', padding: 16 }}
+            style={styles.gradient}
             colors={['rgba(0,0,0, 0.08)', 'rgba(0,0,0, 0.65)']}
           >
             <Text style={styles.description}>

@@ -40,9 +40,7 @@ const NewPostScreen = () => {
   const [isVideo, setIsVideo] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const videoRef = useRef<VideoRef | null>(null)
-  useEffect(() => {
-    console.log('videoUri', videoUri)
-  }, [videoUri])
+
   const handleMedia = async () => {
     try {
       const res = await openPicker({
@@ -124,7 +122,7 @@ const NewPostScreen = () => {
         isRecording={isRecording}
         setIsRecording={setIsRecording}
       >
-        <ScrollView scrollEnabled contentContainerStyle={{ flex: 1 }}>
+        <ScrollView scrollEnabled contentContainerStyle={styles.flexContainer}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'position' : 'height'}
             keyboardVerticalOffset={90}
@@ -146,7 +144,7 @@ const NewPostScreen = () => {
                   <VideoPlayer
                     ref={videoRef}
                     paused={false}
-                    style={{ height: '100%', width: '100%' }}
+                    style={styles.videoPlayer}
                     uri={videoUri}
                   />
                 </View>
@@ -154,27 +152,13 @@ const NewPostScreen = () => {
             </View>
             <View style={styles.mediaButtonsContainer}>
               <TouchableOpacity
-                style={{
-                  width: 75,
-                  height: 75,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderWidth: 1,
-                  borderRadius: 8
-                }}
+                style={styles.button}
                 onPress={handleLaunchLibrary}
               >
                 <Icon name='picture-o' size={22} />
               </TouchableOpacity>
               <TouchableOpacity
-                style={{
-                  width: 75,
-                  height: 75,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderWidth: 1,
-                  borderRadius: 8
-                }}
+                style={styles.button}
                 onPress={handleLaunchCamera}
               >
                 <Icon name='camera' size={22} />
@@ -208,23 +192,10 @@ const NewPostScreen = () => {
                   paddingBottom: 15
                 }}
               >
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between'
-                  }}
-                >
+                <View style={styles.navigationContainer}>
                   <TouchableOpacity
                     onPress={goBack}
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      borderRadius: 21,
-                      borderColor: '#002677',
-                      borderWidth: 2,
-                      paddingVertical: 8,
-                      paddingHorizontal: 12
-                    }}
+                    style={[styles.navigationButton, styles.back]}
                   >
                     <Icon name='chevron-left' size={16} color='#002677' />
                     <Text style={{ marginLeft: 10, color: '#002677' }}>
@@ -232,13 +203,7 @@ const NewPostScreen = () => {
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={{
-                      borderRadius: 21,
-                      borderColor: '#002677',
-                      borderWidth: 2,
-                      paddingVertical: 8,
-                      paddingHorizontal: 12
-                    }}
+                    style={styles.navigationButton}
                     onPress={handlePostSubmit}
                   >
                     <Text style={{ color: '#002677' }}>Submit Post</Text>

@@ -1,6 +1,7 @@
 import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { PostT } from '../../../store/reducers/posts'
+import { StyleSheet } from 'react-native'
 
 type PropsT = {
   isPlaying: boolean
@@ -12,7 +13,7 @@ const PlayIndicator = ({ isPlaying, item }: PropsT) => {
     <>
       {!isPlaying && item.videos ? (
         <Icon
-          style={{ alignSelf: 'center' }}
+          style={styles.icon}
           name='play'
           size={55}
           color='rgba(255,255,255,0.5)'
@@ -21,5 +22,11 @@ const PlayIndicator = ({ isPlaying, item }: PropsT) => {
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  icon: {
+    alignSelf: 'center'
+  }
+})
 
 export default PlayIndicator
